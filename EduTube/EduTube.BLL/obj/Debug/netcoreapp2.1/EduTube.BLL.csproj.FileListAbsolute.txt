@@ -1,0 +1,12 @@
+D:\Projects\EduTube\EduTube\EduTube.BLL\bin\Debug\netcoreapp2.1\EduTube.BLL.deps.json
+D:\Projects\EduTube\EduTube\EduTube.BLL\bin\Debug\netcoreapp2.1\EduTube.BLL.dll
+D:\Projects\EduTube\EduTube\EduTube.BLL\bin\Debug\netcoreapp2.1\EduTube.BLL.pdb
+D:\Projects\EduTube\EduTube\EduTube.BLL\obj\Debug\netcoreapp2.1\EduTube.BLL.csprojAssemblyReference.cache
+D:\Projects\EduTube\EduTube\EduTube.BLL\obj\Debug\netcoreapp2.1\EduTube.BLL.csproj.CoreCompileInputs.cache
+D:\Projects\EduTube\EduTube\EduTube.BLL\obj\Debug\netcoreapp2.1\EduTube.BLL.AssemblyInfoInputs.cache
+D:\Projects\EduTube\EduTube\EduTube.BLL\obj\Debug\netcoreapp2.1\EduTube.BLL.AssemblyInfo.cs
+D:\Projects\EduTube\EduTube\EduTube.BLL\obj\Debug\netcoreapp2.1\EduTube.BLL.dll
+D:\Projects\EduTube\EduTube\EduTube.BLL\obj\Debug\netcoreapp2.1\EduTube.BLL.pdb
+D:\Projects\EduTube\EduTube\EduTube.BLL\bin\Debug\netcoreapp2.1\EduTube.DAL.dll
+D:\Projects\EduTube\EduTube\EduTube.BLL\bin\Debug\netcoreapp2.1\EduTube.DAL.pdb
+D:\Projects\EduTube\EduTube\EduTube.BLL\obj\Debug\netcoreapp2.1\EduTube.BLL.csproj.CopyComplete
