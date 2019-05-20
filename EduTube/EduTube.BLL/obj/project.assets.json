@@ -4506,11 +4506,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Bulat\\Desktop\\Diplomski\\EduTube\\EduTube.BLL\\EduTube.BLL.csproj",
+      "projectUniqueName": "D:\\Projects\\Diplomski\\EduTube\\EduTube.BLL\\EduTube.BLL.csproj",
       "projectName": "EduTube.BLL",
-      "projectPath": "C:\\Users\\Bulat\\Desktop\\Diplomski\\EduTube\\EduTube.BLL\\EduTube.BLL.csproj",
+      "projectPath": "D:\\Projects\\Diplomski\\EduTube\\EduTube.BLL\\EduTube.BLL.csproj",
       "packagesPath": "C:\\Users\\Bulat\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Bulat\\Desktop\\Diplomski\\EduTube\\EduTube.BLL\\obj\\",
+      "outputPath": "D:\\Projects\\Diplomski\\EduTube\\EduTube.BLL\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -4529,8 +4529,8 @@
       "frameworks": {
         "netcoreapp2.2": {
           "projectReferences": {
-            "C:\\Users\\Bulat\\Desktop\\Diplomski\\EduTube\\EduTube.DAL\\EduTube.DAL.csproj": {
-              "projectPath": "C:\\Users\\Bulat\\Desktop\\Diplomski\\EduTube\\EduTube.DAL\\EduTube.DAL.csproj"
+            "D:\\Projects\\Diplomski\\EduTube\\EduTube.DAL\\EduTube.DAL.csproj": {
+              "projectPath": "D:\\Projects\\Diplomski\\EduTube\\EduTube.DAL\\EduTube.DAL.csproj"
             }
           }
         }

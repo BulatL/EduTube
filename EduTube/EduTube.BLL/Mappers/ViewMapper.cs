@@ -10,10 +10,10 @@ namespace EduTube.BLL.Mappers
         public static ViewModel EntityToModel(View entity)
         {
             ViewModel model = new ViewModel();
-            entity.Id        = model.Id;
-            entity.UserId    = model.UserId;
-            entity.VideoId   = model.VideoId;
-            entity.IpAddress = model.IpAddress;
+            model.Id        = entity.Id;
+            model.UserId    = entity.UserId;
+            model.VideoId   = entity.VideoId;
+            model.IpAddress = entity.IpAddress;
 
             if (entity.User != null)
                 model.User = UserMapper.EntityToModel(entity.User);
@@ -46,7 +46,7 @@ namespace EduTube.BLL.Mappers
             return entity;
         }
 
-        public static List<ViewModel> EntitiesToModels(IEnumerable<View> entities)
+        public static List<ViewModel> EntitiesToModels(List<View> entities)
         {
             List<ViewModel> models = entities.Select(x => EntityToModel(x)).ToList();
             return models;

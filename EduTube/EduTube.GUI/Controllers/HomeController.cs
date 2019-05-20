@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace EduTube.GUI.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
         private IVideoManager _videoManager;
@@ -28,16 +27,15 @@ namespace EduTube.GUI.Controllers
         public async Task<IActionResult> Index()
         {
             ApplicationUser user = await _userManager.GetUserAsync(User);
+            List<VideoModel> videos = new List<VideoModel>();
+
             if(user == null)
-            {
-                List<VideoModel> videos = await _videoManager.GetAll();
-                return Json(videos);
-            }
+                videos = await _videoManager.GetTop5Videos(null);
+            
             else
-            {
-                List<VideoModel> videos = await _videoManager.GetAll();
-                return Json(videos);
-            }
+                videos = await _videoManager.GetTop5Videos(user.Id);
+            
+            return View(videos);
         }
 
         public IActionResult Privacy()

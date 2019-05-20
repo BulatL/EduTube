@@ -7,15 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EduTube.DAL.Data;
 using EduTube.DAL.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using EduTube.BLL.Managers.Interfaces;
+using EduTube.BLL.Models;
+using System.Diagnostics;
 
 namespace EduTube.GUI.Controllers
 {
+    [Authorize]
     public class VideosController : Controller
     {
+        private IVideoManager _videoManager;
+        private UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
 
-        public VideosController(ApplicationDbContext context)
+        public VideosController(IVideoManager videoManager, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
+            _videoManager = videoManager;
+            _userManager = userManager;
             _context = context;
         }
 
@@ -24,6 +34,23 @@ namespace EduTube.GUI.Controllers
         {
             var applicationDbContext = _context.Videos.Include(v => v.User);
             return View(await applicationDbContext.ToListAsync());
+        }
+        [Route("Videos/RecommendedVideos/{ipAddress}")]
+        public async Task<IActionResult> RecomendedVideos(string ipAddress)
+        {
+            Debug.WriteLine("usao u kontroler" + DateTime.Now);
+            ApplicationUser user = await _userManager.GetUserAsync(User);
+            Debug.WriteLine("nasao usera " + DateTime.Now);
+            List<VideoModel> videos = new List<VideoModel>();
+
+            if (user == null)
+                videos = await _videoManager.GetRecommendedVideos(null, null);
+
+            else
+                videos = await _videoManager.GetRecommendedVideos(user.Id, null);
+
+            Debug.WriteLine("nazad u kontroleru " + DateTime.Now);
+            return Json(videos);
         }
 
         // GET: Videos/Details/5

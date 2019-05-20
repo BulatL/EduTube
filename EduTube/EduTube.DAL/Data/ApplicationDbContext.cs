@@ -91,6 +91,7 @@ namespace EduTube.DAL.Data
         private void ConfigureVideo(EntityTypeBuilder<Video> builder)
         {
             builder.HasMany(x => x.Hashtags);
+            builder.HasMany(x => x.Views).WithOne(x => x.Video).HasForeignKey(x => x.VideoId);
         }
         private void ConfigureView(EntityTypeBuilder<View> builder)
         {

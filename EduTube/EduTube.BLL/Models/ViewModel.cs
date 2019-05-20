@@ -9,7 +9,7 @@ namespace EduTube.BLL.Models
     {
         public int Id { get; set; }
         public string IpAddress { get; set; }
-        public int? UserId { get; set; }
+        public string UserId { get; set; }
         public ApplicationUserModel User { get; set; }
         public int VideoId { get; set; }
         public VideoModel Video { get; set; }
