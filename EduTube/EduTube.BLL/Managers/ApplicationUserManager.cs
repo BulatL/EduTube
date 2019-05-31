@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EduTube.DAL.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace EduTube.BLL.Managers
 {

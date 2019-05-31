@@ -3,86 +3,33 @@
     ViewData["Title"] = "Home Page";
 }
 
+<h2>popular videos</h2>
 <div class="row">
-    <h2>popular videos</h2>
     @foreach (var video in Model)
     {
-    <div class="col-lg-4">
-        <h2><a href="#">@video.Name</a></h2>
-        @if (video.YoutubeUrl != null)
-        {
-            <iframe id="videoFrame" width="300" height="200" src="@video.YoutubeUrl" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
-        }
-        @if (video.YoutubeUrl == null)
-        {
-            <video width="300" controls>
-                <source src="~/DR%c5%bdAVNI%20POSAO%20[HQ]%20-%20Ep.218%20%c4%8cekiranje%20(30.09.2013.).mp4" type="video/mp4">
-                Your browser does not support HTML5 video.
-            </video>
-        }
-    </div>
+        <div class="col-lg-4">
+            <h2><a href="#">@video.Name</a></h2>
+            @if (video.YoutubeUrl != null)
+            {
+                <iframe id="videoFrame" width="300" height="200" src="@video.YoutubeUrl" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+            }
+            @if (video.YoutubeUrl == null)
+            {
+                <video width="300" controls>
+                    <source src="~/DR%c5%bdAVNI%20POSAO%20[HQ]%20-%20Ep.218%20%c4%8cekiranje%20(30.09.2013.).mp4" type="video/mp4">
+                    Your browser does not support HTML5 video.
+                </video>
+            }
+        </div>
     }
 </div>
 
-<div class="row" id="RecommendedVideosRow">
-    <h2>Recommended videos</h2>
+<h2 id="firstRecommendedHeading"></h2>
+<div class="row" id="firstRecommendedVideosRow">
+</div>
+<h2 id="secondRecommendedHeading"></h2>
+<div class="row" id="secondRecommendedVideosRow">
 </div>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script>
-    $(function () {
-        console.log("nesto");
-        $.getJSON("https://api.ipify.org/?format=json", function (e) {
-            console.log(e.ip);
-        });
-        $.ajax({
-			url: 'https://api.ipify.org/?format=json',
-			type: 'GET',
-			dataType: 'json',
-            success: function (ipAddress) {
-                $.ajax({
-                    url: '/Videos/RecommendedVideos/' + ipAddress.ip,
-			        type: 'GET',
-			        dataType: 'json',
-                    success: function (videos) {
-                        populateReccomendedVideo(videos);
-			        },
-			        error: function (response, jqXHR) {
-			        }
-		        });
-			},
-			error: function (response, jqXHR) {
-			}
-		});
-    })
-    function populateReccomendedVideo(videos) {
-        let recommendedVideosRow = $("#RecommendedVideosRow");
-        let recommendedVideosContent = [];
-
-        for (var i = 0; i < videos.length; i++) {
-            if (videos[i].YoutubeUrl != null) {
-                recommendedVideosContent.push(
-                    `<div class="col-lg-4>"
-                        <h2><a href="#">${videos[i].name}</a></h2>
-                        <iframe id="videoFrame" width="300" height="200" src="${videos[i].YoutubeUrl}" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
-                     </div>
-                    `
-                );
-            }
-            else {
-                recommendedVideosContent.push(
-                    `<div class="col-lg-4>"
-                        <h2><a href="#">${videos[i].name}</a></h2>
-                        <video width="300" controls>
-                            <source src="~/DR%c5%bdAVNI%20POSAO%20[HQ]%20-%20Ep.218%20%c4%8cekiranje%20(30.09.2013.).mp4" type="video/mp4">
-                            Your browser does not support HTML5 video.
-                        </video>
-                     </div>
-                    `
-                );
-            }
-        }
-
-        recommendedVideosRow.html(recommendedVideosContent.join(''));
-    }
-</script>
+<script src="~/js/HomePage.js"></script>

@@ -20,9 +20,28 @@ namespace EduTube.BLL.Managers
             _context = context;
         }
 
+        public async Task<List<HashtagRelationshipModel>> GetByVideoId(int id, bool includeHashtag)
+        {
+            return includeHashtag ? HashtagRelationshipMapper.EntitiesToModels(
+                await _context.HashTagRelationships.Where(x => x.VideoId == id).Include(x => x.Hashtag).ToListAsync())
+                : HashtagRelationshipMapper.EntitiesToModels(await _context.HashTagRelationships.ToListAsync());
+        }
+
         public async Task<List<HashtagRelationshipModel>> GetAll()
         {
             return HashtagRelationshipMapper.EntitiesToModels(await _context.HashTagRelationships.ToListAsync());
+        }
+        
+        public async Task<List<int?>> Get2MostPopularHashtagsIdByVideoId(List<int> videosId)
+        {
+
+            return await _context.HashTagRelationships
+                .Where(x => videosId.Contains(int.Parse(x.VideoId.ToString())))
+                .GroupBy(x => x.HashTagId)
+                .OrderByDescending(g => g.Count())
+                .Take(2)
+                .Select(x => x.Key)
+                .ToListAsync();
         }
 
         public async Task<HashtagRelationshipModel> GetById(int id, bool includeAll)

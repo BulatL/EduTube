@@ -12,19 +12,24 @@ using Microsoft.AspNetCore.Identity;
 using EduTube.BLL.Managers.Interfaces;
 using EduTube.BLL.Models;
 using System.Diagnostics;
+using EduTube.GUI.ViewModels;
 
 namespace EduTube.GUI.Controllers
 {
-    [Authorize]
     public class VideosController : Controller
     {
         private IVideoManager _videoManager;
+        private IHashtagRelationshipManager _hashtagRelationshipManager;
+        private IHashtagManager _hashtagManager;
         private UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
 
-        public VideosController(IVideoManager videoManager, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+        public VideosController(IVideoManager videoManager, IHashtagRelationshipManager hashtagRelationshipManager,
+            IHashtagManager hashtagManager, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _videoManager = videoManager;
+            _hashtagRelationshipManager = hashtagRelationshipManager;
+            _hashtagManager = hashtagManager;
             _userManager = userManager;
             _context = context;
         }
@@ -32,24 +37,77 @@ namespace EduTube.GUI.Controllers
         // GET: Videos
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Videos.Include(v => v.User);
-            return View(await applicationDbContext.ToListAsync());
+            ApplicationUser user = await _userManager.GetUserAsync(User);
+            List<VideoModel> videos = new List<VideoModel>();
+            if(user != null)
+            {
+                return View(await _videoManager.GetTop5Videos(user.Id));
+            }
+            else
+            {
+                return View(await _videoManager.GetTop5Videos(null));
+            }
         }
         [Route("Videos/RecommendedVideos/{ipAddress}")]
         public async Task<IActionResult> RecomendedVideos(string ipAddress)
         {
-            Debug.WriteLine("usao u kontroler" + DateTime.Now);
-            ApplicationUser user = await _userManager.GetUserAsync(User);
-            Debug.WriteLine("nasao usera " + DateTime.Now);
-            List<VideoModel> videos = new List<VideoModel>();
 
-            if (user == null)
-                videos = await _videoManager.GetRecommendedVideos(null, null);
+            List<VideoModel> firstRecommendedVideos = new List<VideoModel>();
+            List<VideoModel> secondRecommendedVideos = new List<VideoModel>();
+            List<int> videosId = new List<int>();
+            List<int?> hashtagsId = new List<int?>();
+            HashtagModel firstHashtag = null;
+            HashtagModel secondHashtag = null;
+
+            Debug.WriteLine("usao u kontroler" + DateTime.Now);
+            ApplicationUser user = new ApplicationUser();
+            user = await _userManager.GetUserAsync(User);
+            Debug.WriteLine("nasao usera " + DateTime.Now);
+
+
+            if (user != null)
+            {
+                videosId = await _videoManager.GetVideosIdByView(user.Id, null);
+                hashtagsId = await _hashtagManager.Get2MostPopularHashtagsIdByVideoId(videosId);
+                if(hashtagsId[0] != null)
+                {
+                    firstHashtag = await _hashtagManager.GetById(int.Parse(hashtagsId[0].ToString()));
+                    firstRecommendedVideos = await _videoManager.Get6VideosByHashtag(user.Id, hashtagsId[0]);
+                }
+                if (hashtagsId[1] != null)
+                {
+                    secondHashtag = await _hashtagManager.GetById(int.Parse(hashtagsId[1].ToString()));
+                    secondRecommendedVideos = await _videoManager.Get6VideosByHashtag(user.Id, hashtagsId[1]);
+                }
+            }
 
             else
-                videos = await _videoManager.GetRecommendedVideos(user.Id, null);
+            {
+                videosId = await _videoManager.GetVideosIdByView(null, ipAddress);
+                hashtagsId = await _hashtagManager.Get2MostPopularHashtagsIdByVideoId(videosId);
+                if (hashtagsId[0] != null)
+                {
+                    firstHashtag = await _hashtagManager.GetById(int.Parse(hashtagsId[0].ToString()));
+                    firstRecommendedVideos = await _videoManager.Get6VideosByHashtag(null, hashtagsId[0]);
+                }
+                if (hashtagsId[1] != null)
+                {
+                    secondHashtag = await _hashtagManager.GetById(int.Parse(hashtagsId[1].ToString()));
+                    secondRecommendedVideos = await _videoManager.Get6VideosByHashtag(null, hashtagsId[1]);
+                }
+            }
 
             Debug.WriteLine("nazad u kontroleru " + DateTime.Now);
+            HomeRecommendedVideos viewModel = new HomeRecommendedVideos(firstRecommendedVideos,
+                secondRecommendedVideos, firstHashtag.Name, secondHashtag.Name);
+            return Json(viewModel);
+        }
+
+        [Route("Videos/Search/{search}")]
+        public async Task<IActionResult> Search(string search)
+        {
+            ApplicationUser user = await _userManager.GetUserAsync(User);
+            List<VideoModel> videos = await _videoManager.SearchVideos(user?.Id, search);
             return Json(videos);
         }
 

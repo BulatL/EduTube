@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EduTube.DAL.Data;
 using EduTube.DAL.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EduTube.GUI.Controllers
 {
+    [Authorize]
     public class ChatsController : Controller
     {
         private readonly ApplicationDbContext _context;

@@ -30,6 +30,20 @@ namespace EduTube.BLL.Managers
             return HashtagMapper.EntityToModel(await _context.Hashtags.FirstOrDefaultAsync(x => x.Id == id));
         }
 
+
+        public async Task<List<int?>> Get2MostPopularHashtagsIdByVideoId(List<int> videosId)
+        {
+
+            return await _context.HashTagRelationships
+                .Where(x => videosId.Contains(int.Parse(x.VideoId.ToString())))
+                .GroupBy(x => x.HashTagId)
+                .OrderByDescending(g => g.Count())
+                .Take(2)
+                .Select(x => x.Key)
+                .ToListAsync();
+        }
+
+
         public async Task<HashtagModel> Create(HashtagModel hashtag)
         {
             Hashtag entity = HashtagMapper.ModelToEntity(hashtag);
