@@ -23,7 +23,7 @@ namespace EduTube.DAL.Entities
         public string UserId { get; set; }
         public VideoVisibility VideoVisibility { get; set; }
         public virtual List<Reaction> Reactions { get; set; }
-        public virtual List<HashTagRelationship> Hashtags { get; set; }
+        public virtual List<HashTagRelationship> HashtagRelationships { get; set; }
         public virtual List<Comment> Comments { get; set; }
         public List<View> Views { get; set; }
     }

@@ -90,7 +90,7 @@ namespace EduTube.DAL.Data
         //}
         private void ConfigureVideo(EntityTypeBuilder<Video> builder)
         {
-            builder.HasMany(x => x.Hashtags);
+            builder.HasMany(x => x.HashtagRelationships);
             builder.HasMany(x => x.Views).WithOne(x => x.Video).HasForeignKey(x => x.VideoId);
         }
         private void ConfigureView(EntityTypeBuilder<View> builder)
@@ -100,7 +100,7 @@ namespace EduTube.DAL.Data
         private void ConfigureHashTagRelationship(EntityTypeBuilder<HashTagRelationship> builder)
         {
             builder.HasOne(x => x.Chat).WithMany(x => x.Hashtags).HasForeignKey(x => x.ChatId);
-            builder.HasOne(x => x.Video).WithMany(x => x.Hashtags).HasForeignKey(x => x.VideoId);
+            builder.HasOne(x => x.Video).WithMany(x => x.HashtagRelationships).HasForeignKey(x => x.VideoId);
         }
         private void ConfigureSubscription(EntityTypeBuilder<Subscription> builder)
         {

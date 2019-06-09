@@ -19,9 +19,11 @@ namespace EduTube.BLL.Models
         public string IvniteCode { get; set; }
         public ApplicationUserModel User { get; set; }
         public string UserId { get; set; }
+        public string UserChannelName { get; set; }
+        public string Hashtags { get; set; }
         public VideoVisibilityModel VideoVisibility { get; set; }
         public List<ReactionModel> Reactions { get; set; }
-        public List<HashtagRelationshipModel> Hashtags { get; set; }
+        public List<HashtagRelationshipModel> HashtagRelationships { get; set; }
         public List<CommentModel> Comments { get; set; }
         public List<ViewModel> Views { get; set; }
     }

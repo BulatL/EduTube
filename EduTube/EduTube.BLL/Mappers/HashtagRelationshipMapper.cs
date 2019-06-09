@@ -24,7 +24,7 @@ namespace EduTube.BLL.Mappers
 
             if (entity.Video != null)
             {
-                entity.Video.Hashtags.Select(x => x.Video = null);
+                entity.Video.HashtagRelationships.Select(x => x.Video = null);
                 model.Video = VideoMapper.EntityToModel(entity.Video);
             }
 
@@ -49,7 +49,7 @@ namespace EduTube.BLL.Mappers
 
             if (model.Video != null)
             {
-                model.Video.Hashtags.Select(x => x.Video = null);
+                model.Video.HashtagRelationships.Select(x => x.Video = null);
                 entity.Video = VideoMapper.ModelToEntity(model.Video);
             }
             if (model.Hashtag != null)

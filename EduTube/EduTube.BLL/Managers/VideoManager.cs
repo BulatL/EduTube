@@ -182,7 +182,7 @@ namespace EduTube.BLL.Managers
         public async Task<VideoModel> GetById(int id, bool includeAll)
         {
             return includeAll ? VideoMapper.EntityToModel(await _context.Videos
-                .Include(x => x.Hashtags).ThenInclude(x => x.Hashtag).Include(x => x.User)
+                .Include(x => x.HashtagRelationships).ThenInclude(x => x.Hashtag).Include(x => x.User)
                 .FirstOrDefaultAsync(x => x.Id == id && !x.Deleted))
                 : VideoMapper.EntityToModel(await _context.Videos
                 .FirstOrDefaultAsync(x => x.Id == id && !x.Deleted));

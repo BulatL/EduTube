@@ -51,7 +51,6 @@ namespace EduTube.GUI.Controllers
         [Route("Videos/RecommendedVideos/{ipAddress}")]
         public async Task<IActionResult> RecomendedVideos(string ipAddress)
         {
-
             List<VideoModel> firstRecommendedVideos = new List<VideoModel>();
             List<VideoModel> secondRecommendedVideos = new List<VideoModel>();
             List<int> videosId = new List<int>();

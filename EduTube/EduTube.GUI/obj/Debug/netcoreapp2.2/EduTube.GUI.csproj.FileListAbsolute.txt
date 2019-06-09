@@ -108,3 +108,14 @@ D:\Projects\Diplomski\EduTube\EduTube.GUI\bin\Debug\netcoreapp2.2\EduTube.GUI.dl
 D:\Projects\Diplomski\EduTube\EduTube.GUI\bin\Debug\netcoreapp2.2\EduTube.GUI.pdb
 D:\Projects\Diplomski\EduTube\EduTube.GUI\bin\Debug\netcoreapp2.2\EduTube.GUI.Views.dll
 D:\Projects\Diplomski\EduTube\EduTube.GUI\bin\Debug\netcoreapp2.2\EduTube.GUI.Views.pdb
+D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Views\Elasticsearch\Index.g.cshtml.cs
+D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Areas\Identity\Pages\Account\Login.g.cshtml.cs
+D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Areas\Identity\Pages\Account\Manage\Index.g.cshtml.cs
+D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Areas\Identity\Pages\Account\Manage\PersonalData.g.cshtml.cs
+D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Areas\Identity\Pages\Account\Manage\_ManageNav.g.cshtml.cs
+D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Areas\Identity\Pages\Account\Manage\_ViewImports.g.cshtml.cs
+D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Areas\Identity\Pages\Account\Register.g.cshtml.cs
+D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Areas\Identity\Pages\Account\_ViewImports.g.cshtml.cs
+D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Areas\Identity\Pages\_ValidationScriptsPartial.g.cshtml.cs
+D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Areas\Identity\Pages\_ViewImports.g.cshtml.cs
+D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Areas\Identity\Pages\_ViewStart.g.cshtml.cs

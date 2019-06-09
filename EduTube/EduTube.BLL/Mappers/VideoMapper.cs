@@ -29,10 +29,11 @@ namespace EduTube.BLL.Mappers
                 entity.User.Videos = null;
             }
 
-            if (entity.Hashtags != null)
+            if (entity.HashtagRelationships != null)
             {
-                entity.Hashtags.ForEach(x => x.Video = null);
-                model.Hashtags = HashtagRelationshipMapper.EntitiesToModels(entity.Hashtags);
+                entity.HashtagRelationships.ForEach(x => x.Video = null);
+                model.HashtagRelationships = HashtagRelationshipMapper.EntitiesToModels(entity.HashtagRelationships);
+                model.Hashtags = string.Join(",", entity.HashtagRelationships.Select(x => x.Hashtag).Select(x => x.Name));
             }
 
             if (entity.Comments != null)
@@ -77,10 +78,10 @@ namespace EduTube.BLL.Mappers
                 entity.User = UserMapper.ModelToEntity(model.User);
             }
 
-            if (model.Hashtags != null)
+            if (model.HashtagRelationships != null)
             {
-                model.Hashtags.Select(x => x.Video = null);
-                entity.Hashtags = HashtagRelationshipMapper.ModelsToEntities(model.Hashtags);
+                model.HashtagRelationships.Select(x => x.Video = null);
+                entity.HashtagRelationships = HashtagRelationshipMapper.ModelsToEntities(model.HashtagRelationships);
             }
 
             if (model.Comments != null)
