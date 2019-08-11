@@ -10,6 +10,9 @@ namespace EduTube.BLL.Mappers
 
         public static HashtagRelationshipModel EntityToModel(HashTagRelationship entity)
         {
+            if (entity == null)
+                return null;
+
             HashtagRelationshipModel model = new HashtagRelationshipModel();
             model.Id        = entity.Id;
             model.ChatId    = entity.ChatId;

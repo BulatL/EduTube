@@ -1,0 +1,109 @@
+﻿body {
+    color: #ffffff;
+}
+/*#profileImageDiv{
+    max-height: 15em;
+    max-width: 18em;
+}
+#profileImage{
+    border-radius: 50%;
+    max-width: 100%;
+    height: auto;
+}*/
+
+#profileImageDiv {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-bottom: 2em;
+}
+
+    #profileImageDiv img {
+        width: 100%;
+        height: auto;
+    }
+#subProfileImageDiv {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-bottom: 1em;
+}
+
+    #subProfileImageDiv img {
+    width: 100%;
+    height: auto;
+}
+#userTabDiv {
+    padding: 1em 3em;
+}
+#userName{
+    display:inline-block;
+    margin-right:1em;
+}
+
+.purpleBtn {
+    background-color: #e80a89;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    position: absolute;
+    cursor: pointer;
+    display: inline-block;
+}
+    .purpleBtn:hover {
+        box-shadow: 0 10px 30px rgba(0,0,0,.2);
+        background: linear-gradient(to right,#f05a28 0,#e80a89 100%);
+        color: #fff;
+    }
+
+.display-inline-block {
+    display: inline-block;
+    margin-top: 1em;
+}
+.videoThumbnailsDiv {
+    position: relative;
+    text-align: center;
+    
+}
+.videoThumbnails {
+    max-width: 13em;
+    max-height: 10em;
+}
+.bottom-right {
+    position: absolute;
+    bottom: -10px;
+    right: 5px;
+}
+#margin-top{
+    margin-top:1em;
+}
+#videoDuration:hover{
+    color:#fff;
+}
+#tab-link-videos, #tab-link-subscribers, #tab-link-subscribed-on {
+    text-align:center;
+    width: 60%;
+    position: inherit;
+}
+#tab-link-videos {
+    margin-right: 5em;
+}
+#tab-link-subscribers{
+    margin-left:5em;
+}
+#tab-link-subscribed-on {
+    margin-left: 5em;
+}
+#nav-tabs-ul {
+    border-bottom: none;
+}
+.margin-top{
+    margin-top: 1em;
+}
+#tab-content-subscribers div{
+    margin-right:1em;
+}

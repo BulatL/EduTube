@@ -13,6 +13,11 @@ using EduTube.BLL.Managers.Interfaces;
 using EduTube.BLL.Models;
 using System.Diagnostics;
 using EduTube.GUI.ViewModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.AspNetCore.Hosting;
+using EduTube.DAL.Enums;
+using EduTube.GUI.Services.Interface;
 
 namespace EduTube.GUI.Controllers
 {
@@ -23,15 +28,18 @@ namespace EduTube.GUI.Controllers
         private IHashtagManager _hashtagManager;
         private UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
+        private IVideoService _videoService;
 
         public VideosController(IVideoManager videoManager, IHashtagRelationshipManager hashtagRelationshipManager,
-            IHashtagManager hashtagManager, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+            IHashtagManager hashtagManager, UserManager<ApplicationUser> userManager, ApplicationDbContext context,
+            IVideoService videoService)
         {
             _videoManager = videoManager;
             _hashtagRelationshipManager = hashtagRelationshipManager;
             _hashtagManager = hashtagManager;
             _userManager = userManager;
             _context = context;
+            _videoService = videoService;
         }
 
         // GET: Videos
@@ -68,15 +76,18 @@ namespace EduTube.GUI.Controllers
             {
                 videosId = await _videoManager.GetVideosIdByView(user.Id, null);
                 hashtagsId = await _hashtagManager.Get2MostPopularHashtagsIdByVideoId(videosId);
-                if(hashtagsId[0] != null)
+                if(hashtagsId != null)
                 {
-                    firstHashtag = await _hashtagManager.GetById(int.Parse(hashtagsId[0].ToString()));
-                    firstRecommendedVideos = await _videoManager.Get6VideosByHashtag(user.Id, hashtagsId[0]);
-                }
-                if (hashtagsId[1] != null)
-                {
-                    secondHashtag = await _hashtagManager.GetById(int.Parse(hashtagsId[1].ToString()));
-                    secondRecommendedVideos = await _videoManager.Get6VideosByHashtag(user.Id, hashtagsId[1]);
+                    if (hashtagsId[0] != null)
+                    {
+                        firstHashtag = await _hashtagManager.GetById(int.Parse(hashtagsId[0].ToString()));
+                        firstRecommendedVideos = await _videoManager.Get6VideosByHashtag(user.Id, hashtagsId[0]);
+                    }
+                    if (hashtagsId[1] != null)
+                    {
+                        secondHashtag = await _hashtagManager.GetById(int.Parse(hashtagsId[1].ToString()));
+                        secondRecommendedVideos = await _videoManager.Get6VideosByHashtag(user.Id, hashtagsId[1]);
+                    }
                 }
             }
 
@@ -101,6 +112,13 @@ namespace EduTube.GUI.Controllers
                 secondRecommendedVideos, firstHashtag.Name, secondHashtag.Name);
             return Json(viewModel);
         }
+        [Route("Videos/{id}")]
+        public async Task<IActionResult> SingleVideo(int id)
+        {
+            VideoModel video = await _videoManager.GetById(id, true);
+            return View(video);
+        }
+
 
         [Route("Videos/Search/{search}")]
         public async Task<IActionResult> Search(string search)
@@ -110,47 +128,37 @@ namespace EduTube.GUI.Controllers
             return Json(videos);
         }
 
-        // GET: Videos/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var video = await _context.Videos
-                .Include(v => v.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (video == null)
-            {
-                return NotFound();
-            }
-
-            return View(video);
-        }
-
         // GET: Videos/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
         // POST: Videos/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,DateCreatedOn,YoutubeUrl,FilePath,AllowComments,Blocked,Deleted,IvniteCode,UserId,VideoVisibility")] Video video)
+        [RequestFormLimits(ValueLengthLimit = int.MaxValue, MultipartBodyLengthLimit = int.MaxValue)]
+        public async Task<IActionResult> Create(VideoCreateViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(video);
-                await _context.SaveChangesAsync();
+                VideoModel video = VideoCreateViewModel.ConvertToModel(viewModel);
+
+                if(viewModel.Video != null)
+                {
+                    video.FilePath = await _videoService.UploadVideo(viewModel.Video);
+                    Debug.WriteLine("Zavrsio sa snimanjem fajla" + DateTime.Now);
+                    video.Duration = _videoService.VideoDuration(video.FilePath);
+                }
+                ApplicationUser currentUser = await _userManager.GetUserAsync(User);
+                video.UserId = currentUser.Id;
+                await _videoManager.Create(video);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", video.UserId);
-            return View(video);
+            return View(viewModel);
         }
 
         // GET: Videos/Edit/5

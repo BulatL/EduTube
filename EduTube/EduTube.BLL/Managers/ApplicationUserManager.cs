@@ -32,6 +32,14 @@ namespace EduTube.BLL.Managers
                 .Include(x => x.Videos).Include(x => x.Subscribers).Include(x => x.SubscribedOn)
                 .Include(x => x.Notifications).FirstOrDefaultAsync(x => x.Id == id && !x.Deleted));
         }
+        public async Task<ApplicationUserModel> GetByChannelName(string channelname)
+        {
+            return UserMapper.EntityToModel(await _context.Users
+                .Include(x => x.Subscribers).ThenInclude(x => x.Subscriber)
+                .Include(x => x.SubscribedOn).ThenInclude(x => x.SubscribedOn)
+                .Include(x => x.Videos)
+                .FirstOrDefaultAsync(x => x.ChannelName.Equals(channelname) && !x.Deleted)) ;
+        }
 
         public async Task<ApplicationUserModel> Update(ApplicationUserModel userModel)
         {

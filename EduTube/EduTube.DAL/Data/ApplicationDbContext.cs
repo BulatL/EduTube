@@ -105,10 +105,10 @@ namespace EduTube.DAL.Data
         private void ConfigureSubscription(EntityTypeBuilder<Subscription> builder)
         {
             builder.HasOne(x => x.Subscriber).
-                WithMany(x => x.Subscribers).
+                WithMany(x => x.SubscribedOn).
                 HasForeignKey(x => x.SubscriberId);
             builder.HasOne(x => x.SubscribedOn).
-                WithMany(x => x.SubscribedOn).
+                WithMany(x => x.Subscribers).
                 HasForeignKey(x => x.SubscribedOnId);
             /*builder.HasKey(key => new {
                 key.SubscriberId,

@@ -90,7 +90,6 @@ D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Views\Sh
 D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Views\Shared\_ValidationScriptsPartial.g.cshtml.cs
 D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Views\Videos\Create.g.cshtml.cs
 D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Views\Videos\Delete.g.cshtml.cs
-D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Views\Videos\Details.g.cshtml.cs
 D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Views\Videos\Edit.g.cshtml.cs
 D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Views\Videos\Index.g.cshtml.cs
 D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Views\_ViewImports.g.cshtml.cs
@@ -119,3 +118,5 @@ D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Areas\Id
 D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Areas\Identity\Pages\_ValidationScriptsPartial.g.cshtml.cs
 D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Areas\Identity\Pages\_ViewImports.g.cshtml.cs
 D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Areas\Identity\Pages\_ViewStart.g.cshtml.cs
+D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Views\Videos\SingleVideo.g.cshtml.cs
+D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Views\Users\Profile.g.cshtml.cs

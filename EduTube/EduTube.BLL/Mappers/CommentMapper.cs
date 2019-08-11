@@ -10,6 +10,9 @@ namespace EduTube.BLL.Mappers
 
         public static CommentModel EntityToModel(Comment entity)
         {
+            if (entity == null)
+                return null;
+
             CommentModel model  = new CommentModel();
             model.Id            = entity.Id;
             model.UserId        = entity.UserId;

@@ -39,15 +39,21 @@ namespace EduTube.GUI.Controllers
                 page = 0;
             ISearchResponse<VideoModel> videosResponse = null;
             ISearchResponse<ApplicationUserModel> usersResponse = null;
+            //split search query by white space. So you can search all words in search query
+            List<String> search_querys = search_query.Split(null).ToList();
+
+            search_query = search_query.Replace("-", " ");
+
             #region videosSearch
             if (search_etity == null || search_etity.Equals("videos"))
             {
+
                 videosResponse = await client.SearchAsync<VideoModel>(s => s
                     .Index("videos")
                     .AllTypes()
                     .From(page)
                     .Size(10)
-                    .Query(q =>
+                    .Query(q => 
                         q.Fuzzy(f => f
                             .Field(fi => fi.Name)
                             .Fuzziness(Fuzziness.EditDistance(2))
@@ -55,6 +61,11 @@ namespace EduTube.GUI.Controllers
                             .Transpositions(true)
                             .MaxExpansions(100)
                             .Value(search_query)
+                        )
+                        ||
+                        q.MatchPhrasePrefix(m => m
+                            .Field(fi => fi.Name)
+                            .Query(search_query)
                         )
                         ||
                         q.Fuzzy(f => f
@@ -66,6 +77,11 @@ namespace EduTube.GUI.Controllers
                             .Value(search_query)
                         )
                         ||
+                        q.MatchPhrasePrefix(m => m
+                            .Field(fi => fi.Description)
+                            .Query(search_query)
+                        )
+                        ||
                         q.Fuzzy(f => f
                             .Field(fi => fi.UserChannelName)
                             .Fuzziness(Fuzziness.EditDistance(2))
@@ -75,6 +91,11 @@ namespace EduTube.GUI.Controllers
                             .Value(search_query)
                         )
                         ||
+                        q.MatchPhrasePrefix(m => m
+                            .Field(fi => fi.UserChannelName)
+                            .Query(search_query)
+                        )
+                        ||
                         q.Fuzzy(f => f
                             .Field(fi => fi.Hashtags)
                             .Fuzziness(Fuzziness.EditDistance(2))
@@ -82,6 +103,11 @@ namespace EduTube.GUI.Controllers
                             .Transpositions(true)
                             .MaxExpansions(100)
                             .Value(search_query)
+                        )
+                        ||
+                        q.MatchPhrasePrefix(m => m
+                            .Field(fi => fi.Hashtags)
+                            .Query(search_query)
                         )
                     )
                     .Highlight(h => h
@@ -187,6 +213,11 @@ namespace EduTube.GUI.Controllers
                         .Value(search_query)
                     )
                     ||
+                    q.MatchPhrasePrefix(m => m
+                        .Field(fi => fi.Firstname)
+                        .Query(search_query)
+                    )
+                    ||
                     q.Fuzzy(f => f
                         .Field(fi => fi.Lastname)
                         .Fuzziness(Fuzziness.EditDistance(2))
@@ -194,6 +225,11 @@ namespace EduTube.GUI.Controllers
                         .Transpositions(true)
                         .MaxExpansions(100)
                         .Value(search_query)
+                    )
+                    ||
+                    q.MatchPhrasePrefix(m => m
+                        .Field(fi => fi.Lastname)
+                        .Query(search_query)
                     )
                     ||
                     q.Fuzzy(f => f
@@ -205,6 +241,11 @@ namespace EduTube.GUI.Controllers
                         .Value(search_query)
                     )
                     ||
+                    q.MatchPhrasePrefix(m => m
+                        .Field(fi => fi.ChannelName)
+                        .Query(search_query)
+                    )
+                    ||
                     q.Fuzzy(f => f
                         .Field(fi => fi.ChannelDescription)
                         .Fuzziness(Fuzziness.EditDistance(2))
@@ -212,6 +253,11 @@ namespace EduTube.GUI.Controllers
                         .Transpositions(true)
                         .MaxExpansions(100)
                         .Value(search_query)
+                    )
+                    ||
+                    q.MatchPhrasePrefix(m => m
+                        .Field(fi => fi.ChannelDescription)
+                        .Query(search_query)
                     )
                 )
                 .Highlight(h => h
@@ -299,7 +345,6 @@ namespace EduTube.GUI.Controllers
             }
             #endregion
 
-            
             List <SearchVideosViewModel> videoList = new List<SearchVideosViewModel>();
             List<SearchUsersViewModel> userList = new List<SearchUsersViewModel>();
             double totalPagesVideos = 0;
@@ -422,6 +467,8 @@ namespace EduTube.GUI.Controllers
             Object videoObj = new
             {
                 id = video.Id,
+                duration = video.Duration,
+                thumbnail = video.Thumbnail,
                 name = video.Name,
                 description = video.Description,
                 userChannelName = video.UserChannelName,
@@ -446,57 +493,79 @@ namespace EduTube.GUI.Controllers
             .DefaultIndex("videos");
 
             ElasticLowLevelClient lowlevelClient = new ElasticLowLevelClient(settings);
+            ElasticClient client = new ElasticClient(settings);
 
             List<VideoModel> videos = await _videoManager.GetAll();
             List<ApplicationUserModel> users = await _applicationUserManager.GetAll();
 
+            
             List<Object> videosObj = new List<object>();
             List<Object> usersObj = new List<object>();
 
             foreach (VideoModel video in videos)
             {
-                video.User = await _applicationUserManager.GetById(video.UserId, false);
-                video.HashtagRelationships = await _hashtagRelationshipManager.GetByVideoId(video.Id, true);
-                string hashtagName = string.Join(", ", video.HashtagRelationships.Select(x => x.Hashtag).Select(x => x.Name));
+                IExistsResponse exist = client.DocumentExists(new DocumentExistsRequest("videos", "videomodel", video.Id));
 
-                Object indexObj = new { index = new { _index = "videos", _type = "videomodel", _id = video.Id } };
-                Object videoObj = new
+                if (!exist.Exists)
                 {
-                    id = video.Id,
-                    name = video.Name,
-                    description = video.Description,
-                    userChannelName = video.User.ChannelName,
-                    userId = video.UserId,
-                    hashtags = hashtagName,
-                    dateCreatedOn = video.DateCreatedOn.ToString("yyyy-MM-dd")
-                };
+                    video.User = await _applicationUserManager.GetById(video.UserId, false);
+                    video.HashtagRelationships = await _hashtagRelationshipManager.GetByVideoId(video.Id, true);
+                    string hashtagName = string.Join(", ", video.HashtagRelationships.Select(x => x.Hashtag).Select(x => x.Name));
 
-                videosObj.Add(indexObj);
-                videosObj.Add(videoObj);
+                    Object indexObj = new { index = new { _index = "videos", _type = "videomodel", _id = video.Id } };
+                    Object videoObj = new
+                    {
+                        id = video.Id,
+                        duration = video.Duration,
+                        thumbnail = video.Thumbnail,
+                        name = video.Name,
+                        description = video.Description,
+                        userChannelName = video.User.ChannelName,
+                        userId = video.UserId,
+                        hashtags = hashtagName,
+                        dateCreatedOn = video.DateCreatedOn.ToString("yyyy-MM-dd")
+                    };
+
+                    videosObj.Add(indexObj);
+                    videosObj.Add(videoObj);
+                } 
             }
 
             foreach (ApplicationUserModel user in users)
             {
-                Object indexObj = new { index = new { _index = "users", _type = "applicationusermodel", _id = user.Id.ToString() } };
-                Object userObj = new
+                IExistsResponse exist = client.DocumentExists(new DocumentExistsRequest("users", "applicationusermodel", user.Id.ToString()));
+
+                if (!exist.Exists)
                 {
-                    id = user.Id,
-                    dateOfBirth = user.DateOfBirth.ToString("yyyy-MM-dd"),
-                    firstname = user.Firstname,
-                    lastname = user.Lastname,
-                    channelName = user.ChannelName,
-                    channelDescription = user.ChannelDescription,
-                    profileImage = user.ProfileImage
-                };
+                    Object indexObj = new { index = new { _index = "users", _type = "applicationusermodel", _id = user.Id.ToString() } };
+                    Object userObj = new
+                    {
+                        id = user.Id,
+                        dateOfBirth = user.DateOfBirth.ToString("yyyy-MM-dd"),
+                        firstname = user.Firstname,
+                        lastname = user.Lastname,
+                        channelName = user.ChannelName,
+                        channelDescription = user.ChannelDescription,
+                        profileImage = user.ProfileImage
+                    };
 
-                usersObj.Add(indexObj);
-                usersObj.Add(userObj);
+                    usersObj.Add(indexObj);
+                    usersObj.Add(userObj);
+                }
             }
+            string videosResponseStream = "";
+            string usersResponseStream = "";
 
-            StringResponse vidoesResponse = await lowlevelClient.BulkAsync<StringResponse>(PostData.MultiJson(videosObj));
-            StringResponse usersResponse = await lowlevelClient.BulkAsync<StringResponse>(PostData.MultiJson(usersObj));
-            string videosResponseStream = vidoesResponse.Body;
-            string usersResponseStream = usersResponse.Body;
+            if (videosObj.Count() > 0)
+            {
+                StringResponse vidoesResponse = await lowlevelClient.BulkAsync<StringResponse>(PostData.MultiJson(videosObj));
+                videosResponseStream = vidoesResponse.Body;
+            }
+            if(usersObj.Count() > 0)
+            {
+                StringResponse usersResponse = await lowlevelClient.BulkAsync<StringResponse>(PostData.MultiJson(usersObj));
+                usersResponseStream = usersResponse.Body;
+            }
 
             return Json((videosResponseStream, usersResponseStream));
         }
@@ -528,6 +597,12 @@ namespace EduTube.GUI.Controllers
                                       .Name(n => n.DateCreatedOn)
                                  ).Text(t => t
                                       .Name(n => n.Description)
+                                      .Analyzer("standard_english")
+                                 ).Text(t => t
+                                      .Name(n => n.Duration)
+                                      .Analyzer("standard_english")
+                                 ).Text(t => t
+                                      .Name(n => n.Thumbnail)
                                       .Analyzer("standard_english")
                                  ).Text(t => t
                                       .Name(n => n.Name)

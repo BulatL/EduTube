@@ -14,6 +14,9 @@ using EduTube.DAL.Data;
 using Microsoft.AspNetCore.Identity;
 using EduTube.DAL.Entities;
 using EduTube.BLL.Extensions;
+using EduTube.GUI.Services.Interface;
+using EduTube.GUI.Services;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace EduTube.GUI
 {
@@ -35,6 +38,7 @@ namespace EduTube.GUI
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
 
             services.AddDbContext<ApplicationDbContext>(options =>
                  options.UseSqlServer(
@@ -61,8 +65,14 @@ namespace EduTube.GUI
             });
 
             services.RegisterBLLServices();
+            services.AddScoped<IVideoService, VideoService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            /*services.Configure<FormOptions>(x =>
+            {
+                x.ValueLengthLimit = int.MaxValue;
+                x.MultipartBodyLengthLimit = int.MaxValue; // In case of multipart
+            });*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

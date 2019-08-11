@@ -33,6 +33,7 @@ namespace EduTube.BLL.Managers
             {
                 return VideoMapper.EntitiesToModels(await _context.Videos
                     .Include(x => x.Views)
+                    .Include(x => x.User)
                     .Where(x => !x.Deleted && (x.VideoVisibility != VideoVisibility.Invitation || 
                     (x.VideoVisibility == VideoVisibility.Invitation && x.UserId == userId)))
                     .OrderByDescending(x => x.Views.Count())
@@ -42,6 +43,7 @@ namespace EduTube.BLL.Managers
             {
                 return VideoMapper.EntitiesToModels(await _context.Videos
                    .Include(x => x.Views)
+                    .Include(x => x.User)
                    .Where(x => !x.Deleted && x.VideoVisibility == VideoVisibility.Public)
                    .OrderByDescending(x => x.Views.Count())
                    .Take(5).ToListAsync());

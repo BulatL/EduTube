@@ -10,6 +10,9 @@ namespace EduTube.BLL.Mappers
 
         public static NotificationModel EntityToModel(Notification entity)
         {
+            if (entity == null)
+                return null;
+
             NotificationModel model = new NotificationModel();
             model.Id                = entity.Id;
             model.UserId            = entity.UserId;

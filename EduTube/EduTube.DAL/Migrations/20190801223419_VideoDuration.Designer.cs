@@ -4,14 +4,16 @@ using EduTube.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EduTube.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190801223419_VideoDuration")]
+    partial class VideoDuration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -663,12 +665,12 @@ namespace EduTube.DAL.Migrations
             modelBuilder.Entity("EduTube.DAL.Entities.Subscription", b =>
                 {
                     b.HasOne("EduTube.DAL.Entities.ApplicationUser", "SubscribedOn")
-                        .WithMany("Subscribers")
+                        .WithMany("SubscribedOn")
                         .HasForeignKey("SubscribedOnId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("EduTube.DAL.Entities.ApplicationUser", "Subscriber")
-                        .WithMany("SubscribedOn")
+                        .WithMany("Subscribers")
                         .HasForeignKey("SubscriberId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });

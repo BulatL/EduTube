@@ -10,6 +10,9 @@ namespace EduTube.BLL.Mappers
 
         public static SubscriptionModel EntityToModel(Subscription entity)
         {
+            if (entity == null)
+                return null;
+
             SubscriptionModel model = new SubscriptionModel();
             model.Id             = entity.Id;
             model.SubscriberId   = entity.SubscriberId;
@@ -26,8 +29,8 @@ namespace EduTube.BLL.Mappers
 
             if (entity.Subscriber != null)
             {
-                entity.SubscribedOn.SubscribedOn = null;
-                entity.SubscribedOn.Subscribers = null;
+                entity.Subscriber.SubscribedOn = null;
+                entity.Subscriber.Subscribers = null;
                 model.Subscriber = UserMapper.EntityToModel(entity.Subscriber);
             }
 

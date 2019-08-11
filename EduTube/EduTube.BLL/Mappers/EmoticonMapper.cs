@@ -10,6 +10,9 @@ namespace EduTube.BLL.Mappers
 
         public static EmoticonModel EntityToModel(Emoticon entity)
         {
+            if (entity == null)
+                return null;
+
             EmoticonModel model = new EmoticonModel();
             model.Id        = entity.Id;
             model.Name      = entity.Name;

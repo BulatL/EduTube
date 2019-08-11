@@ -11,6 +11,9 @@ namespace EduTube.BLL.Mappers
     {
         public static ChatMessageModel EntityToModel(ChatMessage entity)
         {
+            if (entity == null)
+                return null;
+
             ChatMessageModel model = new ChatMessageModel();
             model.Id            = entity.Id;
             model.UserId        = entity.UserId;

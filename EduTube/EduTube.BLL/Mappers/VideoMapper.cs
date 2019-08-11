@@ -9,6 +9,9 @@ namespace EduTube.BLL.Mappers
     {
         public static VideoModel EntityToModel(Video entity)
         {
+            if (entity == null)
+                return null;
+
             VideoModel model = new VideoModel();
             model.Id              = entity.Id;
             model.Name            = entity.Name;
@@ -16,6 +19,8 @@ namespace EduTube.BLL.Mappers
             model.Blocked         = entity.Blocked;
             model.Deleted         = entity.Deleted;
             model.FilePath        = entity.FilePath;
+            model.Duration        = entity.Duration;
+            model.Thumbnail       = entity.Thumbnail;
             model.IvniteCode      = entity.IvniteCode;
             model.YoutubeUrl      = entity.YoutubeUrl;
             model.Description     = entity.Description;
@@ -26,7 +31,8 @@ namespace EduTube.BLL.Mappers
             if (entity.User != null)
             {
                 entity.User.Videos = null;
-                entity.User.Videos = null;
+                model.UserChannelName = entity.User.ChannelName;
+                model.User = UserMapper.EntityToModel(entity.User);
             }
 
             if (entity.HashtagRelationships != null)
@@ -65,6 +71,8 @@ namespace EduTube.BLL.Mappers
             entity.Blocked         = model.Blocked;
             entity.Deleted         = model.Deleted;
             entity.FilePath        = model.FilePath;
+            entity.Duration        = model.Duration;
+            entity.Thumbnail       = model.Thumbnail;
             entity.IvniteCode      = model.IvniteCode;
             entity.YoutubeUrl      = model.YoutubeUrl;
             entity.Description     = model.Description;

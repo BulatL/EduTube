@@ -9,6 +9,9 @@ namespace EduTube.BLL.Mappers
 
         public static HashtagModel EntityToModel(Hashtag entity)
         {
+            if (entity == null)
+                return null;
+
             HashtagModel model = new HashtagModel();
             model.Id   = entity.Id;
             model.Name = entity.Name;

@@ -8,6 +8,7 @@ namespace EduTube.BLL.Managers.Interfaces
     {
         Task<List<ApplicationUserModel>> GetAll();
         Task<ApplicationUserModel> GetById(string id, bool includeAll);
+        Task<ApplicationUserModel> GetByChannelName(string channelName);
         //ApplicationUserModel Create(int id);
         Task<ApplicationUserModel> Update(ApplicationUserModel userModel);
         Task Delete(string id);

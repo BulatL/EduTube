@@ -4,3 +4,6 @@ EduTube/EduTube.DAL/obj/
 EduTube/EduTube.GUI/obj/
 EduTube/EduTube.GUI/bin/
 EduTube/EduTube.GUI/wwwroot/videos/
+EduTube/EduTube.GUI/wwwroot/profileImages/
+EduTube/EduTube.GUI/wwwroot/thumbnails/
+EduTube/EduTube.GUI/wwwroot/images/

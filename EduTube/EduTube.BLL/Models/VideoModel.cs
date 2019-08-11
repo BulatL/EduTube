@@ -17,6 +17,8 @@ namespace EduTube.BLL.Models
         public bool Blocked { get; set; }
         public bool Deleted { get; set; }
         public string IvniteCode { get; set; }
+        public TimeSpan Duration { get; set; }
+        public string Thumbnail { get; set; }
         public ApplicationUserModel User { get; set; }
         public string UserId { get; set; }
         public string UserChannelName { get; set; }

@@ -6,8 +6,9 @@ $(function () {
     var searchInput = document.getElementById("searchInput");
     searchInput.addEventListener("keyup", function (event) {
         if (event.keyCode === 13) {
+            let search_query = searchInput.value.replace(/ /g, '-');
             event.preventDefault();
-            window.location.href = "/Search/" + searchInput.value;
+            window.location.href = "/Search?search_query=" + search_query;
         }
     });
 })

@@ -9,6 +9,9 @@ namespace EduTube.BLL.Mappers
     {
         public static ApplicationUserModel EntityToModel(ApplicationUser entity)
         {
+            if (entity == null)
+                return null;
+
             ApplicationUserModel model = new ApplicationUserModel();
             model.AccessFailedCount    = entity.AccessFailedCount;
             model.ConcurrencyStamp     = entity.ConcurrencyStamp;
@@ -33,6 +36,12 @@ namespace EduTube.BLL.Mappers
             model.ProfileImage         = entity.ProfileImage;
             model.UserName             = entity.UserName;
 
+            if (entity.Videos != null)
+            {
+                entity.Videos.Select(x => x.User = null);
+                model.Videos = VideoMapper.EntitiesToModels(entity.Videos);
+            }
+
             if (entity.Notifications != null)
             {
                 entity.Notifications.Select(x => x.User = null);
@@ -41,22 +50,24 @@ namespace EduTube.BLL.Mappers
 
             if (entity.SubscribedOn != null)
             {
-                entity.SubscribedOn.Select(x => x.SubscribedOn = null);
-                entity.SubscribedOn.Select(x => x.Subscriber = null);
+                foreach (var sub in entity.SubscribedOn)
+                {
+                    sub.Subscriber = null;
+                }
+                //entity.SubscribedOn.Select(x => x.SubscribedOn = null);
+                //entity.SubscribedOn.Select(x => x.Subscriber = null);
                 model.SubscribedOn = SubscriptionMapper.EntitiesToModels(entity.SubscribedOn);
             }
 
             if (entity.Subscribers != null)
             {
-                entity.Subscribers.Select(x => x.SubscribedOn = null);
-                entity.Subscribers.Select(x => x.Subscriber = null);
+                foreach (var sub in entity.Subscribers)
+                {
+                    sub.SubscribedOn = null;
+                }
+                //entity.Subscribers.Select(x => x.SubscribedOn = null);
+                //entity.Subscribers.Select(x => x.Subscriber = null);
                 model.Subscribers = SubscriptionMapper.EntitiesToModels(entity.Subscribers);
-            }
-
-            if (entity.Videos != null)
-            {
-                entity.Videos.Select(x => x.User = null);
-                model.Videos = VideoMapper.EntitiesToModels(entity.Videos);
             }
 
             return model;
@@ -88,30 +99,30 @@ namespace EduTube.BLL.Mappers
             entity.UserName             = model.UserName;
 
 
+            if (model.Videos != null)
+            {
+                model.Videos.ForEach(x => x.User = null);
+                entity.Videos = VideoMapper.ModelsToEntities(model.Videos);
+            }
+
             if (model.Notifications != null)
             {
-                model.Notifications.Select(x => x.User = null);
+                model.Notifications.ForEach(x => x.User = null);
                 entity.Notifications = NotificationMapper.ModelsToEntities(model.Notifications);
             }
 
             if (model.SubscribedOn != null)
             {
-                model.SubscribedOn.Select(x => x.SubscribedOn = null);
-                model.SubscribedOn.Select(x => x.Subscriber = null);
+                model.SubscribedOn.ForEach(x => x.SubscribedOn = null);
+                model.SubscribedOn.ForEach(x => x.Subscriber = null);
                 entity.SubscribedOn = SubscriptionMapper.ModelsToEntities(model.SubscribedOn);
             }
 
             if (model.Subscribers != null)
             {
-                model.Subscribers.Select(x => x.SubscribedOn = null);
-                model.Subscribers.Select(x => x.Subscriber = null);
+                model.Subscribers.ForEach(x => x.SubscribedOn = null);
+                model.Subscribers.ForEach(x => x.Subscriber = null);
                 entity.Subscribers = SubscriptionMapper.ModelsToEntities(model.Subscribers);
-            }
-
-            if (model.Videos != null)
-            {
-                model.Videos.Select(x => x.User = null);
-                entity.Videos = VideoMapper.ModelsToEntities(model.Videos);
             }
 
             return entity;

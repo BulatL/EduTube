@@ -10,6 +10,9 @@ namespace EduTube.BLL.Mappers
 
         public static ReactionModel EntityToModel(Reaction entity)
         {
+            if (entity == null)
+                return null;
+
             ReactionModel model = new ReactionModel();
             model.Id            = entity.Id;
             model.UserId        = entity.UserId;

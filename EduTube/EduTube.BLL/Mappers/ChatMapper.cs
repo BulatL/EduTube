@@ -11,10 +11,13 @@ namespace EduTube.BLL.Mappers
     {
         public static ChatModel EntityToModel(Chat entity)
         {
+            if (entity == null)
+                return null;
+
             ChatModel model = new ChatModel();
-            model.Id        = entity.Id;
-            model.Name      = entity.Name;
-            model.Deleted   = entity.Deleted;
+            model.Id = entity.Id;
+            model.Name = entity.Name;
+            model.Deleted = entity.Deleted;
 
             if (entity.Hashtags != null)
             {

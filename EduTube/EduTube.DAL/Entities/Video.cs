@@ -19,6 +19,8 @@ namespace EduTube.DAL.Entities
         public bool Blocked { get; set; }
         public bool Deleted { get; set; }
         public string IvniteCode { get; set; }
+        public TimeSpan Duration { get; set; }
+        public string Thumbnail { get; set; }
         public ApplicationUser User { get; set; }
         public string UserId { get; set; }
         public VideoVisibility VideoVisibility { get; set; }

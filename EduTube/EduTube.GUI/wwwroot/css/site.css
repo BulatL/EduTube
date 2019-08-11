@@ -6,11 +6,14 @@ a.navbar-brand {
   text-align: center;
   word-break: break-all;
 }
-
+#mainBodyDiv{
+    padding:3em 2em;
+    
+}
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 @media (min-width: 768px) {
   html {
@@ -42,8 +45,10 @@ html {
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    background-color: #121212 !important;
+    color: #ffffff;
 }
 .footer {
   position: absolute;
@@ -55,6 +60,13 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
 
+/*navbar*/
+.navbar {
+    background-color: #272727;
+}
+    .navbar a {
+        color: #ffffff;
+    }
 /*search input*/
 
 input[type=search] {
@@ -71,6 +83,21 @@ input[type=search] {
         border: solid 1px #fff;
     }
 
-.blue {
-    color: #2b63f2;
+a {
+    color: #ffffff;
+    text-decoration: none;
+}
+    a:hover {
+        color: #e80a89;
+        text-decoration: none;
+    }
+h2{
+    color:white;
+}
+
+.purpleColorTxt {
+    color: #e80a89;
+}
+.greyBackground {
+    background-color: #242424;
 }

@@ -9,6 +9,9 @@ namespace EduTube.BLL.Mappers
     {
         public static ViewModel EntityToModel(View entity)
         {
+            if (entity == null)
+                return null;
+
             ViewModel model = new ViewModel();
             model.Id        = entity.Id;
             model.UserId    = entity.UserId;
