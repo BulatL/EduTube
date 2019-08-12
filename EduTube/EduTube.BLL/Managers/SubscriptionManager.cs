@@ -34,6 +34,21 @@ namespace EduTube.BLL.Managers
                 .FirstOrDefaultAsync(x => x.Id == id && !x.Deleted));
         }
 
+        public async Task<List<SubscriptionModel>> GetBySubscriber(string id)
+        {
+            return SubscriptionMapper.EntitiesToModels(await _context.Subscriptions.Where(x => x.SubscriberId.Equals(id) && !x.Deleted).ToListAsync());
+        }
+
+        public async Task<List<SubscriptionModel>> GetBySubscribedOn(string id)
+        {
+            return SubscriptionMapper.EntitiesToModels(await _context.Subscriptions.Where(x => x.SubscribedOnId.Equals(id) && !x.Deleted).ToListAsync());
+        }
+
+        public async Task<SubscriptionModel> GetBySubscriberAndSubscribedOn(string subscriberId, string subscribedOnId)
+        {
+            return SubscriptionMapper.EntityToModel(await _context.Subscriptions.FirstOrDefaultAsync(x => x.SubscriberId.Equals(subscriberId) && x.SubscribedOnId.Equals(subscribedOnId) && !x.Deleted));
+        }
+
         public async Task<SubscriptionModel> Create(SubscriptionModel subscription)
         {
             Subscription entity = SubscriptionMapper.ModelToEntity(subscription);
@@ -49,11 +64,17 @@ namespace EduTube.BLL.Managers
             return subscription;
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(string subscriberId, string subscribedOnId)
         {
-            Subscription entity = await _context.Subscriptions.FirstOrDefaultAsync(x => x.Id == id);
-            /*entity.Deleted = true;
-            _context.Update(entity);*/
+            Subscription entity = await _context.Subscriptions.FirstOrDefaultAsync(x => x.SubscriberId.Equals(subscriberId) && x.SubscribedOnId.Equals(subscribedOnId) && !x.Deleted);
+            entity.Deleted = true;
+            _context.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Remove(string subscriberId, string subscribedOnId)
+        {
+            Subscription entity = await _context.Subscriptions.FirstOrDefaultAsync(x => x.SubscriberId.Equals(subscriberId) && x.SubscribedOnId.Equals(subscribedOnId) && !x.Deleted);
             _context.Subscriptions.Remove(entity);
             await _context.SaveChangesAsync();
         }

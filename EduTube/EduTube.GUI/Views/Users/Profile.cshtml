@@ -5,6 +5,7 @@
 <link href="~/css/ProfilePage.css" rel="stylesheet" />
 
 <div class="row">
+    <input type="hidden" value="@Model.Id" id="userIdHidden" />
     <div class="col-lg-3 col-md-3 col-sm-12">
         <div id="profileImageDiv">
             <img id="profileImage" src="~/profileImages/@Model.ProfileImage" />
@@ -12,22 +13,13 @@
         <div class="container">
             <h4>@Model.ChannelName</h4>
             <h5 class="purpleColorTxt" id="userName">@Model.Firstname @Model.Lastname</h5>
-            @if (ViewBag.Subscribed == "Subscribed")
+            @if (ViewBag.Subscribed != "SameUser")
             {
-                <button class="purpleBtn">Already Subscribed</button>
+                <input type="hidden" value="@ViewBag.Subscribed" id="subscribedHidden" />
+                <button class="purpleBtn" onclick="Subscribe()" id="subscribeBtn">Subscribe</button>
             }
-            @if (ViewBag.Subscribed == "NotSubscribed")
-            {
-                <button class="purpleBtn">Subscribe</button>
-            }
-            @if (ViewBag.Subscribed == "UserNotLogged")
-            {
-                <button class="purpleBtn">Subscribe after login</button>
-            }
-            @if (ViewBag.Subscribed == "SameUser")
-            {
-                <button class="purpleBtn">@ViewBag.SubscribersCount Subscribers</button>
-            }
+
+
             <br />
             <p id="margin-top">@Model.ChannelDescription</p>
         </div>
@@ -68,11 +60,11 @@
                 <h4 class="text-center margin-top">@Model.ChannelName Subscribers</h4>
                 @if (Model.Subscribers != null)
                 {
-                    <div class="container">
+                    <div class="container" id="subscribersDiv">
                         @foreach (var subscriber in Model.Subscribers)
                         {
-                       
-                            <div class="display-inline-block">
+
+                            <div class="display-inline-block" id="subscriber_@subscriber.Subscriber.ChannelName.Replace(" ", "-")">
                                 <a href="/Users/@subscriber.Subscriber.ChannelName.Replace(" ", "-")">
                                     <div id="subProfileImageDiv">
                                         <img id="subProfileImage" src="~/profileImages/@subscriber.Subscriber.ProfileImage" />
@@ -97,10 +89,10 @@
                 <h4 class="text-center margin-top">@Model.ChannelName Subscribed On</h4>
                 @if (Model.SubscribedOn != null)
                 {
-                    <div class="container">
+                    <div class="container" id="subscribedOnDiv">
                         @foreach (var subscriber in Model.SubscribedOn)
                         {
-                            <div class="display-inline-block">
+                            <div class="display-inline-block" id="subscribedOn_@subscriber.SubscribedOn.ChannelName.Replace(" ", "-")">
                                 <a href="/Users/@subscriber.SubscribedOn.ChannelName.Replace(" ", "-")">
                                     <div id="subProfileImageDiv">
                                         <img id="subProfileImage" src="~/profileImages/@subscriber.SubscribedOn.ProfileImage" />
@@ -123,3 +115,5 @@
         </div>
     </div>
 </div>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/js/Subscribe.js"></script>

@@ -15,7 +15,6 @@ namespace EduTube.DAL.Entities
         [ForeignKey("SubscribedOnId")]
         public ApplicationUser SubscribedOn { get; set; }
         public string SubscribedOnId { get; set; }
-        public DateTime ExpirationDate { get; set; }
         public bool Deleted { get; set; }
     }
 }

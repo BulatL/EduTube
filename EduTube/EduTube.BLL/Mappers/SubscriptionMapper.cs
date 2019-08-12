@@ -15,10 +15,9 @@ namespace EduTube.BLL.Mappers
 
             SubscriptionModel model = new SubscriptionModel();
             model.Id             = entity.Id;
-            model.SubscriberId   = entity.SubscriberId;
-            model.ExpirationDate = entity.ExpirationDate;
-            model.SubscribedOnId = entity.SubscribedOnId;
             model.Deleted        = entity.Deleted;
+            model.SubscriberId   = entity.SubscriberId;
+            model.SubscribedOnId = entity.SubscribedOnId;
 
             if (entity.SubscribedOn != null)
             {
@@ -40,10 +39,9 @@ namespace EduTube.BLL.Mappers
         {
             Subscription entity   = new Subscription();
             entity.Id             = model.Id;
-            entity.SubscriberId   = model.SubscriberId;
-            entity.ExpirationDate = model.ExpirationDate;
-            entity.SubscribedOnId = model.SubscribedOnId;
             entity.Deleted        = model.Deleted;
+            entity.SubscriberId   = model.SubscriberId;
+            entity.SubscribedOnId = model.SubscribedOnId;
 
             if (model.SubscribedOn != null)
             {

@@ -8,8 +8,12 @@ namespace EduTube.BLL.Managers.Interfaces
     {
         Task<List<SubscriptionModel>> GetAll();
         Task<SubscriptionModel> GetById(int id, bool includeAll);
+        Task<List<SubscriptionModel>> GetBySubscriber(string id);
+        Task<List<SubscriptionModel>> GetBySubscribedOn(string id);
+        Task<SubscriptionModel> GetBySubscriberAndSubscribedOn(string subscriberId, string subscribedOnId);
         Task<SubscriptionModel> Create(SubscriptionModel subscription);
         Task<SubscriptionModel> Update(SubscriptionModel subscription);
-        Task Delete(int id);
+        Task Delete(string subscriberId, string subscribedOnId);
+        Task Remove(string subscriberId, string subscribedOnId);
     }
 }

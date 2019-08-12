@@ -61,9 +61,9 @@ namespace EduTube.GUI.Controllers
                         }
                     }
                     if (subscribedOn)
-                        ViewData["Subscribed"] = "Subscribed";
+                        ViewData["Subscribed"] = "Unsubscribe";
                     else
-                        ViewData["Subscribed"] = "NotSubscribed";
+                        ViewData["Subscribed"] = "Subscribe";
                 }
             }
             else
