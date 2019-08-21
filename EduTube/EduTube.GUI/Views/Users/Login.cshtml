@@ -1,0 +1,29 @@
+﻿@model EduTube.GUI.ViewModels.LoginViewModel
+@{
+   ViewData["Title"] = "Login";
+}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="~/css/Login.css" rel="stylesheet" />
+<div class="" id="loginDiv">
+   <h5 class="text-center whiteColor">Login</h5>
+   <form method="post">
+      <label class="col-form-label whiteColor">Email</label>
+      <input asp-for="Email" class="form-control" placeholder="Email" style="font-family:Arial, FontAwesome" />
+      <span asp-validation-for="Email" style="color:red;"></span>
+      <br />
+      <label class="col-form-label whiteColor">Password</label>
+      <input asp-for="Password" type="password" class="form-control" placeholder="Password" />
+      <span asp-validation-for="Password" style="color:red;"></span>
+
+      <button type="submit" class="purpleBtn" id="signInButton">Sing in</button>
+      <div class="text-center" id="optionsDiv">
+         <a class="whiteColor">Forgot password?</a>
+         <div class="or">
+            <hr class="bar" />
+            <span class="whiteColor">OR</span>
+            <hr class="bar" />
+         </div>
+         <button id="createAccount">Create an account</button>
+      </div>
+   </form>
+</div>

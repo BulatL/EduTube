@@ -120,3 +120,5 @@ D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Areas\Id
 D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Areas\Identity\Pages\_ViewStart.g.cshtml.cs
 D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Views\Videos\SingleVideo.g.cshtml.cs
 D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Views\Users\Profile.g.cshtml.cs
+D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Views\Users\Login.g.cshtml.cs
+D:\Projects\Diplomski\EduTube\EduTube.GUI\obj\Debug\netcoreapp2.2\Razor\Views\Users\Register.g.cshtml.cs

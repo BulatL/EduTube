@@ -1,0 +1,56 @@
+﻿body {
+   color:white;
+}
+a:hover {
+   color: #e80a89 !important;
+   text-decoration: none !important;
+   cursor:pointer;
+}
+
+#loginDiv {
+   background-color: #242424;
+   width: 30%;
+   color: #333333;
+   margin: 0 auto;
+   overflow: hidden;
+   padding: 10px 30px 50px 30px;
+   align-items: center;
+   float: none;
+}
+#optionsDiv{
+   margin-top:2em;
+}
+
+#signInButton {
+   margin-top:1.5em;
+   width: 100%;
+   border:none;
+   position:inherit !important;
+   height: 2em;
+
+}
+.or {
+   margin-top: 1em;
+   display: flex;
+   align-items: center;
+}
+   .or span {
+      padding: 0 12px;
+   }
+.bar {
+   flex: auto;
+   border: none;
+   height: 1px;
+   background-color: #aaa;
+}
+#createAccount {
+   background-color: #242424;
+   color: white;
+   width: 80%;
+   margin-top: 1em;
+   cursor: pointer;
+}
+   #createAccount:hover {
+      color: #e80a89;
+      border-color: #e80a89;
+   }

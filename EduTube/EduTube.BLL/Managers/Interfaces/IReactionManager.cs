@@ -4,12 +4,13 @@ using EduTube.BLL.Models;
 
 namespace EduTube.BLL.Managers.Interfaces
 {
-    public interface IReactionManager
-    {
-        Task<List<ReactionModel>> GetAll();
-        Task<ReactionModel> GetById(int id);
-        Task<ReactionModel> Create(ReactionModel reaction);
-        Task<ReactionModel> Update(ReactionModel reaction);
-        Task Delete(int id);
-    }
+   public interface IReactionManager
+   {
+      Task<List<ReactionModel>> GetAll();
+      Task<ReactionModel> GetById(int id);
+      Task<ReactionModel> Create(ReactionModel reaction);
+      Task<ReactionModel> Update(ReactionModel reaction);
+      Task Delete(int id);
+      Task DeleteActivateByUser(string id, bool option);
+   }
 }

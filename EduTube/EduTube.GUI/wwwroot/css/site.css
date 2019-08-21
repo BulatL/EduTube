@@ -101,3 +101,29 @@ h2{
 .greyBackground {
     background-color: #242424;
 }
+.whiteColor {
+   color: #ffffff !important;
+}
+.boldBlack{
+   color:black;
+}
+.purpleBtn {
+   background-color: #e80a89;
+   border: none;
+   border-radius: 5px;
+   color: #fff;
+   position: absolute;
+   cursor: pointer;
+   display: inline-block;
+}
+
+   .purpleBtn:hover {
+      box-shadow: 0 10px 30px rgba(0,0,0,.2);
+      background: linear-gradient(to right,#f05a28 0,#e80a89 100%);
+      color: #fff;
+   }
+
+.footer {
+   border-top: none !important;
+   background-color: #242424;
+}

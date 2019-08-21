@@ -45,21 +45,6 @@
     margin-right:1em;
 }
 
-.purpleBtn {
-    background-color: #e80a89;
-    border: none;
-    border-radius: 5px;
-    color: #fff;
-    position: absolute;
-    cursor: pointer;
-    display: inline-block;
-}
-    .purpleBtn:hover {
-        box-shadow: 0 10px 30px rgba(0,0,0,.2);
-        background: linear-gradient(to right,#f05a28 0,#e80a89 100%);
-        color: #fff;
-    }
-
 .display-inline-block {
     display: inline-block;
     margin-top: 1em;
