@@ -44,7 +44,7 @@ namespace EduTube.BLL.Managers
 
       public async Task<ApplicationUserModel> GetById(string id, bool includeAll)
       {
-         return  includeAll ? UserMapper.EntityToModel(await _userManager.Users
+         return includeAll ? UserMapper.EntityToModel(await _userManager.Users
                .Include(x => x.Videos).Include(x => x.Subscribers).Include(x => x.SubscribedOn)
                .Include(x => x.Notifications).FirstOrDefaultAsync(x => x.Id == id && !x.Deleted))
             : UserMapper.EntityToModel(await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id && !x.Deleted));
@@ -52,6 +52,11 @@ namespace EduTube.BLL.Managers
          /*return UserMapper.EntityToModel(await _context.Users
              .Include(x => x.Videos).Include(x => x.Subscribers).Include(x => x.SubscribedOn)
              .Include(x => x.Notifications).FirstOrDefaultAsync(x => x.Id == id && !x.Deleted));*/
+      }
+
+      public async Task<bool> CheckIfChannelNameExist(string channelName, string userId)
+      {
+         return await _userManager.Users.AnyAsync(x => !x.Id.Equals(userId) && x.ChannelName.Equals(channelName));
       }
 
       public async Task<ApplicationUserModel> GetByChannelName(string channelname)
@@ -107,7 +112,7 @@ namespace EduTube.BLL.Managers
          ApplicationUser user = _userManager.Users.FirstOrDefault(x => x.Id == id);
          user.Deleted = false;
          await _userManager.UpdateAsync(user);
-         
+
          /*ApplicationUser user = _context.Users.FirstOrDefault(x => x.Id == id);
          List<ChatMessage> chatMessages = await _context.ChatMessages.Where(x => x.UserId == user.Id).ToListAsync();
          List<Reaction> reactions = await _context.Reactions.Where(x => x.UserId == user.Id).ToListAsync();
@@ -131,6 +136,17 @@ namespace EduTube.BLL.Managers
       public async Task<SignInResult> Login(string email, string password, bool rememberMe)
       {
          return await _signInManager.PasswordSignInAsync(email, password, rememberMe, lockoutOnFailure: false);
+      }
+
+      public async Task Register(ApplicationUserModel model, string password)
+      {
+         ApplicationUser entity = UserMapper.ModelToEntity(model);
+         IdentityResult result = await _userManager.CreateAsync(entity);
+         if (result.Succeeded)
+         {
+            await _userManager.AddPasswordAsync(entity, password);
+            await _userManager.AddToRoleAsync(entity, "User");
+         }
       }
    }
 }

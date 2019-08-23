@@ -1,0 +1,97 @@
+﻿body {
+}
+#registerDiv {
+   background-color: #242424;
+   width: 70%;
+   color: #333333;
+   margin: 0 auto;
+   overflow: hidden;
+   padding: 2em 4em 2em 4em;
+   align-items: center;
+   float: none;
+}
+#tabs {
+   margin-top: 1em;
+   display: -webkit-box;
+}
+.blackBackground{
+   background-color:#121212;
+}
+.tabsDiv {
+   cursor: default;
+   padding: 5px 5px;
+}
+.tabsDivActiv {
+   box-shadow: 0 10px 30px rgba(0,0,0,.2);
+   background: linear-gradient(to right,#f05a28 0,#e80a89 100%);
+   color: #fff;
+}
+.leftBorderRadius {
+   border-bottom-left-radius: 5px;
+   border-top-left-radius: 5px;
+}
+.rightBorderRadius {
+   border-bottom-right-radius: 5px;
+   border-top-right-radius: 5px;
+}
+#mainTabDiv{
+   padding:2em 1em;
+}
+.purpleBtn {
+   position: inherit;
+   font-size: 21px;
+   width: 5em;
+}
+#btnNext {
+   margin-top: 1em;
+   float: right;
+   margin-right: 0.5em;
+}
+#btnBack {
+   margin-top: 1em;
+   float: left;
+}
+#btnRegister {
+   margin-top: 1em;
+   float: right;
+}
+.displayInline {
+   display: -webkit-box;
+   display: flex;
+}
+#basicInfoDiv {
+   margin-top: -1em;
+   margin-left: 2em;
+   width: 81%;
+}
+textarea {
+   resize: none;
+   height:7em;
+}
+/*image preview*/
+#profileImageDiv {
+}
+
+#imageUpload {
+   display: none;
+}
+
+#profileImage {
+   cursor: pointer;
+}
+
+#profile-container {
+   width: 8em;
+   height: 8em;
+   overflow: hidden;
+   -webkit-border-radius: 50%;
+   -moz-border-radius: 50%;
+   -ms-border-radius: 50%;
+   -o-border-radius: 50%;
+   border-radius: 50%;
+}
+
+   #profile-container img {
+      width: 8em;
+      height: 8em;
+   }

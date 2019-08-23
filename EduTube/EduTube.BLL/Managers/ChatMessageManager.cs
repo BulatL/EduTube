@@ -28,7 +28,8 @@ namespace EduTube.BLL.Managers
       public async Task<ChatMessageModel> GetById(int id, bool includeAll)
       {
          return includeAll ? ChatMessageMapper.EntityToModel(await _context.ChatMessages
-             .Include(x => x.Chat).Include(x => x.Message).FirstAsync(x => x.Id == id && !x.Deleted))
+             //.Include(x => x.Chat)
+             .Include(x => x.Message).FirstAsync(x => x.Id == id && !x.Deleted))
              : ChatMessageMapper.EntityToModel(await _context.ChatMessages.FirstAsync(x => x.Id == id && !x.Deleted));
       }
 

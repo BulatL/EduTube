@@ -342,17 +342,21 @@ namespace EduTube.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ApplicationUserId");
+
                     b.Property<string>("Content");
 
                     b.Property<bool>("Deleted");
 
                     b.Property<string>("RedirectPath");
 
+                    b.Property<bool>("Seen");
+
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Notifications");
                 });
@@ -461,8 +465,6 @@ namespace EduTube.DAL.Migrations
                     b.Property<int>("VideoId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.HasIndex("VideoId");
 
@@ -585,7 +587,7 @@ namespace EduTube.DAL.Migrations
 
             modelBuilder.Entity("EduTube.DAL.Entities.ChatMessage", b =>
                 {
-                    b.HasOne("EduTube.DAL.Entities.Chat", "Chat")
+                    b.HasOne("EduTube.DAL.Entities.Chat")
                         .WithMany("Messages")
                         .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -603,7 +605,7 @@ namespace EduTube.DAL.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("EduTube.DAL.Entities.Video", "Video")
+                    b.HasOne("EduTube.DAL.Entities.Video")
                         .WithMany("Comments")
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -629,15 +631,15 @@ namespace EduTube.DAL.Migrations
 
             modelBuilder.Entity("EduTube.DAL.Entities.Notification", b =>
                 {
-                    b.HasOne("EduTube.DAL.Entities.ApplicationUser", "User")
+                    b.HasOne("EduTube.DAL.Entities.ApplicationUser")
                         .WithMany("Notifications")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("EduTube.DAL.Entities.Reaction", b =>
                 {
-                    b.HasOne("EduTube.DAL.Entities.Comment", "Comment")
+                    b.HasOne("EduTube.DAL.Entities.Comment")
                         .WithMany("Reactions")
                         .HasForeignKey("CommentId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -648,11 +650,11 @@ namespace EduTube.DAL.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("EduTube.DAL.Entities.ApplicationUser", "User")
-                        .WithMany("Reactions")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("EduTube.DAL.Entities.Video", "Video")
+                    b.HasOne("EduTube.DAL.Entities.Video")
                         .WithMany("Reactions")
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -681,12 +683,7 @@ namespace EduTube.DAL.Migrations
 
             modelBuilder.Entity("EduTube.DAL.Entities.View", b =>
                 {
-                    b.HasOne("EduTube.DAL.Entities.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("EduTube.DAL.Entities.Video", "Video")
+                    b.HasOne("EduTube.DAL.Entities.Video")
                         .WithMany("Views")
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict);

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using EduTube.BLL.Managers.Interfaces;
 using EduTube.BLL.Models;
 using EduTube.DAL.Entities;
+using EduTube.GUI.Services.Interface;
 using EduTube.GUI.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,11 +21,14 @@ namespace EduTube.GUI.Controllers
       private IApplicationUserManager _userManager;
       private SignInManager<ApplicationUser> _signInManager;
       private UserManager<ApplicationUser> _identityManager;
+      private IUploadService _uploadSerice;
 
-      public UsersController(IApplicationUserManager userManager, SignInManager<ApplicationUser> signInManager)
+      public UsersController(IApplicationUserManager userManager, SignInManager<ApplicationUser> signInManager,
+         IUploadService uploadSerice)
       {
          _userManager = userManager;
          _signInManager = signInManager;
+         _uploadSerice = uploadSerice;
       }
 
       public IActionResult Index()
@@ -90,7 +94,7 @@ namespace EduTube.GUI.Controllers
       {
          if (ModelState.IsValid)
          {
-            var result = await _signInManager.PasswordSignInAsync(viewModel.Email, viewModel.Password, viewModel.RememberMe, lockoutOnFailure: true);
+            var result = await _userManager.Login(viewModel.Email, viewModel.Password, viewModel.RememberMe);
             if (result.Succeeded)
             {
                return RedirectToAction("Index", "Home");
@@ -125,9 +129,32 @@ namespace EduTube.GUI.Controllers
       {
          if (ModelState.IsValid)
          {
-           //_identityManager.CreateAsync();
+            ApplicationUserModel user = new ApplicationUserModel()
+            {
+               Blocked = false,
+               Deleted = false,
+               Lastname = viewModel.Lastname,
+               Firstname = viewModel.Firstname,
+               ChannelDescription = viewModel.ChannelDescription,
+               ChannelName = viewModel.ChannelName,
+               DateOfBirth = viewModel.DateOfBirth,
+               Email = viewModel.Email,
+               UserName = viewModel.Email
+            };
+
+            if(viewModel.ProfileImage != null)
+               user.ProfileImage = await _uploadSerice.UploadImage(viewModel.ProfileImage);
+
+            await _userManager.Register(user, viewModel.Password);
+            return RedirectToAction("Login");
          }
          return View(new RegisterViewModel());
+      }
+
+
+      public async Task<IActionResult> ChannelNameExist(string channelName)
+      {
+         return Json(await _userManager.CheckIfChannelNameExist(channelName, "Null"));
       }
 
       [Route("Logout")]

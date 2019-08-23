@@ -14,36 +14,36 @@ using Microsoft.Extensions.Logging;
 
 namespace EduTube.GUI
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            //CreateWebHostBuilder(args).Build().Run();
-            var host = CreateWebHostBuilder(args).Build();
+   public class Program
+   {
+      public static void Main(string[] args)
+      {
+         //CreateWebHostBuilder(args).Build().Run();
+         var host = CreateWebHostBuilder(args).Build();
 
-            using (var scope = host.Services.CreateScope())
+         using (var scope = host.Services.CreateScope())
+         {
+            var services = scope.ServiceProvider;
+            var appContext = services.GetRequiredService<ApplicationDbContext>();
+
+            try
             {
-                var services = scope.ServiceProvider;
-                var appContext = services.GetRequiredService<ApplicationDbContext>();
+               var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+               var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-                try
-                {
-                    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-
-                    UserSeed.SeedAsync(appContext, userManager, roleManager).Wait();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.StackTrace);
-                }
+               UserSeed.SeedAsync(appContext, userManager, roleManager).Wait();
             }
+            catch (Exception ex)
+            {
+               Console.WriteLine(ex.StackTrace);
+            }
+         }
 
-            host.Run();
-        }
+         host.Run();
+      }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
-    }
+      public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+          WebHost.CreateDefaultBuilder(args)
+              .UseStartup<Startup>();
+   }
 }

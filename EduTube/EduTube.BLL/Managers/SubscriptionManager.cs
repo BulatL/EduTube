@@ -81,7 +81,7 @@ namespace EduTube.BLL.Managers
 
       public async Task DeleteActivateByUser(string id, bool option)
       {
-         List<Subscription> subscriptions = await _context.Subscriptions.Where(x => (x.SubscribedOnId.Equals(id) || x.SubscriberId.Equals(id)) 
+         List<Subscription> subscriptions = await _context.Subscriptions.Where(x => (x.SubscribedOnId.Equals(id) || x.SubscriberId.Equals(id))
                                                                                  && x.Deleted == !option).ToListAsync();
          subscriptions.Select(x => x.Deleted = option);
          _context.UpdateRange(subscriptions);

@@ -69,7 +69,7 @@ namespace EduTube.GUI
          });
 
          services.RegisterBLLServices();
-         services.AddScoped<IVideoService, VideoService>();
+         services.AddScoped<IUploadService, UploadService>();
 
          services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
          /*services.Configure<FormOptions>(x =>

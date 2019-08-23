@@ -4,10 +4,10 @@ using System.Text;
 
 namespace EduTube.DAL.Enums
 {
-    public enum VideoVisibility
-    {
-        Public,
-        Private,
-        Invitation
-    }
+   public enum VideoVisibility
+   {
+      Public,
+      Private,
+      Invitation
+   }
 }

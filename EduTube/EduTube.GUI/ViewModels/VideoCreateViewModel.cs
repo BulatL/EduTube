@@ -9,36 +9,36 @@ using System.Threading.Tasks;
 
 namespace EduTube.GUI.ViewModels
 {
-    public class VideoCreateViewModel
-    {
-        [Required]
-        public string Name { get; set; }
-        [Required]
-        public string Description { get; set; }
-        [Display(Name= "Youtube embaded url")]
-        public string YoutubeUrl { get; set; }
-        public IFormFile Video { get; set; }
-        public bool AllowComments { get; set; }
-        public string IvniteCode { get; set; }
-        public int VideoVisibility { get; set; }
-        public List<String> Hashtags { get; set; }
+   public class VideoCreateViewModel
+   {
+      [Required]
+      public string Name { get; set; }
+      [Required]
+      public string Description { get; set; }
+      [Display(Name = "Youtube embaded url")]
+      public string YoutubeUrl { get; set; }
+      public IFormFile Video { get; set; }
+      public bool AllowComments { get; set; }
+      public string IvniteCode { get; set; }
+      public int VideoVisibility { get; set; }
+      public List<String> Hashtags { get; set; }
 
-        public VideoCreateViewModel(){}
+      public VideoCreateViewModel() { }
 
-        public static VideoModel ConvertToModel(VideoCreateViewModel viewModel)
-        {
-            VideoModel model = new VideoModel();
-            model.Name = viewModel.Name;
-            model.Description = viewModel.Description;
-            model.YoutubeUrl = viewModel.YoutubeUrl;
-            model.AllowComments = viewModel.AllowComments;
-            model.IvniteCode = viewModel.IvniteCode;
-            model.VideoVisibility = (VideoVisibilityModel)viewModel.VideoVisibility;
-            model.Deleted = false;
-            model.Blocked = false;
-            model.DateCreatedOn = DateTime.Now;
+      public static VideoModel ConvertToModel(VideoCreateViewModel viewModel)
+      {
+         VideoModel model = new VideoModel();
+         model.Name = viewModel.Name;
+         model.Description = viewModel.Description;
+         model.YoutubeUrl = viewModel.YoutubeUrl;
+         model.AllowComments = viewModel.AllowComments;
+         model.IvniteCode = viewModel.IvniteCode;
+         model.VideoVisibility = (VideoVisibilityModel)viewModel.VideoVisibility;
+         model.Deleted = false;
+         model.Blocked = false;
+         model.DateCreatedOn = DateTime.Now;
 
-            return model;
-        }
-    }
+         return model;
+      }
+   }
 }

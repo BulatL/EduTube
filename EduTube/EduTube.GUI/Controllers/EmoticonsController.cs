@@ -10,144 +10,144 @@ using EduTube.DAL.Entities;
 
 namespace EduTube.GUI.Controllers
 {
-    public class EmoticonsController : Controller
-    {
-        private readonly ApplicationDbContext _context;
+   public class EmoticonsController : Controller
+   {
+      private readonly ApplicationDbContext _context;
 
-        public EmoticonsController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+      public EmoticonsController(ApplicationDbContext context)
+      {
+         _context = context;
+      }
 
-        // GET: Emoticons
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Emoticons.ToListAsync());
-        }
+      // GET: Emoticons
+      public async Task<IActionResult> Index()
+      {
+         return View(await _context.Emoticons.ToListAsync());
+      }
 
-        // GET: Emoticons/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+      // GET: Emoticons/Details/5
+      public async Task<IActionResult> Details(int? id)
+      {
+         if (id == null)
+         {
+            return NotFound();
+         }
 
-            var emoticon = await _context.Emoticons
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (emoticon == null)
-            {
-                return NotFound();
-            }
+         var emoticon = await _context.Emoticons
+             .FirstOrDefaultAsync(m => m.Id == id);
+         if (emoticon == null)
+         {
+            return NotFound();
+         }
 
-            return View(emoticon);
-        }
+         return View(emoticon);
+      }
 
-        // GET: Emoticons/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+      // GET: Emoticons/Create
+      public IActionResult Create()
+      {
+         return View();
+      }
 
-        // POST: Emoticons/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,ImagePath,Deleted")] Emoticon emoticon)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(emoticon);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(emoticon);
-        }
-
-        // GET: Emoticons/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var emoticon = await _context.Emoticons.FindAsync(id);
-            if (emoticon == null)
-            {
-                return NotFound();
-            }
-            return View(emoticon);
-        }
-
-        // POST: Emoticons/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ImagePath,Deleted")] Emoticon emoticon)
-        {
-            if (id != emoticon.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(emoticon);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EmoticonExists(emoticon.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(emoticon);
-        }
-
-        // GET: Emoticons/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var emoticon = await _context.Emoticons
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (emoticon == null)
-            {
-                return NotFound();
-            }
-
-            return View(emoticon);
-        }
-
-        // POST: Emoticons/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var emoticon = await _context.Emoticons.FindAsync(id);
-            _context.Emoticons.Remove(emoticon);
+      // POST: Emoticons/Create
+      // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+      // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+      [HttpPost]
+      [ValidateAntiForgeryToken]
+      public async Task<IActionResult> Create([Bind("Id,Name,ImagePath,Deleted")] Emoticon emoticon)
+      {
+         if (ModelState.IsValid)
+         {
+            _context.Add(emoticon);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
+         }
+         return View(emoticon);
+      }
 
-        private bool EmoticonExists(int id)
-        {
-            return _context.Emoticons.Any(e => e.Id == id);
-        }
-    }
+      // GET: Emoticons/Edit/5
+      public async Task<IActionResult> Edit(int? id)
+      {
+         if (id == null)
+         {
+            return NotFound();
+         }
+
+         var emoticon = await _context.Emoticons.FindAsync(id);
+         if (emoticon == null)
+         {
+            return NotFound();
+         }
+         return View(emoticon);
+      }
+
+      // POST: Emoticons/Edit/5
+      // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+      // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+      [HttpPost]
+      [ValidateAntiForgeryToken]
+      public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ImagePath,Deleted")] Emoticon emoticon)
+      {
+         if (id != emoticon.Id)
+         {
+            return NotFound();
+         }
+
+         if (ModelState.IsValid)
+         {
+            try
+            {
+               _context.Update(emoticon);
+               await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+               if (!EmoticonExists(emoticon.Id))
+               {
+                  return NotFound();
+               }
+               else
+               {
+                  throw;
+               }
+            }
+            return RedirectToAction(nameof(Index));
+         }
+         return View(emoticon);
+      }
+
+      // GET: Emoticons/Delete/5
+      public async Task<IActionResult> Delete(int? id)
+      {
+         if (id == null)
+         {
+            return NotFound();
+         }
+
+         var emoticon = await _context.Emoticons
+             .FirstOrDefaultAsync(m => m.Id == id);
+         if (emoticon == null)
+         {
+            return NotFound();
+         }
+
+         return View(emoticon);
+      }
+
+      // POST: Emoticons/Delete/5
+      [HttpPost, ActionName("Delete")]
+      [ValidateAntiForgeryToken]
+      public async Task<IActionResult> DeleteConfirmed(int id)
+      {
+         var emoticon = await _context.Emoticons.FindAsync(id);
+         _context.Emoticons.Remove(emoticon);
+         await _context.SaveChangesAsync();
+         return RedirectToAction(nameof(Index));
+      }
+
+      private bool EmoticonExists(int id)
+      {
+         return _context.Emoticons.Any(e => e.Id == id);
+      }
+   }
 }

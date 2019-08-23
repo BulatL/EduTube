@@ -5,71 +5,71 @@ using System.Linq;
 
 namespace EduTube.BLL.Mappers
 {
-    public class SubscriptionMapper
-    {
+   public class SubscriptionMapper
+   {
 
-        public static SubscriptionModel EntityToModel(Subscription entity)
-        {
-            if (entity == null)
-                return null;
+      public static SubscriptionModel EntityToModel(Subscription entity)
+      {
+         if (entity == null)
+            return null;
 
-            SubscriptionModel model = new SubscriptionModel();
-            model.Id             = entity.Id;
-            model.Deleted        = entity.Deleted;
-            model.SubscriberId   = entity.SubscriberId;
-            model.SubscribedOnId = entity.SubscribedOnId;
+         SubscriptionModel model = new SubscriptionModel();
+         model.Id = entity.Id;
+         model.Deleted = entity.Deleted;
+         model.SubscriberId = entity.SubscriberId;
+         model.SubscribedOnId = entity.SubscribedOnId;
 
-            if (entity.SubscribedOn != null)
-            {
-                entity.SubscribedOn.SubscribedOn = null;
-                entity.SubscribedOn.Subscribers = null;
-                model.SubscribedOn = UserMapper.EntityToModel(entity.SubscribedOn);
-            }
+         if (entity.SubscribedOn != null)
+         {
+            entity.SubscribedOn.SubscribedOn = null;
+            entity.SubscribedOn.Subscribers = null;
+            model.SubscribedOn = UserMapper.EntityToModel(entity.SubscribedOn);
+         }
 
-            if (entity.Subscriber != null)
-            {
-                entity.Subscriber.SubscribedOn = null;
-                entity.Subscriber.Subscribers = null;
-                model.Subscriber = UserMapper.EntityToModel(entity.Subscriber);
-            }
+         if (entity.Subscriber != null)
+         {
+            entity.Subscriber.SubscribedOn = null;
+            entity.Subscriber.Subscribers = null;
+            model.Subscriber = UserMapper.EntityToModel(entity.Subscriber);
+         }
 
-            return model;
-        }
-        public static Subscription ModelToEntity(SubscriptionModel model)
-        {
-            Subscription entity   = new Subscription();
-            entity.Id             = model.Id;
-            entity.Deleted        = model.Deleted;
-            entity.SubscriberId   = model.SubscriberId;
-            entity.SubscribedOnId = model.SubscribedOnId;
+         return model;
+      }
+      public static Subscription ModelToEntity(SubscriptionModel model)
+      {
+         Subscription entity = new Subscription();
+         entity.Id = model.Id;
+         entity.Deleted = model.Deleted;
+         entity.SubscriberId = model.SubscriberId;
+         entity.SubscribedOnId = model.SubscribedOnId;
 
-            if (model.SubscribedOn != null)
-            {
-                model.SubscribedOn.SubscribedOn = null;
-                model.SubscribedOn.Subscribers = null;
-                entity.SubscribedOn = UserMapper.ModelToEntity(model.SubscribedOn);
-            }
+         if (model.SubscribedOn != null)
+         {
+            model.SubscribedOn.SubscribedOn = null;
+            model.SubscribedOn.Subscribers = null;
+            entity.SubscribedOn = UserMapper.ModelToEntity(model.SubscribedOn);
+         }
 
-            if (entity.Subscriber != null)
-            {
-                model.Subscriber.SubscribedOn = null;
-                model.Subscriber.Subscribers = null;
-                entity.Subscriber = UserMapper.ModelToEntity(model.Subscriber);
-            }
+         if (entity.Subscriber != null)
+         {
+            model.Subscriber.SubscribedOn = null;
+            model.Subscriber.Subscribers = null;
+            entity.Subscriber = UserMapper.ModelToEntity(model.Subscriber);
+         }
 
-            return entity;
-        }
+         return entity;
+      }
 
-        public static List<SubscriptionModel> EntitiesToModels(IEnumerable<Subscription> entities)
-        {
-            List<SubscriptionModel> models = entities.Select(x => EntityToModel(x)).ToList();
-            return models;
-        }
+      public static List<SubscriptionModel> EntitiesToModels(IEnumerable<Subscription> entities)
+      {
+         List<SubscriptionModel> models = entities.Select(x => EntityToModel(x)).ToList();
+         return models;
+      }
 
-        public static List<Subscription> ModelsToEntities(List<SubscriptionModel> models)
-        {
-            List<Subscription> entities = models.Select(x => ModelToEntity(x)).ToList();
-            return entities;
-        }
-    }
+      public static List<Subscription> ModelsToEntities(List<SubscriptionModel> models)
+      {
+         List<Subscription> entities = models.Select(x => ModelToEntity(x)).ToList();
+         return entities;
+      }
+   }
 }
