@@ -23,14 +23,19 @@
 
       if (channelName != "" && password != "" && email != "" && channelDescription != "") {
          $.ajax({
-            url: '/Users/ChannelnameExist?channelName=' + channelName,
+            url: `/Users/ChannelnameExist?channelName=${channelName}&email=${email}`,
             type: 'GET',
             dataType: 'json',
             contentType: "application/json",
             success: function (response) {
                console.log(response);
-               if (response == true) {
+               if (response.channelNameExist == true) {
                   $('#channelNameError').text("Channel name already taken");
+               }
+               if (response.emailExist == true) {
+                  $('#emailError').text("Email already taken");
+               }
+               if (response.emailExist == true || response.channelNameExist == true) {
                   return false
                }
                else 

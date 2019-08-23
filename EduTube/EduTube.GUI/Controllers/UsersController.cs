@@ -152,9 +152,11 @@ namespace EduTube.GUI.Controllers
       }
 
 
-      public async Task<IActionResult> ChannelNameExist(string channelName)
+      public async Task<IActionResult> ChannelNameExist(string channelName, string email)
       {
-         return Json(await _userManager.CheckIfChannelNameExist(channelName, "Null"));
+         bool ex = await _userManager.ChannelNameExist(channelName, "Null");
+         bool ce = await _userManager.EmailExist(email, "Null"); 
+         return Json(new { channelNameExist = ex, emailExist = ce });
       }
 
       [Route("Logout")]

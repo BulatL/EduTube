@@ -54,9 +54,13 @@ namespace EduTube.BLL.Managers
              .Include(x => x.Notifications).FirstOrDefaultAsync(x => x.Id == id && !x.Deleted));*/
       }
 
-      public async Task<bool> CheckIfChannelNameExist(string channelName, string userId)
+      public async Task<bool> ChannelNameExist(string channelName, string userId)
       {
          return await _userManager.Users.AnyAsync(x => !x.Id.Equals(userId) && x.ChannelName.Equals(channelName));
+      }
+      public async Task<bool> EmailExist(string email, string userId)
+      {
+         return await _userManager.Users.AnyAsync(x => !x.Id.Equals(userId) && x.NormalizedEmail.Equals(email.ToUpper()));
       }
 
       public async Task<ApplicationUserModel> GetByChannelName(string channelname)
