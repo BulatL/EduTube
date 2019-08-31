@@ -2,8 +2,9 @@
 @{
    ViewData["Title"] = "Register";
 }
-<link href="~/css/RegisterPage.css" rel="stylesheet" />
-<link href="~/lib/jquery/jquery-ui-1.11.4/jquery-ui.css" rel="stylesheet" />
+@section Styles{
+   <link href="~/css/RegisterPage.css" rel="stylesheet" />
+ }
 <div class="" id="registerDiv">
    <h5 class="whiteColor text-center">CREATE YOUR PROFILE FOR <strong>FREE</strong> </h5>
    <div id="tabs">
@@ -60,13 +61,13 @@
                </div>
                <div class="col-6">
                   <label asp-for="Password" class="col-form-label whiteColor"></label>
-                  <input asp-for="Password" type="password" class="form-control" placeholder="Password" id="password"/>
+                  <input asp-for="Password" type="password" class="form-control" placeholder="Password" id="password" />
                   <span asp-validation-for="Password" style="color:red;" id="passwordError"></span>
                </div>
             </div>
             <div class="col-12">
                <label asp-for="Email" class="col-form-label whiteColor"></label>
-               <input asp-for="Email" class="form-control" placeholder="Email" id="email"/>
+               <input asp-for="Email" class="form-control" placeholder="Email" id="email" />
                <span asp-validation-for="Email" style="color:red;" id="emailError"></span>
             </div>
             <div class="col-12">
@@ -82,7 +83,6 @@
       </form>
    </div>
 </div>
-
-<script src="~/lib/jquery/dist/jquery.js"></script>
-<script src="~/lib/jquery/jquery-ui-1.11.4/jquery-ui.js"></script>
-<script src="~/js/RegisterPage.js"></script>
+@section Scripts{
+   <script src="~/js/RegisterPage.js"></script>
+}

@@ -10,9 +10,11 @@ namespace EduTube.BLL.Managers.Interfaces
       Task<List<ApplicationUserModel>> GetAll();
       Task<ApplicationUserModel> GetById(string id, bool includeAll);
       Task<ApplicationUserModel> GetByChannelName(string channelName);
+      Task<ApplicationUserModel> GetByEmail(string email);
+      Task<ApplicationUserModel> GetByEmailAndPassword(string email, string password);
       Task<bool> ChannelNameExist(string channelName, string userId);
       Task<bool> EmailExist(string email, string userId);
-      Task<SignInResult> Login(string email, string password, bool rememberMe);
+      Task<bool> Login(string email, string password, bool rememberMe);
       //ApplicationUserModel Create(int id);
       Task<ApplicationUserModel> Update(ApplicationUserModel userModel);
       Task Register(ApplicationUserModel user, string password);

@@ -30,6 +30,10 @@ namespace EduTube.BLL.Managers
          return EmoticonMapper.EntityToModel(await _context.Emoticons
              .FirstOrDefaultAsync(x => x.Id == id && !x.Deleted));
       }
+      public async Task<int?> GetEmoticonId(int videoId, string userId)
+      {
+         return await _context.Reactions.Where(x => x.VideoId == videoId && x.UserId.Equals(userId) && !x.Deleted).Select(x => x.EmoticonId).FirstOrDefaultAsync();
+      }
       public async Task<EmoticonModel> Create(EmoticonModel emoticon)
       {
          Emoticon entity = EmoticonMapper.ModelToEntity(emoticon);

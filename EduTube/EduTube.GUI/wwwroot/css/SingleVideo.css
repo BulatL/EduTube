@@ -1,211 +1,186 @@
-﻿body {
-    background-image: url(http://wallpoper.com/images/00/31/33/51/black-background_00313351.jpg);
-    margin: 0;
-    padding: 0;
-    background-size: inherit;
-    background-position: center;
-    font-family: sans-serif;
+﻿.resizeVideoEmoticonCount, .resizeCommentEmoticonCount {
+   margin-top: 1rem;
+}
+.resizeVideoEmoticon, .resizeVideoEmoticonCount {
+   -moz-transform: scale(1.5);
+   -webkit-transform: scale(1.5);
+   transform: scale(1.5);
+}
+.resizeCommentEmoticon, .resizeCommentEmoticonCount {
+   -moz-transform: scale(1.2);
+   -webkit-transform: scale(1.2);
+   transform: scale(1.2);
+}
+button:focus {
+   outline: 0;
+}
+.emoticonBtn, .commentEmoticonBtn {
+   background-color: transparent;
+   border:none;
+   cursor:pointer;
+   margin-top:1em;
+}
+   .emoticonBtn:focus, .commentEmoticonBtn :focus{
+      border: none;
+   }
+   .emoticonBtn img, .commentEmoticonBtn img{
+      object-fit: cover;
+      -moz-transition: all 0.3s;
+      -webkit-transition: all 0.3s;
+      transition: all 0.3s;
+      width: 2.5rem;
+      margin-right: 1rem;
+   }
+
+   .emoticonBtn:hover img, .emoticonBtn:hover h6 {
+      -moz-transform: scale(1.5);
+      -webkit-transform: scale(1.5);
+      transform: scale(1.5);
+   }
+   .emoticonBtn:hover h6 {
+      margin-top: 1rem;
+   }
+   .commentEmoticonBtn:hover img {
+      -moz-transform: scale(1.2);
+      -webkit-transform: scale(1.2);
+      transform: scale(1.2);
+   }
+   .commentEmoticonBtn:hover h6 {
+      margin-top: 1rem;
+   }
+.breakLine {
+   margin-top: 1rem;
+   margin-bottom: 1rem;
+   height: 0.1em;
+   width: -webkit-fill-available;
+   background-color: #242424;
+}
+@media (min-width: 768px) {
+   .inheritDiv {
+      display: inherit !important;
+   }
+   #btnSubscribeOwner, #emoticonsDiv {
+      float: right;
+   }
 }
 
-#navBar {
-    background: #333;
+@media (max-width: 768px) {
+   .inheritDiv {
+      display: block !important;
+   }
+   #btnSubscribeOwner {
+      float: left;
+   }
+}
+#ownerInfo {
+   display: inline-flex !important;
+}
+.commentImageDiv {
+   width: 3.5rem;
+   height: 3.5rem;
+   margin-right: 2rem;
+}
+#profileImageDiv {
+   width: 4.5rem;
+   height: 4.5rem;
+}
+#profileImageDiv, .commentImageDiv {
+   position: relative;
+   overflow: hidden;
+   border-radius: 50%;
 }
 
-a {
-    color: white;
+   #profileImageDiv img, .commentImageDiv img {
+      width: 100%;
+      height: auto;
+   }
+
+/*showMore*/
+
+.panel-wrapper {
+   position: relative;
 }
 
-.container-fluid, #videosDiv, .FollowersContainer {
-    text-align: center;
-    margin-top: 3em;
+.btn {
+   left: 30%;
+   text-decoration: none;
+   width: 30%;
 }
 
-h2 {
-    margin-top: 3em;
-    text-align: center;
-    color: white;
+.show, .hide {
+   position: absolute;
+   bottom: -4em;
+   z-index: 100;
+   text-align: center;
 }
 
-h3 {
-    margin-top: 1em;
-    color: #00961a;
-    margin-left: 20px;
+.hide {
+   display: none;
 }
 
-h4 {
-    margin-bottom: 1em;
-    color: white;
+.show:target {
+   display: none;
 }
 
-#searchOptionsDiv {
-    color: white;
-    margin-top: 3em;
-}
+   .show:target ~ .hide {
+      display: block;
+   }
 
-#search {
-    margin-left: 1em;
-    width: 3em;
-    height: 1.8em;
-    margin-top: 0.2em;
-}
+   .show:target ~ .panel {
+      max-height: 2000px;
+   }
 
-#input-group {
-    margin-top: 2em;
-}
+   .show:target ~ .fade {
+      margin-top: 0;
+   }
 
-.Video, #usersDiv, #commentsDiv {
-    text-align: center;
+.panel {
+   position: relative;
+   margin: 2rem auto;
+   max-height: 4.5rem;
+   overflow: hidden;
+   transition: max-height .5s ease;
 }
-
-#ownerName {
-    color: #00961a;
+#breakAfterOwner{
+   margin-top: 2rem;
 }
-
-.imgVideo {
-    height: 200px;
-    width: 300px;
-    border-radius: 25px;
+/*resize input*/
+textarea {
+   width: inherit !important;
+   resize: none;
+   font-size: 18px;
+   overflow-x: hidden;
+   overflow-y: auto;
+   min-height: 2em;
+   height: 2em;
+   padding: 2px;
+   max-height: 8em;
+   left: 0px;
+   margin-bottom: 1rem;
 }
-
-#commentsInfoDiv {
-    color: white;
+#cancelComment{
+   margin-right:1rem;
 }
-
-footer {
-    height: 2em;
-    background-color: #333;
-    bottom: 0;
-    left: 0;
-    width: 100vw;
-    position: fixed;
+#cancelComment, #saveComment{
+   width:7rem;
 }
-
-p {
-    color: white;
-    padding: 0 30px;
-    font-size: 20px;
+.commentsOptionsDiv {
+   background-color: #363636;
+   box-shadow: 0 10px 30px rgba(0,0,0,.2);
+   color: white;
+   margin-right: 1rem;
+   width: 40%;
+   padding: 0.3rem;
+   text-align: center;
+   margin-top: 0.5rem;
+   margin-bottom: 1rem;
 }
-
-#videoFrame {
-    margin-top: 2em;
-    margin-bottom: 2em;
+.margin-top {
+   margin-top: 1rem;
 }
-
-.videoInformationInput {
-    border: none;
-    font-size: 2.5em;
-    background: none;
-    color: white;
-    margin-left: 0.5em;
-}
-
-#videoBrPregleda {
-    border: none;
-    font-size: 2.5em;
-    background: none;
-    color: white;
-}
-
-#btnUnlike, #btnLike {
-    width: 50px;
-    height: 50px;
-}
-
-.floatRight {
-    float: right;
-}
-
-#videoBrLajkova {
-    border: none;
-    font-size: 1.5em;
-    background: none;
-    color: white;
-    width: 3em;
-    margin-left: 1em;
-}
-
-#videoInformationContainer {
-    margin-left: -1.7em;
-}
-
-#ownerUsername {
-    font-size: 2em;
-}
-
-#videoOpis {
-    border: outset;
-    background: none;
-    color: white;
-    font-size: 1.5em;
-}
-
-#videoNaziv {
-    border: none;
-    background: none;
-    color: white;
-    font-size: 1.5em;
-}
-
-#editVideoButtons {
-    margin-bottom: 2em;
-    margin-left: -1.5em;
-}
-
-#komentarInput {
-    border: outset;
-    background: none;
-    color: white;
-    font-size: 1.5em;
-    width: 40em;
-    margin-bottom: 1em;
-}
-
-#komentarInputButtons, #glavniKomentarDiv {
-    margin-bottom: 2em;
-}
-
-#btnPost {
-    margin-bottom: 0.5em;
-    width: 5em;
-}
-
-.komentarContainer {
-    border: outset
-}
-
-.avatar {
-    margin: 0.5em;
-    width: 80px;
-    height: 80px;
-    border-radius: 25px;
-}
-
-.komentarOpis {
-    margin-left: 0.5em;
-    border: outset;
-    background: none;
-    color: white;
-    font-size: 1.5em;
-    width: 20em;
-    margin-bottom: 1em;
-}
-
-#komentarDatum {
-    margin-left: 0.5em;
-    border: none;
-    background: none;
-    color: white;
-    font-size: 1.5em;
-}
-
-#editComment {
-    background-color: #28a745;
-    border-color: #28a745;
-    color: #fff;
-}
-
-.deleteCommentButton {
-    background-color: #dc3545;
-    border-color: #dc3545;
-    color: #fff;
+.commentBorder {
+   border-left: solid;
+   border-bottom: solid;
+   border-width: 1px;
+   border-color: #e80a89;
 }

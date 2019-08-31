@@ -14,7 +14,6 @@ using EduTube.BLL.Models;
 
 namespace EduTube.GUI.Controllers
 {
-   [Authorize]
    public class ChatsController : Controller
    {
       private readonly ApplicationDbContext _context;

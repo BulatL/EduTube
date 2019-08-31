@@ -8,163 +8,76 @@ using Microsoft.EntityFrameworkCore;
 using EduTube.DAL.Data;
 using EduTube.DAL.Entities;
 using EduTube.BLL.Managers.Interfaces;
+using EduTube.GUI.ViewModels;
+using EduTube.BLL.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace EduTube.GUI.Controllers
 {
    public class CommentsController : Controller
    {
-      private readonly ApplicationDbContext _context;
-      private ICommentManager _commentManager;
+      private readonly ICommentManager _commentManager;
+      private readonly IApplicationUserManager _userManager;
 
-      public CommentsController(ApplicationDbContext context, ICommentManager commentManager)
+      public CommentsController(ICommentManager commentManager, IApplicationUserManager userManager)
       {
-         _context = context;
          _commentManager = commentManager;
-      }
-
-      // GET: Comments
-      public async Task<IActionResult> Index()
-      {
-         /*var applicationDbContext = _context.Comments.Include(c => c.User).Include(c => c.Video);
-         return View(await applicationDbContext.ToListAsync());*/
-         return Json(await _commentManager.GetAll());
-      }
-
-      // GET: Comments/Details/5
-      public async Task<IActionResult> Details(int? id)
-      {
-         if (id == null)
-         {
-            return NotFound();
-         }
-
-         var comment = await _context.Comments
-             .Include(c => c.User)
-             //.Include(c => c.Video)
-             .FirstOrDefaultAsync(m => m.Id == id);
-         if (comment == null)
-         {
-            return NotFound();
-         }
-
-         return View(comment);
-      }
-
-      // GET: Comments/Create
-      public IActionResult Create()
-      {
-         ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
-         ViewData["VideoId"] = new SelectList(_context.Videos, "Id", "Id");
-         return View();
+         _userManager = userManager;
       }
 
       // POST: Comments/Create
       // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
       // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+      [Authorize]
       [HttpPost]
-      [ValidateAntiForgeryToken]
-      public async Task<IActionResult> Create([Bind("Id,Content,DateCreatedOn,UserId,VideoId,Deleted")] Comment comment)
+      public async Task<IActionResult> Create(CreateCommentViewModel viewModel)
       {
          if (ModelState.IsValid)
          {
-            _context.Add(comment);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-         }
-         ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", comment.UserId);
-         ViewData["VideoId"] = new SelectList(_context.Videos, "Id", "Id", comment.VideoId);
-         return View(comment);
-      }
-
-      // GET: Comments/Edit/5
-      public async Task<IActionResult> Edit(int? id)
-      {
-         if (id == null)
-         {
-            return NotFound();
-         }
-
-         var comment = await _context.Comments.FindAsync(id);
-         if (comment == null)
-         {
-            return NotFound();
-         }
-         ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", comment.UserId);
-         ViewData["VideoId"] = new SelectList(_context.Videos, "Id", "Id", comment.VideoId);
-         return View(comment);
-      }
-
-      // POST: Comments/Edit/5
-      // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-      // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-      [HttpPost]
-      [ValidateAntiForgeryToken]
-      public async Task<IActionResult> Edit(int id, [Bind("Id,Content,DateCreatedOn,UserId,VideoId,Deleted")] Comment comment)
-      {
-         if (id != comment.Id)
-         {
-            return NotFound();
-         }
-
-         if (ModelState.IsValid)
-         {
-            try
+            ApplicationUserModel user = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
+            CommentModel comment = new CommentModel()
             {
-               _context.Update(comment);
-               await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-               if (!CommentExists(comment.Id))
-               {
-                  return NotFound();
-               }
-               else
-               {
-                  throw;
-               }
-            }
-            return RedirectToAction(nameof(Index));
+               Content = viewModel.CommentContent,
+               DateCreatedOn = DateTime.Now,
+               Deleted = false,
+               VideoId = viewModel.VideoId,
+               UserId = user.Id
+            };
+            comment = await _commentManager.Create(comment);
+            return Json(new { commentId = comment.Id, ownerProfileImage = user.ProfileImage, ownerChannelName = user.ChannelName,
+               dateCreatedOn = comment.DateCreatedOn, commentContent = comment.Content});
          }
-         ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", comment.UserId);
-         ViewData["VideoId"] = new SelectList(_context.Videos, "Id", "Id", comment.VideoId);
-         return View(comment);
+         return StatusCode(400);
       }
 
-      // GET: Comments/Delete/5
-      public async Task<IActionResult> Delete(int? id)
+      [Authorize]
+      [HttpPut]
+      [Route("Comments/Edit/{id}")]
+      public async Task<IActionResult> Edit(int id, CreateCommentViewModel viewModel)
       {
-         if (id == null)
-         {
-            return NotFound();
-         }
+         string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+         CommentModel comment = await _commentManager.GetById(id, false);
 
-         var comment = await _context.Comments
-             .Include(c => c.User)
-             //.Include(c => c.Video)
-             .FirstOrDefaultAsync(m => m.Id == id);
-         if (comment == null)
-         {
-            return NotFound();
-         }
+         if (!userId.Equals(comment.UserId))
+            return StatusCode(400);
 
-         return View(comment);
+         await _commentManager.Update(id, viewModel.CommentContent);
+
+         return StatusCode(200);
       }
 
-      // POST: Comments/Delete/5
-      [HttpPost, ActionName("Delete")]
-      [ValidateAntiForgeryToken]
-      public async Task<IActionResult> DeleteConfirmed(int id)
+      [Authorize]
+      [HttpDelete]
+      [Route("Comments/Delete/{id}")]
+      public async Task<IActionResult> Delete(int id)
       {
-         var comment = await _context.Comments.FindAsync(id);
-         _context.Comments.Remove(comment);
-         await _context.SaveChangesAsync();
-         return RedirectToAction(nameof(Index));
+         int result = await _commentManager.Delete(id);
+         if (result > 0 )
+            return StatusCode(200);
+         else
+            return StatusCode(404);
       }
 
-      private bool CommentExists(int id)
-      {
-         return _context.Comments.Any(e => e.Id == id);
-      }
    }
 }

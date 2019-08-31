@@ -1,120 +1,344 @@
-﻿@model EduTube.BLL.Models.VideoModel
+﻿@model EduTube.GUI.ViewModels.VideoViewModel
 @{
-    ViewData["Title"] = "Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+   ViewData["Title"] = Model.Name;
+   Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<link href="~/css/SingleVideo.css" rel="stylesheet" />
-
-<div class="container-fluid">
-    <div class="container-fluid" id="VideoContainer">
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="container">
-                    @if (Model.FilePath != null && Model.FilePath != "")
-                    {
-                        <iframe id="videoFrame" width="950" height="550" src="@Model.YoutubeUrl" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
-                    }
-                    @if (Model.YoutubeUrl != null && Model.YoutubeUrl != "")
-                    {
-                        <iframe id="videoFrame" width="950" height="550" src="@Model.YoutubeUrl" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
-                    }
-
-                    <div class="caption">
-                        <input class="videoInformationInput" id="videoNaziv" type="text" name="videoNaziv" value="@Model.Name" readonly>
-                    </div>
-                    <div class="container">
-
-                        <input class="videoInformationInput" id="videoBrPregleda" type="text" name="videoNaziv" value="@Model.Name views" readonly>
-                        <div class="floatRight">
-                            <a onclick="dislikeVideo(@Model.Id)"><img id="btnUnlike" src="~/uploads/red-thumbs-down-md.png"></a>
-                            <!--if (Model.AllowRaiting == true)
-                            {
-                                <input class="videoInformationInput" id="videoBrLajkova" type="text" name="videoNaziv" value="Model.NumberOfDislikes  Model.NumberOfLikes" readonly>
-                            }-->
-                            <a onclick="likeVideo(@Model.Id)"><img id="btnLike" src="~/uploads/green-thumbs-up-md.png"></a>
-                        </div>
-                    </div>
-                    <div class="container" id="videoButtonsDiv">
-
-                    </div>
-                    <div class="container">
-                        <div class="col-lg-8" id="videoInformationContainer">
-                            <div class="container">
-                                <p class="viewCV">
-                                    <a href="http://localhost:55157/Youtube/users/@Model.User.Id" id="ownerName"><h3 id="ownerUsername">@Model.User.ChannelName</h3></a>
-                                    <textarea rows="4" cols="30" class="videoInformationInput" id="videoOpis" readonly>@Model.Description</textarea><br />
-                                    <input class="videoInformationInput" id="videoNaziv" type="text" name="videoDate" value="Posted @Model.DateCreatedOn" readonly>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-lg-4" id="editVideoButtons">
-                            <div class="container" id="editVideoButtonsDiv">
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6">
-                    <div class="row">
-                        <div class="container-fluid" id="komentariContainer">
-                            <div class="col-lg-10">
-                                <input type="text" placeholder="enter comment here" id="komentarInput">
-                            </div>
-                            <div class="col-lg-2" id="komentarInputButtons">
-                                <div class="container-fluid" id="videoPostButtonsDiv">
-                                    <button id="btnPost" class="btn btn-success" onclick="postComment(@Model.Id)">Post</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-8" id="glavniKomentarDiv">
-                    @if (Model.AllowComments == true)
-                    {
-                        @if (Model.Comments != null && Model.Comments.Count() > 0)
-                        {
-                            @foreach (var comment in Model.Comments)
-                            {
-                                <div class="container-fluid">
-                                    <div class="komentarContainer">
-                                        <div class="col-log-3" id="komentarDiv'+@comment.Id+'">
-                                            <a href="http://localhost:55157/Youtube/users/@comment.User.Id" id="ownerUsername">
-                                                <img src="~/uploads/@comment.User.ProfileImage" class="avatar">
-                                                @comment.User.ChannelName
-                                            </a><br />
-                                            <textarea id="@comment.Id@comment.Content" rows="4" cols="30" class="komentarOpis" readonly>@comment.Content</textarea><br />
-                                            <input class="videoInformationInput" id="komentarDatum" type="text" value="Posted @comment.DateCreatedOn" readonly><br />
-                                            <div class="containerButtonsKomentar">
-                                                <a onclick="dislikeComment(@comment.Id)" class="AnchorLikeComment"><img id="btnUnlike" src="~/uploads/red-thumbs-down-md.png"></a>
-                                                <input id="videoBrLajkova" type="text" name="videoNaziv" value="comment.NumberOfDislikes   comment.NumberOfLikes" readonly>
-                                                <a onclick="likeComment(@comment.Id)" class="AnchorDislikeComment"><img id="btnLike" src="~/uploads/green-thumbs-up-md.png"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-log-2" id="@comment.Id" style="float: right; margin-top: -4em; margin-left: -1em;">
-                                            <button class="editCommentButton" name="post" id="editComment" onclick="editComment(@comment.Id, '@comment.Content')">Edit</button>
-                                            <button class="deleteCommentButton" id="deleteVideo" onclick="alertDeleteComment(@comment.Id)">Delete</button>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        }
-                    }
-                    else
-                    {
-                        <h2>@Model.User.ChannelName doesn't allow comments</h2>
-
-                    }
-                </div>
+@section Styles{
+   <link href="~/selectivity-3.1.0/selectivity.min.css" rel="stylesheet" />
+   <link href="~/selectivity-3.1.0/selectivity-jquery.min.css" rel="stylesheet" />
+   <link href="~/css/SingleVideo.css" rel="stylesheet" />
+   <link href="~/css/EditVideoModal.css" rel="stylesheet" />
+}
+<div class="container">
+   <div class="row">
+      <!--Div with video player-->
+      <div class="col-12">
+         <input type="hidden" id="videoId" value="@Model.Id" />
+         @if (Model.YoutubeUrl != null && Model.YoutubeUrl != "")
+         {
+            <iframe id="videoPlayer" class="widthInherit" height="550" src="@Model.YoutubeUrl" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+         }
+         @if (Model.FilePath != null && Model.FilePath != "")
+         {
+            <video controls id="videoPlayer" class="widthInherit">
+               <source src="~/videos/@Model.FilePath" type="video/mp4">
+               Your browser does not support HTML5 video.
+            </video>
+         }
+      </div>
+      <!--Div with video name and view count-->
+      <div class="col-12">
+         <div class="inheritDiv">
+            <h4 class="float-left" style="margin-right:1em;">@Model.Name</h4>
+            <h5 class="float-right" id="viewsCount"></h5>
+         </div>
+      </div>
+      <!--Div with hashtags and emoticons-->
+      <div class="col-12 inheritDiv">
+         <div class="col-lg-3 col-md-3 col-sm-12 noPadding">
+            <span class="breakWord"><strong>Hashtags: </strong>@Model.Hashtags</span>
+         </div>
+         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 noPadding">
+            <div class="row justify-content-center" id="emoticonsDiv">
+               <div>
+                  <button class="emoticonBtn" onclick="Reaction(1, @Model.Id, null)" id="emoticonBtn1">
+                     <img src="~/images/likeEmoticon.png" id="emoticon1" class="" />
+                     <h6 class="whiteColor moveLeft" id="emoticonCount1">@Model.Reactions?.Where(x => x.EmoticonId == 1).Count()</h6>
+                  </button>
+               </div>
+               <div>
+                  <button class="emoticonBtn" onclick="Reaction(3, @Model.Id, null)" id="emoticonBtn3">
+                     <img src="~/images/loveEmoticon.png" id="emoticon3" class="" />
+                     <h6 class="whiteColor moveLeft" id="emoticonCount3">@Model.Reactions?.Where(x => x.EmoticonId == 3).Count()</h6>
+                  </button>
+               </div>
+               <div>
+                  <button class="emoticonBtn" onclick="Reaction(5, @Model.Id, null)" id="emoticonBtn5">
+                     <img src="~/images/LaughtEmoticon.png" id="emoticon5" class="" />
+                     <h6 class="whiteColor moveLeft" id="emoticonCount5">@Model.Reactions?.Where(x => x.EmoticonId == 5).Count()</h6>
+                  </button>
+               </div>
+               <div>
+                  <button class="emoticonBtn" onclick="Reaction(4, @Model.Id, null)" id="emoticonBtn4">
+                     <img src="~/images/wowEmoticon.png" id="emoticon4" class="" />
+                     <h6 class="whiteColor moveLeft" id="emoticonCount4">@Model.Reactions?.Where(x => x.EmoticonId == 4).Count()</h6>
+                  </button>
+               </div>
+               <div>
+                  <button class="emoticonBtn" onclick="Reaction(6, @Model.Id, null)" id="emoticonBtn6">
+                     <img src="~/images/sadEmoticon.png" id="emoticon6" class="" />
+                     <h6 class="whiteColor moveLeft" id="emoticonCount6">@Model.Reactions?.Where(x => x.EmoticonId == 6).Count()</h6>
+                  </button>
+               </div>
+               <div>
+                  <button class="emoticonBtn" onclick="Reaction(7, @Model.Id, null)" id="emoticonBtn7">
+                     <img src="~/images/angry2Emoticon.png" id="emoticon7" class="" />
+                     <h6 class="whiteColor moveLeft" id="emoticonCount7">@Model.Reactions?.Where(x => x.EmoticonId == 7).Count()</h6>
+                  </button>
+               </div>
+               <div>
+                  <button class="emoticonBtn" onclick="Reaction(2, @Model.Id, null)" id="emoticonBtn2">
+                     <img src="~/images/dislikeEmoticon.png" id="emoticon2" class="" />
+                     <h6 class="whiteColor moveLeft" id="emoticonCount2">@Model.Reactions?.Where(x => x.EmoticonId == 2).Count()</h6>
+                  </button>
+               </div>
             </div>
-        </div>
-    </div>
+         </div>
+         <input type="hidden" id="reactionHidden" value="@Model.UserReactionOnVideo" />
+      </div>
+      <!--Break line-->
+      <div class="col-12">
+         <div class="breakLine"></div>
+      </div>
+      <!--Div with owner and description-->
+      <div class="col-12" id="ownerInfo">
+         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+            <div id="profileImageDiv">
+               <img src="/profileImages/@Model.OwnerProfileImage" />
+            </div>
+         </div>
+         <!--Div with video description-->
+         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 noPadding ">
+            <div class="">
+               <h4>@Model.OwnerChannelName</h4>
+               <span>@Model.DateCreatedOn</span>
+            </div>
+            <div class="panel-wrapper">
+               <a href="#show" class="show orangeBtn btn" id="show">Show More</a>
+               <a href="#hide" class="hide grayBtn btn" id="hide">Show Less</a>
+               <div class="panel">
+                  @Model.Description
+               </div><!-- end panel -->
+            </div><!-- end panel-wrapper -->
+         </div>
+         <!--Div with buttons for edit, delete i subscribe-->
+         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 noPadding">
+            <div class="noPadding">
+               @if (User.Identity.IsAuthenticated)
+               {
+                  @if (Model.OwnerChannelName.Equals(User.Claims.FirstOrDefault(x => x.Type.Equals("channelName")).Value))
+                  {
+                     <button class="greenBtn position-initial fillAvailable" id="btnSubscribeOwner" onclick="OpenEditVideoModal()">Edit info</button>
+                     <button class="redBtn position-initial fillAvailable margin-top" id="btnSubscribeOwner" onclick="DeleteVideo(@Model.Id)">Delete video</button>
+                  }
+                  @if (!Model.OwnerChannelName.Equals(User.Claims.FirstOrDefault(x => x.Type.Equals("channelName")).Value))
+                  {
+                     <button class="purpleBtn position-initial" id="btnSubscribeOwner">Subscribe</button>
+                  }
+               }
+               @if (!User.Identity.IsAuthenticated)
+               {
+                  <a href="/Login?redirectUrl=/Videos/@Model.Id" class="purpleBtn position-initial" id="btnSubscribeOwner">Subscribe</a>
+               }
+            </div>
+         </div>
+      </div>
+      <!--Break line-->
+      <div class="col-12" id="breakAfterOwner">
+         <div class="breakLine"></div>
+      </div>
+
+      <!--Comments not allowed-->
+      @if (Model.AllowComments != true)
+      {
+         <div class="col-12 text-center">
+            <h4>@Model.OwnerChannelName does not allow comments</h4>
+         </div>
+      }
+      <!--Comments allowed-->
+      @if (Model.AllowComments == true)
+      {
+         <!--Div for creating new comment-->
+         <div class="col-12 inheritDiv">
+            <div class="inline-flex widthInherit">
+               <div class="commentImageDiv">
+                  @if (Context.User.Identity.IsAuthenticated)
+                  {
+                     @if (User.Claims.FirstOrDefault(x => x.Type.Equals("channelName")).Value != "")
+                     {
+                        <img src="/profileImages/@Model.OwnerProfileImage" />
+                     }
+                     @if (User.Claims.FirstOrDefault(x => x.Type.Equals("channelName")).Value == "")
+                     {
+                        <img src="~/profileImages/default-avatar.png" />
+                     }
+                  }
+                  @if (!Context.User.Identity.IsAuthenticated)
+                  {
+                     <img src="~/profileImages/default-avatar.png" />
+                  }
+               </div>
+               <div class="container noPadding">
+                  <textarea class="autofit" placeholder="Enter comment here..." id="newComment"></textarea>
+                  <div class="inline-flex float-right">
+                     <button class="grayBtn" id="cancelComment" onclick="ResetTextarea()">Cancel</button>
+                     @if (Context.User.Identity.IsAuthenticated)
+                     {
+                        <button class="orangeBtn" id="saveComment" onclick="CreateComment(@Model.Id)">Save</button>
+                     }
+                     @if (!Context.User.Identity.IsAuthenticated)
+                     {
+                        <button class="orangeBtn" id="saveComment" onclick="RedirectToLogin(@Model.Id)">Save</button>
+                     }
+                  </div>
+               </div>
+            </div>
+         </div>
+         <!--Div with all comments-->
+         <div class="col-12 noPadding margin-top" id="commentsDiv">
+            @if (Model.Comments?.Any() == true)
+            {
+               @foreach (var comment in Model.Comments)
+               {
+                  <div class="col-12 comment_@comment.Id">
+                     <div class="row">
+                        <div class="col-1">
+                           <a href="/Users/@comment.OwnerChannelName.Replace(" ", "-")">
+                              <div class="commentImageDiv">
+                                 <img src="/profileImages/@comment.OwnerProfileImage" />
+                              </div>
+                           </a>
+                        </div>
+                        <div class="col-11">
+                           <div class="row">
+                              <div class="col-8">
+                                 <span><a href="/Users/@comment.OwnerChannelName.Replace(" ", "-")"><strong>   @comment.OwnerChannelName</strong></a> @comment.DateCreatedOn</span>
+                              </div>
+                              @if (Context.User.Identity.IsAuthenticated)
+                              {
+                                 @if (User.Claims.FirstOrDefault(x => x.Type.Equals("channelName")).Value.Equals(comment.OwnerChannelName) || User.Claims.FirstOrDefault(x => x.Type.Equals("role")).Value.Equals("ADMIN"))
+                                 {
+                                    <div class="col-4">
+                                       <button class="dotBtn" onclick="showCommentOptionDiv(@comment.Id)">
+                                          <div class="dotMenu float-right">
+                                          </div>
+                                       </button>
+                                       <div class="commentsOptionsDiv float-right" style="display: none;" id="commentOptionsDiv_@comment.Id">
+                                          <div class="hoverGray"><button class="transparentBtn" onclick="MakeCommentEditable(@comment.Id)">Edit <i class='fas fa-edit'></i></button></div>
+                                          <div class="hoverGray"><button class="transparentBtn" onclick="DeleteComment(@comment.Id)">Delete <i class='far fa-trash-alt'></i></button></div>
+                                       </div>
+                                    </div>
+                                 }
+                              }
+                              <div class="col-12" id="commentContentDiv_@comment.Id">
+                                 <span id="commentContentSpan_@comment.Id">@comment.Content</span>
+                              </div>
+                           </div>
+                           <div class="col-12 inline-flex noPadding">
+                              <div>
+                                 <button class="commentEmoticonBtn" onclick="Reaction(1, null, @comment.Id)" id="emoticonBtn1">
+                                    <img src="~/images/likeEmoticon.png" id="commentEmoticon1_@comment.Id" class="" />
+                                    <h6 class="whiteColor moveLeft" id="emoticonCount1Comment_@comment.Id">@comment.Reactions?.Where(x => x.EmoticonId == 1).Count()</h6>
+                                 </button>
+                              </div>
+                              <div>
+                                 <button class="commentEmoticonBtn" onclick="Reaction(2, null, @comment.Id)" id="emoticonBtn1">
+                                    <img src="~/images/dislikeEmoticon.png" id="commentEmoticon2_@comment.Id" class="" />
+                                    <h6 class="whiteColor moveLeft" id="emoticonCount2Comment_@comment.Id">@comment.Reactions?.Where(x => x.EmoticonId == 2).Count()</h6>
+                                 </button>
+                              </div>
+                           </div>
+                           <div class="float-right displayNone" id="editCommentBtnDiv_@comment.Id">
+                              <button class="grayBtn" id="cancelComment" onclick="CancelCommentEdit(@comment.Id)">Cancel</button>
+                              <button class="orangeBtn" id="saveComment" onclick="EditComment(@comment.Id)">Save</button>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-12 comment_@comment.Id" id="breakAfterOwner">
+                     <div class="breakLine"></div>
+                  </div>
+               }
+            }
+         </div>
+      }
+      <!--Hidden div for current user reactions-->
+      <div class="col-12" id="userReactionsCommentDiv">
+         @foreach (var item in Model.UserReactionOnComments)
+         {
+            <input type="hidden" value="@item.CommentId" class="userReactionsComentId" id="userReactionCommentId_@item.CommentId" />
+            <input type="hidden" value="@item.EmoticonId" id="userReactionEmoticonId_@item.CommentId" />
+         }
+      </div>
+      <!--Div with modal dialog for editing video-->
+      <div>
+         <!-- The Modal -->
+         <div class="modal fade" id="editVideoModal">
+            <div class="modal-dialog">
+               <div class="modal-content">
+
+                  <!-- Modal Header -->
+                  <div class="modal-header">
+                     <h4 class='col-12 modal-title text-center'>
+                        Edit Video: @Model.Name
+                        <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                           <span aria-hidden='true'>&times;</span>
+                        </button>
+                     </h4>
+                  </div>
+                  <form method="post"  asp-action="Edit" asp-controller="Videos">
+                     <!-- Modal body -->
+                     <div class="modal-body">
+                        <div class="form-group">
+                           <input type="hidden" asp-for="Id" />
+                           <label asp-for="Name" class="col-form-label whiteColor"></label>
+                           <input asp-for="Name" class="form-control" id="firstname" />
+                           <span asp-validation-for="Name" style="color:red;" id="firstnameError"></span>
+                        </div>
+                        <div class="form-group" style="width: -webkit-fill-available">
+                           <label asp-for="Description" class="col-form-label whiteColor"></label>
+                           <textarea asp-for="Description" class="form-control widthInherit" id="firstname" rows="20"></textarea>
+                           <span asp-validation-for="Description" style="color:red;" id="firstnameError"></span>
+                        </div>
+                        <div class="form-group">
+                           <label asp-for="AllowComments" class="col-form-label whiteColor"></label>
+                           <input asp-for="AllowComments" class="form-control" id="firstname" />
+                           <span asp-validation-for="AllowComments" style="color:red;" id="firstnameError"></span>
+                        </div>
+                        <div class="form-group">
+                           <label asp-for="Hashtags" class="col-form-label whiteColor"></label>
+                           <input asp-for="Hashtags" class="form-control" id="firstname" />
+                           <span asp-validation-for="Hashtags" style="color:red;" id="firstnameError"></span>
+                        </div>
+                        <div class="form-group">
+                           <label asp-for="Visibility" class="col-form-label whiteColor"></label>
+                           <div>
+                              <input type="radio" id="Public" name="Visibility" value="Public"
+                                     checked>
+                              <label for="huey">Public</label>
+                           </div>
+
+                           <div>
+                              <input type="radio" id="Private" name="Visibility" value="Private">
+                              <label for="dewey">Private</label>
+                           </div>
+
+                           <div>
+                              <input type="radio" id="Invitation" name="Visibility" value="Invitation">
+                              <label for="louie">Invitation</label>
+                           </div>
+                        </div>
+                        <div class="form-group">
+                           <label class="col-form-label whiteColor">Inivite code</label>
+                           <input name="InviteCode" class="form-control" placeholder="invite code" id="firstname" />
+                        </div>
+                     </div>
+                     <!-- Modal footer -->
+                     <div class="modal-footer inheritDiv noPadding">
+                        <div class="col-12 noPadding modalDialogBtnDiv">
+                           <button type="button" class="redBtn float-left" id="editVideoBtn" data-dismiss="modal">Close</button>
+                           <button type="submit" class="greenBtn float-right" id="saveVideoBtn">Save</button>
+                        </div>
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
 </div>
-<footer>
-    <p>
-        Copyright &#169 2018 Luka Bulatovic
-    </p>
-</footer>
-<script src="~/lib/jquery/dist/jquery.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+@section Scripts{
+   <script src="~/selectivity-3.1.0/selectivity.min.js"></script>
+   <script src="~/selectivity-3.1.0/selectivity-jquery.min.js"></script>
+   <script src="~/js/VideoPage.js"></script>
+}

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using EduTube.DAL.Entities;
+using System.Linq;
 
 namespace EduTube.BLL.Managers
 {
@@ -28,10 +29,24 @@ namespace EduTube.BLL.Managers
          return ViewMapper.EntityToModel(await _context.Views
              .FirstOrDefaultAsync(x => x.Id == id));
       }
-
-      public async Task<ViewModel> Create(ViewModel view)
+      public async Task<int> CountViewsByVideo(int videoId)
       {
-         View entity = ViewMapper.ModelToEntity(view);
+         return await _context.Views.CountAsync(x => x.VideoId == videoId);
+      }
+
+      public async Task<bool> ViewExist(int videoId, string userId, string ipAddress)
+      {
+         return await _context.Views.AnyAsync(x => x.VideoId == videoId && (x.UserId.Equals(userId) || x.IpAddress.Equals(ipAddress)));
+      }
+
+      public async Task<ViewModel> Create(int videoId, string userId, string ipAddress)
+      {
+         View entity = new View()
+         {
+            VideoId = videoId,
+            UserId = userId,
+            IpAddress = ipAddress
+         };
          _context.Views.Add(entity);
          await _context.SaveChangesAsync();
          return ViewMapper.EntityToModel(entity);

@@ -13,7 +13,7 @@ namespace EduTube.BLL.Managers
 {
    public class ReactionManager : IReactionManager
    {
-      private ApplicationDbContext _context;
+      private readonly ApplicationDbContext _context;
 
       public ReactionManager(ApplicationDbContext context)
       {
@@ -31,11 +31,40 @@ namespace EduTube.BLL.Managers
              .FirstOrDefaultAsync(x => x.Id == id && !x.Deleted));
       }
 
+      public async Task<List<ReactionModel>> GetByVideo(int videoId)
+      {
+         return ReactionMapper.EntitiesToModels(await _context.Reactions.Where(x => x.VideoId == videoId && !x.Deleted).ToListAsync());
+      }
+
+      public async Task<ReactionModel> GetByVideoAndUser(int videoId, string userId)
+      {
+         return ReactionMapper.EntityToModel(await _context.Reactions.FirstOrDefaultAsync(x => x.VideoId == videoId && 
+         x.UserId.Equals(userId) && !x.Deleted));
+      }
+      public async Task<ReactionModel> GetByCommentAndUser(int commentId, string userId)
+      {
+         return ReactionMapper.EntityToModel(await _context.Reactions.FirstOrDefaultAsync(x => x.CommentId == commentId &&
+         x.UserId.Equals(userId) && !x.Deleted));
+      }
+
+      public async Task<List<ReactionModel>> GetCommentsReactionsByUserAndVideo(List<int> commentsId, string userId)
+      {
+         return ReactionMapper.EntitiesToModels(await _context.Reactions.Where(x => commentsId.Contains(x.CommentId.Value) &&
+         x.UserId.Equals(userId) && !x.Deleted).ToListAsync());
+      }
+
       public async Task<ReactionModel> Create(ReactionModel reaction)
       {
          Reaction entity = ReactionMapper.ModelToEntity(reaction);
-         _context.Reactions.Add(entity);
-         await _context.SaveChangesAsync();
+         await _context.Reactions.AddAsync(entity);
+         try
+         {
+            await _context.SaveChangesAsync();
+         }
+         catch(Exception e)
+         {
+            Console.WriteLine(e);
+         }
          return ReactionMapper.EntityToModel(entity);
       }
 
@@ -46,12 +75,19 @@ namespace EduTube.BLL.Managers
          return reaction;
       }
 
-      public async Task Delete(int id)
+      public async Task Remove(int id)
       {
          Reaction entity = await _context.Reactions.FirstOrDefaultAsync(x => x.Id == id);
          /*entity.Deleted = true;
          _context.Update(entity);*/
          _context.Reactions.Remove(entity);
+         await _context.SaveChangesAsync();
+      }
+      public async Task Delete(int id)
+      {
+         Reaction entity = await _context.Reactions.FirstOrDefaultAsync(x => x.Id == id);
+         entity.Deleted = true;
+         _context.Update(entity);
          await _context.SaveChangesAsync();
       }
 

@@ -92,6 +92,7 @@ namespace EduTube.BLL.Managers
                 (h.Video.VideoVisibility == VideoVisibility.Invitation && h.Video.UserId == userId)) &&
                 h.HashTagId == hashtagId)
                 .Select(h => h.Video)
+                .Include(h => h.User)
                 .Take(6)
                 .ToListAsync()
             );
@@ -101,9 +102,9 @@ namespace EduTube.BLL.Managers
          {
             videos.AddRange(await _context.HashTagRelationships
                 .Include(h => h.Video)
-                .Where(h => !h.Video.Deleted && h.Video.VideoVisibility == VideoVisibility.Public &&
-                h.HashTagId == hashtagId)
+                .Where(h => !h.Video.Deleted && h.Video.VideoVisibility == VideoVisibility.Public && h.HashTagId == hashtagId)
                 .Select(h => h.Video)
+                .Include(h => h.User)
                 .Take(6)
                 .ToListAsync()
             );
@@ -183,11 +184,25 @@ namespace EduTube.BLL.Managers
 
       public async Task<VideoModel> GetById(int id, bool includeAll)
       {
-         return includeAll ? VideoMapper.EntityToModel(await _context.Videos
-             .Include(x => x.HashtagRelationships).ThenInclude(x => x.Hashtag).Include(x => x.User)
-             .FirstOrDefaultAsync(x => x.Id == id && !x.Deleted))
-             : VideoMapper.EntityToModel(await _context.Videos
-             .FirstOrDefaultAsync(x => x.Id == id && !x.Deleted));
+         Video entity = new Video();
+         if (includeAll)
+         {
+            entity = await _context.Videos
+            .Include(x => x.HashtagRelationships).ThenInclude(x => x.Hashtag)
+            .Include(x => x.User)
+            .FirstOrDefaultAsync(x => x.Id == id && !x.Deleted);
+            if(entity != null)
+            {
+               entity.Reactions = await _context.Reactions.Where(x => x.VideoId == id && !x.Deleted).ToListAsync();
+               entity.Comments = await _context.Comments.Include(x => x.User).Where(x => x.VideoId == id && !x.Deleted).ToListAsync();
+               entity.Comments.ForEach(x => x.Reactions = _context.Reactions.Where(r => r.CommentId == x.Id && !r.Deleted).ToList());
+            }
+         }
+         else
+         {
+            entity = await _context.Videos.FirstOrDefaultAsync(x => x.Id == id && !x.Deleted);
+         }
+         return VideoMapper.EntityToModel(entity);
       }
 
       public async Task<VideoModel> Create(VideoModel model)
@@ -201,18 +216,30 @@ namespace EduTube.BLL.Managers
 
       public async Task<VideoModel> Update(VideoModel model)
       {
-         _context.Update(VideoMapper.ModelToEntity(model));
+         Video entity = await _context.Videos.Include(x => x.User).FirstOrDefaultAsync(x => x.Id == model.Id && !x.Deleted);
+         VideoMapper.CopyModelToEntity(model, entity);
+         _context.Update(entity);
          await _context.SaveChangesAsync();
-         return model;
+         return VideoMapper.EntityToModel(entity);
       }
 
-      public async Task Delete(int id)
+      public async Task<int> Delete(int id)
+      {
+         Video video = await _context.Videos.FirstOrDefaultAsync(x => x.Id == id);
+         List<Comment> comments = await _context.Comments.Where(x => x.VideoId == id).ToListAsync();
+         video.Deleted = true;
+         comments.ForEach(x => x.Deleted = true);
+         _context.Update(video);
+         _context.UpdateRange(comments);
+         return await _context.SaveChangesAsync();
+      }
+      public async Task<int> Remove(int id)
       {
          Video entity = await _context.Videos.FirstOrDefaultAsync(x => x.Id == id);
-         /*entity.Deleted = true;
-         _context.Update(entity);*/
+         List<Comment> comments = await _context.Comments.Where(x => x.VideoId == id).ToListAsync();
          _context.Videos.Remove(entity);
-         await _context.SaveChangesAsync();
+         _context.Comments.RemoveRange(comments);
+         return await _context.SaveChangesAsync();
       }
 
       public async Task DeleteActivateByUser(string id, bool option)

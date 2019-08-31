@@ -10,6 +10,7 @@ using EduTube.BLL.Models;
 using EduTube.DAL.Entities;
 using EduTube.GUI.Services.Interface;
 using EduTube.GUI.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -83,9 +84,9 @@ namespace EduTube.GUI.Controllers
       }
 
       [Route("Login")]
-      public IActionResult Login()
+      public IActionResult Login(string redirectUrl)
       {
-         return View(new LoginViewModel());
+         return View(new LoginViewModel() { RedirectUrl = redirectUrl});
       }
 
       [Route("Login")]
@@ -95,10 +96,23 @@ namespace EduTube.GUI.Controllers
          if (ModelState.IsValid)
          {
             var result = await _userManager.Login(viewModel.Email, viewModel.Password, viewModel.RememberMe);
-            if (result.Succeeded)
+            if (result)
             {
-               return RedirectToAction("Index", "Home");
+               if (viewModel.RedirectUrl == "" || viewModel.RedirectUrl == null)
+                  return RedirectToAction("Index", "Home");
+               else
+                  return LocalRedirect(viewModel.RedirectUrl);
             }
+            /*if (result.Succeeded)
+            {
+               //var x = await _userManager.GetByEmailAndPassword(viewModel.Email, viewModel.Password);
+               /*ApplicationUserModel user = await _userManager.GetByEmail(viewModel.Email);
+               ViewBag.profileImage = user.ProfileImage;*/
+               /*if (viewModel.ReturnUrl == "" || viewModel.ReturnUrl == null)
+                  return RedirectToAction("Index", "Home");
+               else
+                  return LocalRedirect(viewModel.ReturnUrl);
+            }*/
             /*if (result.RequiresTwoFactor)
             {
                return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
@@ -142,7 +156,7 @@ namespace EduTube.GUI.Controllers
                UserName = viewModel.Email
             };
 
-            if(viewModel.ProfileImage != null)
+            if (viewModel.ProfileImage != null)
                user.ProfileImage = await _uploadSerice.UploadImage(viewModel.ProfileImage);
 
             await _userManager.Register(user, viewModel.Password);
@@ -155,7 +169,7 @@ namespace EduTube.GUI.Controllers
       public async Task<IActionResult> ChannelNameExist(string channelName, string email)
       {
          bool ex = await _userManager.ChannelNameExist(channelName, "Null");
-         bool ce = await _userManager.EmailExist(email, "Null"); 
+         bool ce = await _userManager.EmailExist(email, "Null");
          return Json(new { channelNameExist = ex, emailExist = ce });
       }
 

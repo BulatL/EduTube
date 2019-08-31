@@ -7,6 +7,17 @@ namespace EduTube.BLL.Mappers
 {
    public class VideoMapper
    {
+      public static void CopyModelToEntity(VideoModel model, Video entity)
+      {
+         entity.Name = model.Name;
+         entity.UserId = model.UserId;
+         entity.FilePath = model.FilePath;
+         entity.IvniteCode = model.IvniteCode;
+         entity.Description = model.Description;
+         entity.AllowComments = model.AllowComments;
+         entity.VideoVisibility = VideoVisibilityMapper.ModelToEntity(model.VideoVisibility);
+         entity.UserId = entity.User.Id;
+      }
       public static VideoModel EntityToModel(Video entity)
       {
          if (entity == null)

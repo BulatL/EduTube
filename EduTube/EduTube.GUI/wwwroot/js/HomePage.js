@@ -1,91 +1,85 @@
 ﻿$(function () {
-    $.ajax({
-        url: 'https://api.ipify.org/?format=json',
-        type: 'GET',
-        dataType: 'json',
-        success: function (ipAddress) {
-            $.ajax({
-                url: '/Videos/RecommendedVideos/' + ipAddress.ip,
-                type: 'GET',
-                dataType: 'json',
-                success: function (videos) {
-                    populateReccomendedVideo(videos);
-                },
-                error: function (response, jqXHR) {
-                }
-            });
-        },
-        error: function (response, jqXHR) {
-        }
-    });
+   $.ajax({
+      url: 'https://api.ipify.org/?format=json',
+      type: 'GET',
+      dataType: 'json',
+      success: function (ipAddress) {
+         $.ajax({
+            url: '/Videos/RecommendedVideos/' + ipAddress.ip,
+            type: 'GET',
+            dataType: 'json',
+            success: function (videos) {
+               populateReccomendedVideo(videos);
+            },
+            error: function (response, jqXHR) {
+            }
+         });
+      },
+      error: function (response, jqXHR) {
+      }
+   });
 })
 function populateReccomendedVideo(videos) {
-    let firstRecommendedVideosRow = $("#firstRecommendedVideosRow");
-    let firstRecommendedVideosContent = [];
-    let secondRecommendedVideosRow = $("#secondRecommendedVideosRow");
-    let secondRecommendedVideosContent = [];
+   let firstRecommendedVideosRow = $("#firstRecommendedVideosRow");
+   let firstRecommendedVideosContent = [];
+   let secondRecommendedVideosRow = $("#secondRecommendedVideosRow");
+   let secondRecommendedVideosContent = [];
 
-    if (videos.firstRecommended.length > 0) {
-        for (var i = 0; i < videos.firstRecommended.length; i++) {
-            if (videos.firstRecommended[i].youtubeUrl != null) {
-                firstRecommendedVideosContent.push(
-                    `<div class="col-lg-4">
-                        <h2><a href="#">${videos.firstRecommended[i].name}</a></h2>
-                        <h2>${videos.firstRecommended[i].id}</h2>
-                        <iframe id="videoFrame" width="300" height="200" src="${videos.firstRecommended[i].youtubeUrl}" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
-                     </div>`
-                );
-            }
-            else {
-                firstRecommendedVideosContent.push(
-                    `<div class="col-lg-4>"
-                        <h2><a href="#">${videos.firstRecommended[i].name}</a></h2>
-                        <h2>${videos.firstRecommended[i].id}</h2>
-                        <video width="300" controls>
-                            <source src="~/DR%c5%bdAVNI%20POSAO%20[HQ]%20-%20Ep.218%20%c4%8cekiranje%20(30.09.2013.).mp4" type="video/mp4">
-                            Your browser does not support HTML5 video.
-                        </video>
-                     </div>`
-                );
-            }
-        }
-        firstRecommendedVideosRow.html(firstRecommendedVideosContent.join(''));
-        $("#firstRecommendedHeading").text("Recommended because u watched video with " + videos.firstHashtag + " hashtag");
-    }
-    else {
-        firstRecommendedVideosRow.remove();
-        $("#firstRecommendedHeading").remove();
-    }
+   /*
+    <div class="col-lg-2">
+         <a href="/Videos/@video.Id">
+            <img src="~/thumbnails/@video.Thumbnail" width="160" height="180"/>
+            <h6 class="text-white">@video.Name</h6>
+         </a>
+         <a href="/Users/@video.UserChannelName.Replace(" ", "-")">
+            <h6 class="text-white">@video.UserChannelName</h6>
+         </a>
+         <h6>@video.DateCreatedOn</h6>
+      </div>*/
+   if (videos.firstRecommended.length > 0) {
+      for (var i = 0; i < videos.firstRecommended.length; i++) {
+         console.log(videos.firstRecommended[i]);
+         firstRecommendedVideosContent.push(
+            `<div class="col-lg-2">
+               <a href="/Videos/${videos.firstRecommended[i].id}">
+                  <img src="/thumbnails/${videos.firstRecommended[i].thumbnail}" width="160" height="180"/>
+                  <h6 class="text-white">${videos.firstRecommended[i].name}</h6>
+               </a>
+               <a href="/Users/${videos.firstRecommended[i].userChannelName.replace(/ /g, '-')}">
+                  <h6 class="text-white">${videos.firstRecommended[i].userChannelName}</h6>
+               </a>
+               <h6>${videos.firstRecommended[i].fateCreatedOn}</h6>
+            </div>`
+         );
+      }
+      firstRecommendedVideosRow.html(firstRecommendedVideosContent.join(''));
+      $("#firstRecommendedHeading").text("Recommended because u watched video with " + videos.firstHashtag + " hashtag");
+   }
+   else {
+      firstRecommendedVideosRow.remove();
+      $("#firstRecommendedHeading").remove();
+   }
 
-    if (videos.secondRecommended.length > 0) {
-        for (var i = 0; i < videos.secondRecommended.length; i++) {
-            if (videos.secondRecommended[i].youtubeUrl != null) {
-                secondRecommendedVideosContent.push(
-                    `<div class="col-lg-4">
-                        <h2><a href="#">${videos.secondRecommended[i].name}</a></h2>
-                        <h2>${videos.secondRecommended[i].id}</h2>
-                        <iframe id="videoFrame" width="300" height="200" src="${videos.secondRecommended[i].youtubeUrl}" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
-                     </div>`
-                );
-            }
-            else {
-                secondRecommendedVideosContent.push(
-                    `<div class="col-lg-4>"
-                        <h2><a href="#">${videos.secondRecommended[i].name}</a></h2>
-                        <h2>${videos.secondRecommended[i].id}</h2>
-                        <video width="300" controls>
-                            <source src="~/DR%c5%bdAVNI%20POSAO%20[HQ]%20-%20Ep.218%20%c4%8cekiranje%20(30.09.2013.).mp4" type="video/mp4">
-                            Your browser does not support HTML5 video.
-                        </video>
-                     </div>`
-                );
-            }
-        }
-        secondRecommendedVideosRow.html(secondRecommendedVideosContent.join(''));
-        $("#secondRecommendedHeading").text("Recommended because u watched video with " + videos.secondHashtag + " hashtag");
-    }
-    else {
-        secondRecommendedVideosRow.remove();
-        $("#secondRecommendedHeading").remove();
-    }
+   if (videos.secondRecommended.length > 0) {
+      for (var i = 0; i < videos.secondRecommended.length; i++) {
+         secondRecommendedVideosContent.push(
+            `<div class="col-lg-2">
+               <a href="/Videos/${videos.secondRecommended[i].id}">
+                  <img src="/thumbnails/${videos.secondRecommended[i].thumbnail}" width="160" height="180"/>
+                  <h6 class="text-white">${videos.secondRecommended[i].name}</h6>
+               </a>
+               <a href="/Users/${videos.secondRecommended[i].userChannelName.replace(/ /g, '-')}">
+                  <h6 class="text-white">${videos.secondRecommended[i].userChannelName}</h6>
+               </a>
+               <h6>${videos.secondRecommended[i].fateCreatedOn}</h6>
+            </div>`
+         );
+      }
+      secondRecommendedVideosRow.html(secondRecommendedVideosContent.join(''));
+      $("#secondRecommendedHeading").text("Recommended because u watched video with " + videos.secondHashtag + " hashtag");
+   }
+   else {
+      secondRecommendedVideosRow.remove();
+      $("#secondRecommendedHeading").remove();
+   }
 }

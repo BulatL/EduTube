@@ -1,34 +1,27 @@
 ﻿@model IEnumerable<EduTube.BLL.Models.VideoModel>
 @{
-    ViewData["Title"] = "Home Page";
+   ViewData["Title"] = "Home Page";
 }
 
+@section Styles{ }
 <div id="backgroundImage">
-    <img src="~/images/keyboard.jpg" width="900" />
+   <img src="~/images/keyboard.jpg" width="900" />
 </div>
 <h2 class="text-center">Popular videos</h2>
 <div class="row">
-    @foreach (var video in Model)
-    {
-        <div class="col-lg-2">
-            <a href="#">
-                @if (video.YoutubeUrl != null)
-                {
-                    <iframe id="videoFrame" width="160" height="180" src="@video.YoutubeUrl" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
-                }
-                @if (video.YoutubeUrl == null)
-                {
-                    <video width="300" controls>
-                        <source src="~/DR%c5%bdAVNI%20POSAO%20[HQ]%20-%20Ep.218%20%c4%8cekiranje%20(30.09.2013.).mp4" type="video/mp4">
-                        Your browser does not support HTML5 video.
-                    </video>
-                }
-                <h6 class="text-white">@video.Name</h6>
-                <h6 class="text-white">@video.UserChannelName</h6>
-            </a>
-            <h6>@video.DateCreatedOn</h6>
-        </div>
-    }
+   @foreach (var video in Model)
+   {
+      <div class="col-lg-2">
+         <a href="/Videos/@video.Id">
+            <img src="~/thumbnails/@video.Thumbnail" width="160" height="180" />
+            <h6 class="text-white">@video.Name</h6>
+         </a>
+         <a href="/Users/@video.UserChannelName.Replace(" ", "-")">
+            <h6 class="text-white">@video.UserChannelName</h6>
+         </a>
+         <h6>@video.DateCreatedOn</h6>
+      </div>
+   }
 </div>
 
 <h2 id="firstRecommendedHeading"></h2>
@@ -38,5 +31,6 @@
 <div class="row" id="secondRecommendedVideosRow">
 </div>
 
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/js/HomePage.js"></script>
+@section Scripts{
+   <script src="~/js/HomePage.js"></script>
+}

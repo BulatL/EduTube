@@ -15,7 +15,8 @@ namespace EduTube.BLL.Managers.Interfaces
       Task<VideoModel> GetById(int id, bool includeAll);
       Task<VideoModel> Create(VideoModel video);
       Task<VideoModel> Update(VideoModel video);
-      Task Delete(int id);
+      Task<int> Delete(int id);
+      Task<int> Remove(int id);
       Task DeleteActivateByUser(string id, bool option);
    }
 }

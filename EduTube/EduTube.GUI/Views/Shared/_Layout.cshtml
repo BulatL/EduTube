@@ -1,90 +1,99 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - EduTube</title>
+   <meta charset="utf-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>@ViewData["Title"] - EduTube</title>
 
-    <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-    </environment>
-    <environment exclude="Development">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
-              crossorigin="anonymous"
-              integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE="/>
-    </environment>
-    <link rel="stylesheet" href="~/css/site.css" />
+   <environment include="Development">
+      <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+   </environment>
+   <environment exclude="Production">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css"
+            asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+            asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+            crossorigin="anonymous"
+            integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" />
+   </environment>
+   <link rel="stylesheet" href="~/css/site.css" />
+   <link href="~/lib/jquery/jquery-ui-1.11.4/jquery-ui.css" rel="stylesheet" />
+   @RenderSection("Styles", required: false)
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EduTube</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    @if (Context.User.Identity.IsAuthenticated)
-                    {
-                        <img width="40" src="http://pluspng.com/img-png/user-png-icon-male-user-icon-512.png" title="@User.Identity.Name" />
-                    }
-                    @if (!Context.User.Identity.IsAuthenticated)
-                    {
-                        <a class="nav-link" href="/Login">Login</a>
-                    }
-                    <div class="nav navbar-nav navbar-right">
-                        <div class="input-group">
-                            <input class="form-control mr-sm-2" type="search" placeholder="Search" id="searchInput" aria-label="Search">
-                        </div>
-                    </div>
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+   <header>
+      <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow mb-3">
+         <div class="container-fluid">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EduTube</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+               <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+               @if (Context.User.Identity.IsAuthenticated)
+               {
+                  <a href="/Users/@User.Claims.FirstOrDefault(x => x.Type.Equals("channelName")).Value.Replace(" ", "-")">
+                     <div id="profileImageNavbarDiv">
+                        <img src="~/profileImages/@User.Claims.FirstOrDefault(x => x.Type.Equals("profileImage")).Value" />
+                     </div>
+                  </a>
+               }
+               @if (!Context.User.Identity.IsAuthenticated)
+               {
+                  <a class="nav-link" href="/Login?redirectUrl=@Context.Request.Path">Login</a>
+               }
+               <div class="nav navbar-nav navbar-right">
+                  <div class="input-group">
+                     <input class="form-control mr-sm-2" type="search" placeholder="Search" id="searchInput" aria-label="Search">
+                  </div>
+               </div>
+               <ul class="navbar-nav flex-grow-1">
+                  <li class="nav-item">
+                     <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                  </li>
+               </ul>
             </div>
-        </nav>
-    </header>
-    <div class="container-fluid" id="mainBodyDiv">
-        <partial name="_CookieConsentPartial" />
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+         </div>
+      </nav>
+   </header>
+   <div class="container-fluid" id="mainBodyDiv">
+      <partial name="_CookieConsentPartial" />
+      <main role="main" class="pb-3">
+         @RenderBody()
+      </main>
+   </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2019 - EduTube.GUI - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+   <footer class="border-top footer text-muted">
+      <div class="container">
+         &copy; 2019 - EduTube.GUI - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+      </div>
+   </footer>
 
-    <environment include="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
-    </environment>
-    <environment exclude="Development">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
-                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery"
-                crossorigin="anonymous"
-                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"
-                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
-                crossorigin="anonymous"
-                integrity="sha256-E/V4cWE4qvAeO5MOhjtGtqDzPndRO1LBk8lJ/PR7CA4=">
-        </script>
-    </environment>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+   <environment include="Development">
+      <script src="~/lib/jquery/dist/jquery.js"></script>
+      <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+   </environment>
+   <environment exclude="Development">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+              asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+              asp-fallback-test="window.jQuery"
+              crossorigin="anonymous"
+              integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
+      </script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"
+              asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
+              asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+              crossorigin="anonymous"
+              integrity="sha256-E/V4cWE4qvAeO5MOhjtGtqDzPndRO1LBk8lJ/PR7CA4=">
+      </script>
+   </environment>
+   <script src="~/js/site.js" asp-append-version="true"></script>
 
-    @RenderSection("Scripts", required: false)
+   <script src="~/lib/jquery/jquery-ui-1.11.4/jquery-ui.js"></script>
+   <script src="https://kit.fontawesome.com/b2138d02f2.js"></script>
+   @RenderSection("Scripts", required: false)
 </body>
 </html>

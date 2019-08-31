@@ -2,12 +2,14 @@
 @{
    ViewData["Title"] = "Login";
 }
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link href="~/css/Login.css" rel="stylesheet" />
+@section Styles{
+   <link href="~/css/Login.css" rel="stylesheet" />
+}
 <div class="" id="loginDiv">
    <h5 class="text-center whiteColor">Login</h5>
-   <form method="post">
+   <form method="post" asp-controller="Users" asp-action="Login">
       <label class="col-form-label whiteColor">Email</label>
+      <input asp-for="RedirectUrl" type="hidden" />
       <input asp-for="Email" class="form-control" placeholder="Email" style="font-family:Arial, FontAwesome" />
       <span asp-validation-for="Email" style="color:red;"></span>
       <br />

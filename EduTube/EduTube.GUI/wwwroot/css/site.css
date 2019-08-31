@@ -115,6 +115,7 @@ h2{
    position: absolute;
    cursor: pointer;
    display: inline-block;
+   padding: 0.5rem;
 }
 
    .purpleBtn:hover {
@@ -127,3 +128,133 @@ h2{
    border-top: none !important;
    background-color: #242424;
 }
+.breakWord {
+   word-wrap: break-word;
+}
+#profileImageNavbarDiv {
+   position: relative;
+   width: 3.5rem;
+   height: 3.5rem;
+   overflow: hidden;
+   border-radius: 50%;
+   margin-left: 1rem;
+}
+   #profileImageNavbarDiv img {
+      width: 100%;
+      height: auto;
+   }
+
+.noPadding{
+   padding: 0 !important;
+}
+
+.inline-flex {
+   display: inline-flex;
+}
+.margin-left-2rem {
+   margin-left:2rem;
+}
+.position-initial{
+   position: initial !important;
+}
+.widthInherit {
+   width: inherit;
+}
+.orangeBtn {
+   background-color: #d14e02;
+   border: none;
+   border-radius: 5px;
+   color: #fff;
+   cursor: pointer;
+   display: inline-block;
+   padding: 0.5rem;
+}
+
+   .orangeBtn:hover {
+      box-shadow: 0 10px 30px rgba(0,0,0,.2);
+      background: linear-gradient(to right,#db9d0b 0,#d14e02 100%);
+      color: #fff;
+   }
+.grayBtn {
+   background-color: #363636;
+   border: none;
+   border-radius: 5px;
+   color: #fff;
+   cursor: pointer;
+   display: inline-block;
+   padding: 0.5rem;
+}
+
+   .grayBtn:hover {
+      box-shadow: 0 10px 30px rgba(0,0,0,.2);
+      background: linear-gradient(to right,#8a8a8a 0,#363636 100%);
+      color: #fff;
+   }
+
+.dotMenu:after {
+   content: '\2807';
+   font-size: 2rem;
+   cursor: pointer;
+}
+.dotBtn {
+   background-color: transparent;
+   border: none;
+   color: #363636;
+   float: right;
+}
+.hoverGray:hover {
+   background-color: #8a8a8a;
+   cursor:pointer;
+}
+.transparentBtn {
+   background-color: transparent;
+   border: none;
+   color: white;
+   cursor: pointer;
+   width: -webkit-fill-available;
+}
+.fillAvailable {
+   width: -webkit-fill-available;
+}
+.moveLeft{
+   margin-left: -1rem;
+}
+
+.redBtn {
+   background-color: #ff1928;
+   border: none;
+   border-radius: 5px;
+   color: #fff;
+   position: absolute;
+   cursor: pointer;
+   display: inline-block;
+   padding: 0.5rem;
+}
+
+   .redBtn:hover {
+      box-shadow: 0 10px 30px rgba(0,0,0,.2);
+      background: linear-gradient(to right,#f739ae 0,#ff1928 100%);
+      color: #fff;
+   }
+
+.greenBtn {
+   background-color: #04b533;
+   border: none;
+   border-radius: 5px;
+   color: #fff;
+   position: absolute;
+   cursor: pointer;
+   display: inline-block;
+   padding: 0.5rem;
+}
+
+   .greenBtn:hover {
+      box-shadow: 0 10px 30px rgba(0,0,0,.2);
+      background: linear-gradient(to right,#00d498 0,#04b533 100%);
+      color: #fff;
+   }
+.displayNone{
+   display: none;
+}
+
+/*modal dialog*/

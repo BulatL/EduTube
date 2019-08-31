@@ -21,9 +21,9 @@ namespace EduTube.DAL.Entities
       public bool Blocked { get; set; }
       public bool Deleted { get; set; }
       //public virtual List<Reaction> Reactions { get; set; }
-      public virtual List<Video> Videos { get; set; }
-      public virtual List<Notification> Notifications { get; set; }
-      public virtual List<Subscription> Subscribers { get; set; }
-      public virtual List<Subscription> SubscribedOn { get; set; }
+      public List<Video> Videos { get; set; }
+      public List<Notification> Notifications { get; set; }
+      public List<Subscription> Subscribers { get; set; }
+      public List<Subscription> SubscribedOn { get; set; }
    }
 }

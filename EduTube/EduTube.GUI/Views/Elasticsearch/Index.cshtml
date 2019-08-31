@@ -1,136 +1,138 @@
 ﻿@model EduTube.GUI.ViewModels.SearchViewModel
 
 @{
-    ViewData["Title"] = "Search";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+   ViewData["Title"] = "Search";
+   Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section Styles{ }
 <div class="container">
-    <h2>Search</h2>
-    <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#videos">Videos</a></li>
-        <li><a data-toggle="tab" href="#users">Users</a></li>
-    </ul>
+   <h2>Search</h2>
+   <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#videos">Videos</a></li>
+      <li><a data-toggle="tab" href="#users">Users</a></li>
+   </ul>
 
-    <div class="tab-content">
-        <input type="hidden" id="search_query" value="@Model.SearchQuery" />
-        <div id="videos" class="tab-pane active">
-            <div class="row" id="videosDiv">
-                @if (Model.Videos.Count() == 0)
-                {
-                    <p>No available videos</p>
-                }
-                @if (Model.Videos.Count() > 0)
-                {
-                    @foreach (var video in Model.Videos)
-                    {
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">@Html.Raw(video.Name)</h5>
-                                    <p class="card-text">@Html.Raw(video.Description)</p>
-                                    <p class="card-text">@Html.Raw(video.Hashtags)</p>
-                                    <p class="card-text">@Html.Raw(video.UserChannelName)</p>
-                                    <a href="@video.UserId" class="btn btn-success">@Html.Raw(video.UserChannelName)</a>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                }
-            </div>
-            @if (Model.Videos.Count() > 0 && Model.TotalPagesVideos > 0)
+   <div class="tab-content">
+      <input type="hidden" id="search_query" value="@Model.SearchQuery" />
+      <div id="videos" class="tab-pane active">
+         <div class="row" id="videosDiv">
+            @if (Model.Videos.Count() == 0)
             {
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item paginationVideoPreviouseLi disabled">
-                            <a class="page-link" onclick="loadPreviouseVideos()">Previous</a>
+               <p>No available videos</p>
+            }
+            @if (Model.Videos.Count() > 0)
+            {
+               @foreach (var video in Model.Videos)
+               {
+                  <div class="col-12">
+                     <div class="card">
+                        <div class="card-body">
+                           <h5 class="card-title">@Html.Raw(video.Name)</h5>
+                           <p class="card-text">@Html.Raw(video.Description)</p>
+                           <p class="card-text">@Html.Raw(video.Hashtags)</p>
+                           <p class="card-text">@Html.Raw(video.UserChannelName)</p>
+                           <a href="@video.UserId" class="btn btn-success">@Html.Raw(video.UserChannelName)</a>
+                        </div>
+                     </div>
+                  </div>
+               }
+            }
+         </div>
+         @if (Model.Videos.Count() > 0 && Model.TotalPagesVideos > 0)
+         {
+            <nav aria-label="Page navigation example">
+               <ul class="pagination justify-content-center">
+                  <li class="page-item paginationVideoPreviouseLi disabled">
+                     <a class="page-link" onclick="loadPreviouseVideos()">Previous</a>
+                  </li>
+                  @for (int i = 1; i <= Model.TotalPagesVideos; i++)
+                  {
+                     @if (i == 1)
+                     {
+                        <li class="page-item paginationVideoLi active" id="paginationVideo_@i"><a class="page-link" onclick="loadMoreVideos(@i)">@i</a></li>
+                     }
+                     @if (i > 1)
+                     {
+                        <li class="page-item paginationVideoLi" id="paginationVideo_@i"><a class="page-link" onclick="loadMoreVideos(@i)">@i</a></li>
+                     }
+                  }
+                  @if (Model.TotalPagesVideos == 1)
+                  {
+                     <li class="page-item paginationVideoNextLi disabled">
+                        <a class="page-link" onclick="loadNextVideos()">Next</a>
+                     </li>
+                  }
+                  @if (Model.TotalPagesVideos > 1)
+                  {
+                     <li class="page-item paginationVideoNextLi">
+                        <a class="page-link" onclick="loadNextVideos()">Next</a>
+                     </li>
+                  }
+               </ul>
+            </nav>
+         }
+      </div>
+      <div id="users" class="tab-pane">
+         <div class="row" id="usersDiv">
+            @if (Model.Videos.Count() == 0)
+            {
+               <p>No available users</p>
+            }
+            @if (Model.Videos.Count() > 0)
+            {
+               @foreach (var user in Model.Users)
+               {
+                  <div class="col-12">
+                     <div class="card">
+                        <div class="card-body">
+                           <h5 class="card-title">@Html.Raw(user.ChannelName)</h5>
+                           <p class="card-text">@Html.Raw(user.Firstname)></p>
+                           <p class="card-text">@Html.Raw(user.Lastname)></p>
+                           <p class="card-text">@Html.Raw(user.ChannelDescription)></p>
+                           <a href="@user.Id" class="btn btn-primary">@Html.Raw(user.ChannelName)</a>
+                        </div>
+                     </div>
+                  </div>
+               }
+               @if (Model.TotalPagesUsers > 0)
+               {
+                  <nav aria-label="Page navigation example">
+                     <ul class="pagination justify-content-center">
+                        <li class="page-item paginationUserPreviouseLi disabled">
+                           <a class="page-link" href="#" tabindex="-1">Previous</a>
                         </li>
-                        @for (int i = 1; i <= Model.TotalPagesVideos; i++)
+                        @for (int i = 1; i <= Model.TotalPagesUsers; i++)
                         {
-                            @if (i == 1)
-                            {
-                                <li class="page-item paginationVideoLi active" id="paginationVideo_@i"><a class="page-link" onclick="loadMoreVideos(@i)">@i</a></li>
-                            }
-                            @if (i > 1)
-                            {
-                                <li class="page-item paginationVideoLi" id="paginationVideo_@i"><a class="page-link" onclick="loadMoreVideos(@i)">@i</a></li>
-                            }
+                           @if (i == 1)
+                           {
+                              <li class="page-item paginationUserLi active" id="paginationUser_@i"><a class="page-link" onclick="loadMoreUsers(@i)">@i</a></li>
+                           }
+                           @if (i > 1)
+                           {
+                              <li class="page-item paginationUserLi" id="paginationUser_@i"><a class="page-link" onclick="loadMoreUsers(@i)">@i</a></li>
+                           }
                         }
-                        @if (Model.TotalPagesVideos == 1)
+                        @if (Model.TotalPagesUsers == 1)
                         {
-                            <li class="page-item paginationVideoNextLi disabled">
-                                <a class="page-link" onclick="loadNextVideos()">Next</a>
-                            </li>
+                           <li class="page-item paginationUserNextLi disabled">
+                              <a class="page-link" onclick="loadNextUsers()">Next</a>
+                           </li>
                         }
                         @if (Model.TotalPagesVideos > 1)
                         {
-                            <li class="page-item paginationVideoNextLi">
-                                <a class="page-link" onclick="loadNextVideos()">Next</a>
-                            </li>
+                           <li class="page-item paginationUserNextLi">
+                              <a class="page-link" onclick="loadNextUsers()">Next</a>
+                           </li>
                         }
-                    </ul>
-                </nav>
+                     </ul>
+                  </nav>
+               }
             }
-        </div>
-        <div id="users" class="tab-pane">
-            <div class="row" id="usersDiv">
-                @if (Model.Videos.Count() == 0)
-                {
-                    <p>No available users</p>
-                }
-                @if (Model.Videos.Count() > 0)
-                {
-                    @foreach (var user in Model.Users)
-                    {
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">@Html.Raw(user.ChannelName)</h5>
-                                    <p class="card-text">@Html.Raw(user.Firstname)></p>
-                                    <p class="card-text">@Html.Raw(user.Lastname)></p>
-                                    <p class="card-text">@Html.Raw(user.ChannelDescription)></p>
-                                    <a href="@user.Id" class="btn btn-primary">@Html.Raw(user.ChannelName)</a>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                    @if (Model.TotalPagesUsers > 0)
-                    {
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination justify-content-center">
-                                <li class="page-item paginationUserPreviouseLi disabled">
-                                    <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                </li>
-                                @for (int i = 1; i <= Model.TotalPagesUsers; i++)
-                                {
-                                    @if (i == 1)
-                                    {
-                                        <li class="page-item paginationUserLi active" id="paginationUser_@i"><a class="page-link" onclick="loadMoreUsers(@i)">@i</a></li>
-                                    }
-                                    @if (i > 1)
-                                    {
-                                        <li class="page-item paginationUserLi" id="paginationUser_@i"><a class="page-link" onclick="loadMoreUsers(@i)">@i</a></li>
-                                    }
-                                }
-                                @if (Model.TotalPagesUsers == 1)
-                                {
-                                    <li class="page-item paginationUserNextLi disabled">
-                                        <a class="page-link" onclick="loadNextUsers()">Next</a>
-                                    </li>
-                                }
-                                @if (Model.TotalPagesVideos > 1)
-                                {
-                                    <li class="page-item paginationUserNextLi">
-                                        <a class="page-link" onclick="loadNextUsers()">Next</a>
-                                    </li>
-                                }
-                            </ul>
-                        </nav>
-                    }
-                }
-            </div>
-        </div>
-    </div>
+         </div>
+      </div>
+   </div>
 </div>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/js/Search.js"></script>
+@section Scripts{
+   <script src="~/js/Search.js"></script>
+}

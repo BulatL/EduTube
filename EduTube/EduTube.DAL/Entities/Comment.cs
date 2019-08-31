@@ -15,7 +15,7 @@ namespace EduTube.DAL.Entities
      //[ForeignKey("VideoId")]
      // public Video Video { get; set; }
       public int VideoId { get; set; }
-      public virtual List<Reaction> Reactions { get; set; }
+      public List<Reaction> Reactions { get; set; }
       public bool Deleted { get; set; }
    }
 }

@@ -23,9 +23,9 @@ namespace EduTube.BLL.Models
       public string UserChannelName { get; set; }
       public string Hashtags { get; set; }
       public VideoVisibilityModel VideoVisibility { get; set; }
-      public virtual List<ReactionModel> Reactions { get; set; }
-      public virtual List<HashtagRelationshipModel> HashtagRelationships { get; set; }
-      public virtual List<CommentModel> Comments { get; set; }
-      public virtual List<ViewModel> Views { get; set; }
+      public List<ReactionModel> Reactions { get; set; }
+      public List<HashtagRelationshipModel> HashtagRelationships { get; set; }
+      public List<CommentModel> Comments { get; set; }
+      public List<ViewModel> Views { get; set; }
    }
 }

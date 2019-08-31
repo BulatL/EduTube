@@ -1,119 +1,122 @@
 ﻿@model EduTube.BLL.Models.ApplicationUserModel
 @{
-    ViewData["Title"] = "Profile";
+   ViewData["Title"] = "Profile";
 }
-<link href="~/css/ProfilePage.css" rel="stylesheet" />
 
+@section Styles{
+   <link href="~/css/ProfilePage.css" rel="stylesheet" />
+ }
 <div class="row">
-    <input type="hidden" value="@Model.Id" id="userIdHidden" />
-    <div class="col-lg-3 col-md-3 col-sm-12">
-        <div id="profileImageDiv">
-            <img id="profileImage" src="~/profileImages/@Model.ProfileImage" />
-        </div>
-        <div class="container">
-            <h4>@Model.ChannelName</h4>
-            <h5 class="purpleColorTxt" id="userName">@Model.Firstname @Model.Lastname</h5>
-            @if (ViewBag.Subscribed != "SameUser")
-            {
-                <input type="hidden" value="@ViewBag.Subscribed" id="subscribedHidden" />
-                <button class="purpleBtn" onclick="Subscribe()" id="subscribeBtn">Subscribe</button>
-            }
+   <input type="hidden" value="@Model.Id" id="userIdHidden" />
+   <div class="col-lg-3 col-md-3 col-sm-12">
+      <div id="profileImageDiv">
+         <img id="profileImage" src="~/profileImages/@Model.ProfileImage" />
+      </div>
+      <div class="container">
+         <h4>@Model.ChannelName</h4>
+         <h5 class="purpleColorTxt" id="userName">@Model.Firstname @Model.Lastname</h5>
+         @if (ViewBag.Subscribed != "SameUser")
+         {
+            <input type="hidden" value="@ViewBag.Subscribed" id="subscribedHidden" />
+            <button class="purpleBtn" onclick="Subscribe()" id="subscribeBtn">Subscribe</button>
+         }
 
 
-            <br />
-            <p id="margin-top">@Model.ChannelDescription</p>
-        </div>
-    </div>
-    <div class="col-lg-9 col-md-9 col-sm-12 greyBackground" id="userTabDiv">
-        <ul class="nav nav-tabs" id="nav-tabs-ul">
-            <li class="active"><a data-toggle="tab" href="#tab-content-videos" class="purpleBtn" id="tab-link-videos">Videos</a></li>
-            <li><a data-toggle="tab" href="#tab-content-subscribers" class="purpleBtn" id="tab-link-subscribers">Subscribers</a></li>
-            @if (ViewBag.Subscribed == "SameUser")
+         <br />
+         <p id="margin-top">@Model.ChannelDescription</p>
+      </div>
+   </div>
+   <div class="col-lg-9 col-md-9 col-sm-12 greyBackground" id="userTabDiv">
+      <ul class="nav nav-tabs" id="nav-tabs-ul">
+         <li class="active"><a data-toggle="tab" href="#tab-content-videos" class="purpleBtn" id="tab-link-videos">Videos</a></li>
+         <li><a data-toggle="tab" href="#tab-content-subscribers" class="purpleBtn" id="tab-link-subscribers">Subscribers</a></li>
+         @if (ViewBag.Subscribed == "SameUser")
+         {
+            <li><a data-toggle="tab" href="#tab-content-subscribed-on" class="purpleBtn" id="tab-link-subscribed-on">Subscribed on</a></li>
+         }
+      </ul>
+      <div class="tab-content">
+         <div class="tab-pane active" id="tab-content-videos">
+            <h4 class="text-center margin-top">@Model.ChannelName videos</h4>
+            @if (Model.Videos != null)
             {
-                <li><a data-toggle="tab" href="#tab-content-subscribed-on" class="purpleBtn" id="tab-link-subscribed-on">Subscribed on</a></li>
-            }
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane active" id="tab-content-videos">
-                <h4 class="text-center margin-top">@Model.ChannelName videos</h4>
-                @if (Model.Videos != null)
-                {
-                    @foreach (var video in Model.Videos)
-                    {
-                        <div class="display-inline-block">
-                            <a href="/Videos/@video.Id">
-                                <div class="videoThumbnailsDiv">
-                                    <img class="videoThumbnails" src="~/thumbnails/@video.Thumbnail" />
-                                    <p class="bottom-right greyBackground" id="videoDuration">@video.Duration</p>
-                                </div>
-                                <h6>@video.Name</h6>
-                            </a>
+               @foreach (var video in Model.Videos)
+               {
+                  <div class="display-inline-block">
+                     <a href="/Videos/@video.Id">
+                        <div class="videoThumbnailsDiv">
+                           <img class="videoThumbnails" src="~/thumbnails/@video.Thumbnail" />
+                           <p class="bottom-right greyBackground" id="videoDuration">@video.Duration</p>
                         </div>
-                    }
-                }
-                @if (Model.Videos == null)
-                {
-                    <h4 class="text-center">He does not have videos</h4>
-                }
-            </div>
-            <div class="tab-pane" id="tab-content-subscribers">
-                <h4 class="text-center margin-top">@Model.ChannelName Subscribers</h4>
-                @if (Model.Subscribers != null)
-                {
-                    <div class="container" id="subscribersDiv">
-                        @foreach (var subscriber in Model.Subscribers)
-                        {
+                        <h6>@video.Name</h6>
+                     </a>
+                  </div>
+               }
+            }
+            @if (Model.Videos == null)
+            {
+               <h4 class="text-center">He does not have videos</h4>
+            }
+         </div>
+         <div class="tab-pane" id="tab-content-subscribers">
+            <h4 class="text-center margin-top">@Model.ChannelName Subscribers</h4>
+            @if (Model.Subscribers != null)
+            {
+               <div class="container" id="subscribersDiv">
+                  @foreach (var subscriber in Model.Subscribers)
+                  {
 
-                            <div class="display-inline-block" id="subscriber_@subscriber.Subscriber.ChannelName.Replace(" ", "-")">
-                                <a href="/Users/@subscriber.Subscriber.ChannelName.Replace(" ", "-")">
-                                    <div id="subProfileImageDiv">
-                                        <img id="subProfileImage" src="~/profileImages/@subscriber.Subscriber.ProfileImage" />
-                                    </div>
-                                    <p>@subscriber.Subscriber.ChannelName</p>
-                                </a>
-                            </div>
-                        }
-                    </div>
+                     <div class="display-inline-block" id="subscriber_@subscriber.Subscriber.ChannelName.Replace(" ", "-")">
+                        <a href="/Users/@subscriber.Subscriber.ChannelName.Replace(" ", "-")">
+                           <div id="subProfileImageDiv">
+                              <img id="subProfileImage" src="~/profileImages/@subscriber.Subscriber.ProfileImage" />
+                           </div>
+                           <p>@subscriber.Subscriber.ChannelName</p>
+                        </a>
+                     </div>
+                  }
+               </div>
 
-                    @if (Model.Subscribers.Count() == 0)
-                    {
-                        <h4 class="text-center">No one subscribed to @Model.ChannelName</h4>
-                    }
-                }
-                @if (Model.Subscribers == null)
-                {
-                    <h4 class="text-center">No one subscribed to @Model.ChannelName</h4>
-                }
-            </div>
-            <div class="tab-pane" id="tab-content-subscribed-on">
-                <h4 class="text-center margin-top">@Model.ChannelName Subscribed On</h4>
-                @if (Model.SubscribedOn != null)
-                {
-                    <div class="container" id="subscribedOnDiv">
-                        @foreach (var subscriber in Model.SubscribedOn)
-                        {
-                            <div class="display-inline-block" id="subscribedOn_@subscriber.SubscribedOn.ChannelName.Replace(" ", "-")">
-                                <a href="/Users/@subscriber.SubscribedOn.ChannelName.Replace(" ", "-")">
-                                    <div id="subProfileImageDiv">
-                                        <img id="subProfileImage" src="~/profileImages/@subscriber.SubscribedOn.ProfileImage" />
-                                    </div>
-                                    <h4 class="overflow">@subscriber.SubscribedOn.ChannelName</h4>
-                                </a>
-                            </div>
-                        }
-                    </div>
-                    @if (Model.SubscribedOn.Count() == 0)
-                    {
-                        <h4 class="text-center">@Model.ChannelName Did not subscribe to any channel</h4>
-                    }
-                }
-                @if (Model.SubscribedOn == null)
-                {
-                    <h4 class="text-center">@Model.ChannelName Did not subscribe to any channel</h4>
-                }
-            </div>
-        </div>
-    </div>
+               @if (Model.Subscribers.Count() == 0)
+               {
+                  <h4 class="text-center">No one subscribed to @Model.ChannelName</h4>
+               }
+            }
+            @if (Model.Subscribers == null)
+            {
+               <h4 class="text-center">No one subscribed to @Model.ChannelName</h4>
+            }
+         </div>
+         <div class="tab-pane" id="tab-content-subscribed-on">
+            <h4 class="text-center margin-top">@Model.ChannelName Subscribed On</h4>
+            @if (Model.SubscribedOn != null)
+            {
+               <div class="container" id="subscribedOnDiv">
+                  @foreach (var subscriber in Model.SubscribedOn)
+                  {
+                     <div class="display-inline-block" id="subscribedOn_@subscriber.SubscribedOn.ChannelName.Replace(" ", "-")">
+                        <a href="/Users/@subscriber.SubscribedOn.ChannelName.Replace(" ", "-")">
+                           <div id="subProfileImageDiv">
+                              <img id="subProfileImage" src="~/profileImages/@subscriber.SubscribedOn.ProfileImage" />
+                           </div>
+                           <h4 class="overflow">@subscriber.SubscribedOn.ChannelName</h4>
+                        </a>
+                     </div>
+                  }
+               </div>
+               @if (Model.SubscribedOn.Count() == 0)
+               {
+                  <h4 class="text-center">@Model.ChannelName Did not subscribe to any channel</h4>
+               }
+            }
+            @if (Model.SubscribedOn == null)
+            {
+               <h4 class="text-center">@Model.ChannelName Did not subscribe to any channel</h4>
+            }
+         </div>
+      </div>
+   </div>
 </div>
-<script src="~/lib/jquery/dist/jquery.js"></script>
-<script src="~/js/Subscribe.js"></script>
+@section Scripts{
+   <script src="~/js/Subscribe.js"></script>
+}
