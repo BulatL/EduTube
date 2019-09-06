@@ -8,8 +8,9 @@ namespace EduTube.GUI.Services.Interface
 {
    public interface IUploadService
    {
-      Task<string> UploadImage(IFormFile file);
+      string UploadImage(IFormFile file, string folderName);
       Task<string> UploadVideo(IFormFile file);
       TimeSpan VideoDuration(string fileName);
+      string CreateThumbnail(string videoName);
    }
 }

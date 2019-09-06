@@ -17,14 +17,14 @@ namespace EduTube.GUI.Controllers
    {
       private IVideoManager _videoManager;
       private IApplicationUserManager _applicationUserManager;
-      private IHashtagRelationshipManager _hashtagRelationshipManager;
+      private ITagRelationshipManager _tagRelationshipManager;
 
       public ElasticsearchController(IVideoManager videoManager, IApplicationUserManager applicationUserManager,
-          IHashtagRelationshipManager hashtagRelationshipManager)
+          ITagRelationshipManager tagRelationshipManager)
       {
          _videoManager = videoManager;
          _applicationUserManager = applicationUserManager;
-         _hashtagRelationshipManager = hashtagRelationshipManager;
+         _tagRelationshipManager = tagRelationshipManager;
       }
 
       [Route("Search")]
@@ -97,7 +97,7 @@ namespace EduTube.GUI.Controllers
                     )
                     ||
                     q.Fuzzy(f => f
-                        .Field(fi => fi.Hashtags)
+                        .Field(fi => fi.Tags)
                         .Fuzziness(Fuzziness.EditDistance(2))
                         .PrefixLength(0)
                         .Transpositions(true)
@@ -106,7 +106,7 @@ namespace EduTube.GUI.Controllers
                     )
                     ||
                     q.MatchPhrasePrefix(m => m
-                        .Field(fi => fi.Hashtags)
+                        .Field(fi => fi.Tags)
                         .Query(search_query)
                     )
                 )
@@ -170,7 +170,7 @@ namespace EduTube.GUI.Controllers
                         ),
 
                         fs => fs
-                        .Field(f => f.Hashtags)
+                        .Field(f => f.Tags)
                         .Type(HighlighterType.Plain)
                         .PreTags("<strong class='blue'>")
                         .PostTags("</strong>")
@@ -178,7 +178,7 @@ namespace EduTube.GUI.Controllers
                         .Fragmenter(HighlighterFragmenter.Span)
                         .HighlightQuery(q => q
                             .Fuzzy(m =>
-                                m.Field(fi => fi.Hashtags)
+                                m.Field(fi => fi.Tags)
                                  .Fuzziness(Fuzziness.EditDistance(2))
                                  .PrefixLength(0)
                                  .Transpositions(true)
@@ -356,7 +356,7 @@ namespace EduTube.GUI.Controllers
             {
                SearchVideosViewModel searchVideo = new SearchVideosViewModel(
                    video.Source.Id, video.Source.Name, video.Source.Description, video.Source.UserChannelName,
-                   video.Source.UserId, video.Source.Hashtags);
+                   video.Source.UserId, video.Source.Tags);
 
                foreach (HighlightHit highLight in video.Highlights.Values)
                {
@@ -375,7 +375,7 @@ namespace EduTube.GUI.Controllers
                            searchVideo.UserChannelName = hl;
                            break;
                         case "hashtags":
-                           searchVideo.Hashtags = hl;
+                           searchVideo.Tags = hl;
                            break;
                      }
                   }
@@ -473,7 +473,7 @@ namespace EduTube.GUI.Controllers
             description = video.Description,
             userChannelName = video.UserChannelName,
             userId = video.UserId,
-            hashtags = video.Hashtags,
+            tags = video.Tags,
             dateCreatedOn = video.DateCreatedOn.ToString("yyyy-MM-dd")
          };
 
@@ -509,8 +509,8 @@ namespace EduTube.GUI.Controllers
             if (!exist.Exists)
             {
                video.User = await _applicationUserManager.GetById(video.UserId, false);
-               video.HashtagRelationships = await _hashtagRelationshipManager.GetByVideoId(video.Id, true);
-               string hashtagName = string.Join(", ", video.HashtagRelationships.Select(x => x.Hashtag).Select(x => x.Name));
+               video.TagRelationships = await _tagRelationshipManager.GetByVideoId(video.Id, true);
+               string hashtagName = string.Join(", ", video.TagRelationships.Select(x => x.Tag).Select(x => x.Name));
 
                Object indexObj = new { index = new { _index = "videos", _type = "videomodel", _id = video.Id } };
                Object videoObj = new
@@ -522,7 +522,7 @@ namespace EduTube.GUI.Controllers
                   description = video.Description,
                   userChannelName = video.User.ChannelName,
                   userId = video.UserId,
-                  hashtags = hashtagName,
+                  tags = hashtagName,
                   dateCreatedOn = video.DateCreatedOn.ToString("yyyy-MM-dd")
                };
 
@@ -615,7 +615,7 @@ namespace EduTube.GUI.Controllers
                                    .Name(n => n.UserId)
                                    .Analyzer("standard_english")
                               ).Text(t => t
-                                 .Name(n => n.Hashtags)
+                                 .Name(n => n.Tags)
                                  .Analyzer("standard_english")
                               )
                          )

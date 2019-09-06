@@ -1,4 +1,5 @@
-﻿using EduTube.DAL.Enums;
+﻿using EduTube.BLL.Enums;
+using EduTube.DAL.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;

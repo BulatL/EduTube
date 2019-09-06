@@ -31,7 +31,7 @@ namespace EduTube.BLL.Managers
       {
          //Expression<Func<Chat,bool>> includeExpression
          return includeAll ? await _context.Chats
-             .Include(x => x.Messages).Include(x => x.Hashtags).ThenInclude(x => x.Hashtag)
+             .Include(x => x.Messages).Include(x => x.TagRelationspis).ThenInclude(x => x.Tag)
              .FirstAsync(x => x.Id == id && !x.Deleted)
              : await _context.Chats.FirstAsync(x => x.Id == id && !x.Deleted);
       }
@@ -40,7 +40,7 @@ namespace EduTube.BLL.Managers
       {
          //Expression<Func<Chat,bool>> includeExpression
          return includeAll ? ChatMapper.EntityToModel(await _context.Chats
-             .Include(x => x.Messages).Include(x => x.Hashtags).ThenInclude(x => x.Hashtag)
+             .Include(x => x.Messages).Include(x => x.TagRelationspis).ThenInclude(x => x.Tag)
              .FirstAsync(x => x.Id == id && !x.Deleted))
              : ChatMapper.EntityToModel(await _context.Chats.FirstAsync(x => x.Id == id && !x.Deleted));
       }

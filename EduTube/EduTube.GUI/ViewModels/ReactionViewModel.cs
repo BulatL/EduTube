@@ -12,7 +12,7 @@ namespace EduTube.GUI.ViewModels
       public int? VideoId { get; set; }
       public int? CommentId { get; set; }
       public string UserId { get; set; }
-      public int EmoticonId { get; set; }
+      public int EmojiId { get; set; }
 
       public ReactionViewModel()
       {
@@ -24,7 +24,7 @@ namespace EduTube.GUI.ViewModels
          VideoId = model.VideoId;
          CommentId = model.CommentId;
          UserId = model.UserId;
-         EmoticonId = model.EmoticonId;
+         EmojiId = model.EmojiId;
       }
 
       public static List<ReactionViewModel> CopyToViewModels(List<ReactionModel> models)

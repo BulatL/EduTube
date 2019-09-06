@@ -5,118 +5,256 @@
 
 @section Styles{
    <link href="~/css/ProfilePage.css" rel="stylesheet" />
- }
+}
 <div class="row">
    <input type="hidden" value="@Model.Id" id="userIdHidden" />
-   <div class="col-lg-3 col-md-3 col-sm-12">
+   <!--Div for user info-->
+   <div class="col-lg-3 col-md-3 col-sm-12 text-center">
       <div id="profileImageDiv">
          <img id="profileImage" src="~/profileImages/@Model.ProfileImage" />
       </div>
-      <div class="container">
-         <h4>@Model.ChannelName</h4>
-         <h5 class="purpleColorTxt" id="userName">@Model.Firstname @Model.Lastname</h5>
-         @if (ViewBag.Subscribed != "SameUser")
-         {
-            <input type="hidden" value="@ViewBag.Subscribed" id="subscribedHidden" />
-            <button class="purpleBtn" onclick="Subscribe()" id="subscribeBtn">Subscribe</button>
-         }
-
-
-         <br />
-         <p id="margin-top">@Model.ChannelDescription</p>
-      </div>
-   </div>
-   <div class="col-lg-9 col-md-9 col-sm-12 greyBackground" id="userTabDiv">
-      <ul class="nav nav-tabs" id="nav-tabs-ul">
-         <li class="active"><a data-toggle="tab" href="#tab-content-videos" class="purpleBtn" id="tab-link-videos">Videos</a></li>
-         <li><a data-toggle="tab" href="#tab-content-subscribers" class="purpleBtn" id="tab-link-subscribers">Subscribers</a></li>
-         @if (ViewBag.Subscribed == "SameUser")
-         {
-            <li><a data-toggle="tab" href="#tab-content-subscribed-on" class="purpleBtn" id="tab-link-subscribed-on">Subscribed on</a></li>
-         }
-      </ul>
-      <div class="tab-content">
-         <div class="tab-pane active" id="tab-content-videos">
-            <h4 class="text-center margin-top">@Model.ChannelName videos</h4>
-            @if (Model.Videos != null)
+      <div class="row">
+         <div class="col-12">
+            <h4>@Model.ChannelName</h4>
+         </div>
+         <div class="col-12">
+            <h5 class="purpleColorTxt" id="userName">@Model.Firstname @Model.Lastname</h5>
+         </div>
+         <div class="col-12">
+            @if (ViewBag.Subscribed != "SameUser")
             {
-               @foreach (var video in Model.Videos)
-               {
-                  <div class="display-inline-block">
-                     <a href="/Videos/@video.Id">
-                        <div class="videoThumbnailsDiv">
-                           <img class="videoThumbnails" src="~/thumbnails/@video.Thumbnail" />
-                           <p class="bottom-right greyBackground" id="videoDuration">@video.Duration</p>
-                        </div>
-                        <h6>@video.Name</h6>
-                     </a>
-                  </div>
-               }
+               <input type="hidden" value="@ViewBag.Subscribed" id="subscribedHidden" />
+               <button class="purpleBtn" onclick="Subscribe()" id="subscribeBtn">Subscribe</button>
             }
-            @if (Model.Videos == null)
+            @if (ViewBag.Subscribed == "SameUser")
             {
-               <h4 class="text-center">He does not have videos</h4>
+               <button class="redBtn position-initial" id="deleteProfileBtn" onclick='DeleteProfile("@Model.Id")'>Delete profile</button>
+               <a class="greenBtn position-initial" id="btnSubscribeOwner" href="/Users/Edit/@Model.Id">Edit info</a>
             }
          </div>
-         <div class="tab-pane" id="tab-content-subscribers">
-            <h4 class="text-center margin-top">@Model.ChannelName Subscribers</h4>
-            @if (Model.Subscribers != null)
-            {
-               <div class="container" id="subscribersDiv">
+         <div class="col-12">
+            <p id="margin-top">@Model.ChannelDescription</p>
+         </div>
+      </div>
+   </div>
+   <!--Div for user videos, subscribers-->
+   <div class="col-lg-9 col-md-9 col-sm-12 greyBackground">
+      <div id="tabs">
+         <div class="col-4 text-center blackBackground tabsDiv tabsDivActiv leftBorderRadius" id="videosTab">
+            <button class="whiteColor" onclick="OpenTab('videos')">Videos</button>
+         </div>
+         <div class="col-4 text-center blackBackground tabsDiv" id="subscribersTab">
+            <button class="whiteColor" onclick="OpenTab('subscribers')">Subscribers</button>
+         </div>
+         <div class="col-4 text-center blackBackground tabsDiv rightBorderRadius" id="subscribedOnTab">
+            <button class="whiteColor" onclick="OpenTab('subscribedOn')">Subscribed on</button>
+         </div>
+      </div>
+      <div id="mainTabDiv">
+         <div id="videosDiv">
+            <div class="row">
+               <div class="col-12" id="addVideoDiv">
+                  <a href="/videos/Create" class="btn greenBtn float-right" id="addVideoBtn">Add video</a>
+                  <h4 class="text-center">@Model.ChannelName videos</h4>
+               </div>
+            </div>
+            <div id="userVideosDiv">
+               @if (Model.Videos != null)
+               {
+                  @foreach (var video in Model.Videos)
+                  {
+                     <div class="display-inline-block">
+                        <a href="/Videos/@video.Id">
+                           <div class="videoThumbnailsDiv">
+                              @if (video.FileName != null)
+                              {
+                                 <img class="videoThumbnails" src="~/thumbnails/@video.Thumbnail" />
+                              }
+                              @if (video.FileName == null)
+                              {
+                                 <img class="videoThumbnails" src="@video.Thumbnail" />
+                              }
+                              <p class="bottom-right greyBackground" id="videoDuration">@video.Duration</p>
+                           </div>
+                           <h6>@video.Name</h6>
+                        </a>
+                     </div>
+                  }
+               }
+               @if (Model.Videos == null)
+               {
+                  <h4 class="text-center">He does not have videos</h4>
+               }
+            </div>
+         </div>
+         <div id="subscribersDiv">
+            <div class="row">
+               <div class="col-12">
+                  <h4 class="text-center">@Model.ChannelName Subscribers</h4>
+               </div>
+            </div>
+            <div class="container">
+               @if (Model.Subscribers != null)
+               {
                   @foreach (var subscriber in Model.Subscribers)
                   {
 
-                     <div class="display-inline-block" id="subscriber_@subscriber.Subscriber.ChannelName.Replace(" ", "-")">
+                     <div class="display-inline-block subsDiv" id="subscriber_@subscriber.Subscriber.ChannelName.Replace(" ", "-")">
                         <a href="/Users/@subscriber.Subscriber.ChannelName.Replace(" ", "-")">
-                           <div id="subProfileImageDiv">
+                           <div class="subProfileImageDiv">
                               <img id="subProfileImage" src="~/profileImages/@subscriber.Subscriber.ProfileImage" />
                            </div>
-                           <p>@subscriber.Subscriber.ChannelName</p>
+                           <h4 class="overflow text-center">@subscriber.Subscriber.ChannelName</h4>
                         </a>
                      </div>
                   }
-               </div>
 
-               @if (Model.Subscribers.Count() == 0)
+                  @if (Model.Subscribers.Count() == 0)
+                  {
+                     <h4 class="text-center">No one subscribed to @Model.ChannelName</h4>
+                  }
+               }
+               @if (Model.Subscribers == null)
                {
                   <h4 class="text-center">No one subscribed to @Model.ChannelName</h4>
                }
-            }
-            @if (Model.Subscribers == null)
-            {
-               <h4 class="text-center">No one subscribed to @Model.ChannelName</h4>
-            }
+            </div>
          </div>
-         <div class="tab-pane" id="tab-content-subscribed-on">
-            <h4 class="text-center margin-top">@Model.ChannelName Subscribed On</h4>
-            @if (Model.SubscribedOn != null)
-            {
-               <div class="container" id="subscribedOnDiv">
+         <div id="subscribedOnDiv">
+            <div class="row">
+               <div class="col-12">
+                  <h4 class="text-center">@Model.ChannelName Subscribed On</h4>
+               </div>
+            </div>
+            <div class="container">
+               @if (Model.SubscribedOn != null)
+               {
                   @foreach (var subscriber in Model.SubscribedOn)
                   {
-                     <div class="display-inline-block" id="subscribedOn_@subscriber.SubscribedOn.ChannelName.Replace(" ", "-")">
+                     <div class="display-inline-block subsDiv" id="subscribedOn_@subscriber.SubscribedOn.ChannelName.Replace(" ", "-")">
                         <a href="/Users/@subscriber.SubscribedOn.ChannelName.Replace(" ", "-")">
-                           <div id="subProfileImageDiv">
+                           <div class="subProfileImageDiv">
                               <img id="subProfileImage" src="~/profileImages/@subscriber.SubscribedOn.ProfileImage" />
                            </div>
-                           <h4 class="overflow">@subscriber.SubscribedOn.ChannelName</h4>
+                           <h4 class="overflow text-center">@subscriber.SubscribedOn.ChannelName</h4>
                         </a>
                      </div>
                   }
-               </div>
-               @if (Model.SubscribedOn.Count() == 0)
+                  @if (Model.SubscribedOn.Count() == 0)
+                  {
+                     <h4 class="text-center">@Model.ChannelName Did not subscribe to any channel</h4>
+                  }
+               }
+               @if (Model.SubscribedOn == null)
                {
                   <h4 class="text-center">@Model.ChannelName Did not subscribe to any channel</h4>
                }
-            }
-            @if (Model.SubscribedOn == null)
-            {
-               <h4 class="text-center">@Model.ChannelName Did not subscribe to any channel</h4>
-            }
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+<!--Div with modal dialog for editing profile-->
+<div>
+   <!-- The Modal -->
+   <div class="modal fade" id="editModal">
+      <div class="modal-dialog">
+         <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+               <h4 class='col-12 modal-title text-center'>
+                  Edit informations: @Model.ChannelName
+                  <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                     <span aria-hidden='true'>&times;</span>
+                  </button>
+               </h4>
+            </div>
+            <form method="post" asp-action="Edit" asp-controller="Videos">
+               <!-- Modal body -->
+               <div class="modal-body">
+                  <div class="" id="registerDiv">
+                     <h5 class="whiteColor text-center">CREATE YOUR PROFILE FOR <strong>FREE</strong> </h5>
+                     <div id="tabs">
+                        <div class="col-6 text-center blackBackground tabsDiv tabsDivActiv leftBorderRadius" id="aboutTab">
+                           <span class="whiteColor">About</span>
+                        </div>
+                        <div class="col-6 text-center blackBackground tabsDiv rightBorderRadius" id="accountTab">
+                           <span class="whiteColor">Account</span>
+                        </div>
+                     </div>
+                     <div id="mainTabDiv">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div id="aboutTabDiv">
+                           <div class="displayInline">
+                              <div id="profileImageDiv" class="text-center">
+                                 <div id="profile-container">
+                                    <img id="profileImage" src="~/profileImages/default-avatar.png" />
+                                 </div>
+                                 <input id="imageUpload" type="file"
+                                        asp-for="ProfileImage" placeholder="Photo">
+                                 <span class="whiteColor">Profile picture</span>
+                              </div>
+                              <div id="basicInfoDiv">
+                                 <div class="displayInline">
+                                    <div class="col-6">
+                                       <label asp-for="Firstname" class="col-form-label whiteColor"></label>
+                                       <input asp-for="Firstname" class="form-control" placeholder="First name" id="firstname" />
+                                       <span asp-validation-for="Firstname" style="color:red;" id="firstnameError"></span>
+                                    </div>
+                                    <div class="col-6">
+                                       <label asp-for="Lastname" class="col-form-label whiteColor"></label>
+                                       <input asp-for="Lastname" class="form-control" placeholder="Last name" id="lastname" />
+                                       <span asp-validation-for="Lastname" style="color:red;" id="lastnameError"></span>
+                                    </div>
+                                 </div>
+                                 <div class="col-12">
+                                    <label asp-for="DateOfBirth" class="col-form-label whiteColor"></label>
+                                    <input asp-for="DateOfBirth" class="form-control" id="datepicker" />
+                                    <span asp-validation-for="DateOfBirth" style="color:red;"></span>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-12">
+                              <button class="purpleBtn" type="button" onclick="OpenAccountTab()" id="btnNext">Next</button>
+                           </div>
+                        </div>
+                        <div class="" id="accountTabDiv">
+                           <div class="displayInline">
+                              <div class="col-6">
+                                 <label asp-for="ChannelName" class="col-form-label whiteColor"></label>
+                                 <input asp-for="ChannelName" class="form-control" placeholder="Channel name" id="channelName" />
+                                 <span asp-validation-for="ChannelName" style="color:red;" id="channelNameError"></span>
+                              </div>
+                              <div class="col-6">
+                              </div>
+                           </div>
+                           <div class="col-12">
+                              <label asp-for="Email" class="col-form-label whiteColor"></label>
+                              <input asp-for="Email" class="form-control" placeholder="Email" id="email" />
+                              <span asp-validation-for="Email" style="color:red;" id="emailError"></span>
+                           </div>
+                           <div class="col-12">
+                              <label asp-for="ChannelDescription" class="col-form-label whiteColor"></label>
+                              <textarea asp-for="ChannelDescription" class="form-control" placeholder="Channel description" id="channelDescription"></textarea>
+                              <span asp-validation-for="ChannelDescription" style="color:red;" id="channelDescriptionError"></span>
+                           </div>
+                           <div class="col-12">
+                              <button class="purpleBtn" type="button" onclick="OpenAboutTab()" id="btnBack">Back</button>
+                              <button class="purpleBtn" type="submit" id="btnRegister">Register</button>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </form>
          </div>
       </div>
    </div>
 </div>
 @section Scripts{
    <script src="~/js/Subscribe.js"></script>
+   <script src="~/js/ProfilePage.js"></script>
 }

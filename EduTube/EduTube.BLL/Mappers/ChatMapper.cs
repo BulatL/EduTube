@@ -14,10 +14,10 @@ namespace EduTube.BLL.Mappers
          model.Name = entity.Name;
          model.Deleted = entity.Deleted;
 
-         if (entity.Hashtags != null)
+         if (entity.TagRelationspis != null)
          {
-            entity.Hashtags.ForEach(x => x.Chat = null);
-            model.Hashtags = HashtagRelationshipMapper.EntitiesToModels(entity.Hashtags);
+            entity.TagRelationspis.ForEach(x => x.Chat = null);
+            model.TagRelationspis = TagRelationshipMapper.EntitiesToModels(entity.TagRelationspis);
          }
 
          if (entity.Messages != null)
@@ -31,10 +31,10 @@ namespace EduTube.BLL.Mappers
          entity.Name = model.Name;
          entity.Deleted = model.Deleted;
 
-         if (model.Hashtags != null)
+         if (model.TagRelationspis != null)
          {
-             model.Hashtags.ForEach(x => x.Chat = null);
-             entity.Hashtags = HashtagRelationshipMapper.ModelsToEntities(model.Hashtags);
+             model.TagRelationspis.ForEach(x => x.Chat = null);
+             entity.TagRelationspis = TagRelationshipMapper.ModelsToEntities(model.TagRelationspis);
          }
          if (model.Messages != null)
          {
@@ -52,10 +52,10 @@ namespace EduTube.BLL.Mappers
          model.Name = entity.Name;
          model.Deleted = entity.Deleted;
 
-         if (entity.Hashtags != null)
+         if (entity.TagRelationspis != null)
          {
-            entity.Hashtags.ForEach(x => x.Chat = null);
-            model.Hashtags = HashtagRelationshipMapper.EntitiesToModels(entity.Hashtags);
+            entity.TagRelationspis.ForEach(x => x.Chat = null);
+            model.TagRelationspis = TagRelationshipMapper.EntitiesToModels(entity.TagRelationspis);
          }
 
          if (entity.Messages != null)

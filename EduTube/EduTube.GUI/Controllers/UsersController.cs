@@ -10,6 +10,7 @@ using EduTube.BLL.Models;
 using EduTube.DAL.Entities;
 using EduTube.GUI.Services.Interface;
 using EduTube.GUI.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,15 +21,11 @@ namespace EduTube.GUI.Controllers
    public class UsersController : Controller
    {
       private IApplicationUserManager _userManager;
-      private SignInManager<ApplicationUser> _signInManager;
-      private UserManager<ApplicationUser> _identityManager;
       private IUploadService _uploadSerice;
 
-      public UsersController(IApplicationUserManager userManager, SignInManager<ApplicationUser> signInManager,
-         IUploadService uploadSerice)
+      public UsersController(IApplicationUserManager userManager, IUploadService uploadSerice)
       {
          _userManager = userManager;
-         _signInManager = signInManager;
          _uploadSerice = uploadSerice;
       }
 
@@ -38,7 +35,7 @@ namespace EduTube.GUI.Controllers
       }
 
       [Route("Users/{channelName}")]
-      public async Task<IActionResult> GetUserByChannelName(string channelName)
+      public async Task<IActionResult> UserProfile(string channelName)
       {
          channelName = channelName.Replace("-", " ");
 
@@ -46,6 +43,9 @@ namespace EduTube.GUI.Controllers
 
          if (user == null)
             return StatusCode(404);
+
+         if (user.Videos != null)
+            user.Videos = user.Videos.OrderBy(x => x.Id).ToList();
 
          //currentUser = await _identityManager.GetUserAsync(User);
          ApplicationUserModel currentUser = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
@@ -108,11 +108,11 @@ namespace EduTube.GUI.Controllers
                //var x = await _userManager.GetByEmailAndPassword(viewModel.Email, viewModel.Password);
                /*ApplicationUserModel user = await _userManager.GetByEmail(viewModel.Email);
                ViewBag.profileImage = user.ProfileImage;*/
-               /*if (viewModel.ReturnUrl == "" || viewModel.ReturnUrl == null)
-                  return RedirectToAction("Index", "Home");
-               else
-                  return LocalRedirect(viewModel.ReturnUrl);
-            }*/
+            /*if (viewModel.ReturnUrl == "" || viewModel.ReturnUrl == null)
+               return RedirectToAction("Index", "Home");
+            else
+               return LocalRedirect(viewModel.ReturnUrl);
+         }*/
             /*if (result.RequiresTwoFactor)
             {
                return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
@@ -131,15 +131,51 @@ namespace EduTube.GUI.Controllers
          return View(viewModel);
       }
 
+      [Authorize]
+      [Route("Users/Edit/{id}")]
+      public async Task<IActionResult> Edit(string id)
+      {
+         ApplicationUserModel currentUser = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
+         if (id.Equals(currentUser?.Id))
+         {
+            ViewBag.Register = false;
+            ViewBag.Title = "Edit";
+            UserInfoViewModel viewModel = new UserInfoViewModel(currentUser);
+            return View("Register", viewModel);
+         }
+         return StatusCode(401);
+      }
+
+      [Authorize]
+      [Route("Users/Edit/{id}")]
+      [HttpPost]
+      public async Task<IActionResult> Edit(string id,UserInfoViewModel viewModel)
+      {
+         if (ModelState.IsValid)
+         {
+            ApplicationUserModel user = UserInfoViewModel.CopyToModel(viewModel);
+            if(viewModel.ProfileImage != null)
+               user.ProfileImage = _uploadSerice.UploadImage(viewModel.ProfileImage, "profileImages");
+
+            user = await _userManager.Update(user);
+            return LocalRedirect("/Users/" + user.ChannelName);
+         }
+         ViewBag.Register = false;
+         ViewBag.Title = "Edit";
+         return View("Register", viewModel);
+      }
+
       [Route("Register")]
       public IActionResult Register()
       {
-         return View(new RegisterViewModel());
+         ViewBag.Register = true;
+         ViewBag.Title = "Register";
+         return View(new UserInfoViewModel());
       }
 
       [Route("Register")]
       [HttpPost]
-      public async Task<IActionResult> Register(RegisterViewModel viewModel)
+      public async Task<IActionResult> Register(UserInfoViewModel viewModel)
       {
          if (ModelState.IsValid)
          {
@@ -157,27 +193,43 @@ namespace EduTube.GUI.Controllers
             };
 
             if (viewModel.ProfileImage != null)
-               user.ProfileImage = await _uploadSerice.UploadImage(viewModel.ProfileImage);
+               user.ProfileImage = _uploadSerice.UploadImage(viewModel.ProfileImage, "profileImages");
 
             await _userManager.Register(user, viewModel.Password);
             return RedirectToAction("Login");
          }
-         return View(new RegisterViewModel());
+         ViewBag.Register = true;
+         ViewBag.Title = "Register";
+         return View(viewModel);
       }
 
-
-      public async Task<IActionResult> ChannelNameExist(string channelName, string email)
+      public async Task<IActionResult> ChannelNameEmailExist(string channelName, string email, string userId)
       {
-         bool ex = await _userManager.ChannelNameExist(channelName, "Null");
-         bool ce = await _userManager.EmailExist(email, "Null");
+         bool ex = await _userManager.ChannelNameExist(channelName, userId);
+         bool ce = await _userManager.EmailExist(email, userId);
          return Json(new { channelNameExist = ex, emailExist = ce });
       }
 
       [Route("Logout")]
       public async Task<IActionResult> Logout()
       {
-         await _signInManager.SignOutAsync();
+         await _userManager.Logout();
          return RedirectToAction("Index", "Home");
+      }
+
+      [Authorize]
+      [HttpDelete]
+      [Route("Users/Delete/{id}")]
+      public async Task<IActionResult> Delete(string id)
+      {
+         IdentityResult result = await _userManager.Delete(id);
+         if (result.Succeeded)
+         {
+            await _userManager.Logout();
+            return StatusCode(200);
+         }
+         else
+            return StatusCode(404);
       }
    }
 }

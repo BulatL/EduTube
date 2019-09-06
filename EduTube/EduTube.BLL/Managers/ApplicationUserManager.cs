@@ -35,7 +35,12 @@ namespace EduTube.BLL.Managers
          _subscriptionManager = subscriptionManager;
          _videoManager = videoManager;
       }
-
+      public async Task<string> GetCurrentUserRole(string id)
+      {
+         ApplicationUser user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id.Equals(id));
+         IList<string> roles = await _userManager.GetRolesAsync(user);
+         return roles[0];
+      }
       public async Task<List<ApplicationUserModel>> GetAll()
       {
          return UserMapper.EntitiesToModels(await _userManager.Users.Where(x => !x.Deleted).ToListAsync());
@@ -50,7 +55,6 @@ namespace EduTube.BLL.Managers
          return new ApplicationUserModel();
       }
 
-
       public async Task<ApplicationUserModel> GetById(string id, bool includeAll)
       {
          return includeAll ? UserMapper.EntityToModel(await _userManager.Users
@@ -64,6 +68,7 @@ namespace EduTube.BLL.Managers
       {
          return await _userManager.Users.AnyAsync(x => !x.Id.Equals(userId) && x.ChannelName.Equals(channelName));
       }
+
       public async Task<bool> EmailExist(string email, string userId)
       {
          return await _userManager.Users.AnyAsync(x => !x.Id.Equals(userId) && x.NormalizedEmail.Equals(email.ToUpper()));
@@ -83,23 +88,48 @@ namespace EduTube.BLL.Managers
                .FirstOrDefaultAsync(x => x.Email.Equals(email) && !x.Deleted));
       }
 
-      public async Task<ApplicationUserModel> Update(ApplicationUserModel userModel)
+      public async Task<ApplicationUserModel> Update(ApplicationUserModel model)
       {
-         await _userManager.UpdateAsync(UserMapper.ModelToEntity(userModel));
-         /*_context.Update(UserMapper.ModelToEntity(userModel));
-         await _context.SaveChangesAsync();*/
-         return userModel;
+         bool refreshClaims = false;
+         ApplicationUser entity = await _userManager.Users.FirstOrDefaultAsync(x => x.Id.Equals(model.Id) && !x.Deleted);
+         if (!entity.ChannelName.Equals(model.ChannelName) || !entity.ProfileImage.Equals(model.ProfileImage))
+            refreshClaims = true;
+
+         UserMapper.CopyModelToEntity(model, entity);
+         await _userManager.UpdateAsync(entity);
+
+         if (refreshClaims)
+         {
+            IList<Claim> claims = await _userManager.GetClaimsAsync(entity);
+            List<Claim> oldClaims = new List<Claim>();
+            Claim oldProfileImage = claims.FirstOrDefault(x => x.Type.Equals("profileImage"));
+            Claim oldChannelName = claims.FirstOrDefault(x => x.Type.Equals("channelName"));
+            oldClaims.Add(oldProfileImage);
+            oldClaims.Add(oldChannelName);
+            IdentityResult removeClaims = await _userManager.RemoveClaimsAsync(entity, oldClaims);
+            if (removeClaims.Succeeded)
+            {
+               List<Claim> newClaims = new List<Claim>();
+               Claim profileImage = new Claim("profileImage", entity.ProfileImage);
+               Claim channelName = new Claim("channelName", entity.ChannelName.Replace(" ", "-"));
+               newClaims.Add(profileImage);
+               newClaims.Add(channelName);
+               await _userManager.AddClaimsAsync(entity, newClaims);
+               await _signInManager.RefreshSignInAsync(entity);
+            }
+         }
+         return UserMapper.EntityToModel(entity);
       }
 
-      public async Task Delete(string id)
+      public async Task<IdentityResult> Delete(string id)
       {
          ApplicationUser user = _userManager.Users.FirstOrDefault(x => x.Id == id);
          user.Deleted = true;
-         await _userManager.UpdateAsync(user);
          await _chatMessageManager.DeleteActivateByUser(id, true);
          await _reactionManager.DeleteActivateByUser(id, true);
          await _subscriptionManager.DeleteActivateByUser(id, true);
          await _videoManager.DeleteActivateByUser(id, true);
+         return await _userManager.UpdateAsync(user);
       }
 
       public async Task Activate(string id)
@@ -136,8 +166,14 @@ namespace EduTube.BLL.Managers
                await _signInManager.SignInAsync(user, true);
                return true;
             }
+            return false;
          }
          return false;
+      }
+
+      public async Task Logout()
+      {
+         await _signInManager.SignOutAsync();
       }
 
       public async Task Register(ApplicationUserModel model, string password)
@@ -149,6 +185,23 @@ namespace EduTube.BLL.Managers
             await _userManager.AddPasswordAsync(entity, password);
             await _userManager.AddToRoleAsync(entity, "User");
          }
+      }
+
+      public async Task<bool> SetClaims(ApplicationUser user)
+      {
+         IList<string> roles = await _userManager.GetRolesAsync(user);
+         List<Claim> claims = new List<Claim>();
+         Claim profileImage = new Claim("profileImage", user.ProfileImage);
+         Claim channelName = new Claim("channelName", user.ChannelName.Replace(" ", "-"));
+         Claim role = new Claim("role", roles[0]);
+         claims.Add(profileImage);
+         claims.Add(channelName);
+         claims.Add(role);
+         IdentityResult identity = await _userManager.AddClaimsAsync(user, claims);
+         if (identity.Succeeded)
+            return true;
+         else
+            return false;
       }
    }
 }

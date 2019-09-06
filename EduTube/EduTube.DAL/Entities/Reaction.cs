@@ -7,8 +7,8 @@ namespace EduTube.DAL.Entities
    public class Reaction : Entity
    {
       public DateTime DateCreatedOn { get; set; }
-      public int EmoticonId { get; set; }
-      public Emoticon Emoticon { get; set; }
+      public int EmojiId { get; set; }
+      public Emoji Emoji { get; set; }
       public string UserId { get; set; }
       public ApplicationUser User { get; set; }
       public int? VideoId { get; set; }

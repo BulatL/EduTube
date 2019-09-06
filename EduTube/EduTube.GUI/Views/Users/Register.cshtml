@@ -1,12 +1,19 @@
-﻿@model EduTube.GUI.ViewModels.RegisterViewModel
+﻿@model EduTube.GUI.ViewModels.UserInfoViewModel
 @{
-   ViewData["Title"] = "Register";
+   ViewData["Title"] = ViewBag.Title;
 }
 @section Styles{
    <link href="~/css/RegisterPage.css" rel="stylesheet" />
  }
 <div class="" id="registerDiv">
-   <h5 class="whiteColor text-center">CREATE YOUR PROFILE FOR <strong>FREE</strong> </h5>
+   @if (ViewBag.Register == true)
+   {
+      <h5 class="whiteColor text-center">CREATE YOUR PROFILE FOR <strong>FREE</strong> </h5>
+   }
+   @if (ViewBag.Register != true)
+   {
+      <h5 class="whiteColor text-center">Edit you'r profile</h5>
+   }
    <div id="tabs">
       <div class="col-6 text-center blackBackground tabsDiv tabsDivActiv leftBorderRadius" id="aboutTab">
          <span class="whiteColor">About</span>
@@ -18,11 +25,20 @@
    <div id="mainTabDiv">
       <form id="form" method="post" enctype="multipart/form-data">
          <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+         <input type="hidden" asp-for="Id" id="userId"/>
+         <input type="hidden" asp-for="OldImage" />
          <div id="aboutTabDiv">
             <div class="displayInline">
                <div id="profileImageDiv" class="text-center">
                   <div id="profile-container">
-                     <img id="profileImage" src="~/profileImages/default-avatar.png" />
+                     @if (ViewBag.Register == true)
+                     {
+                        <img id="profileImage" src="~/profileImages/default-avatar.png" />
+                     }
+                     @if (ViewBag.Register != true)
+                     {
+                        <img id="profileImage" src="~/profileImages/@Model.OldImage" />
+                     }
                   </div>
                   <input id="imageUpload" type="file"
                          asp-for="ProfileImage" placeholder="Photo">
@@ -54,16 +70,26 @@
          </div>
          <div class="" id="accountTabDiv">
             <div class="displayInline">
-               <div class="col-6">
-                  <label asp-for="ChannelName" class="col-form-label whiteColor"></label>
-                  <input asp-for="ChannelName" class="form-control" placeholder="Channel name" id="channelName" />
-                  <span asp-validation-for="ChannelName" style="color:red;" id="channelNameError"></span>
-               </div>
-               <div class="col-6">
-                  <label asp-for="Password" class="col-form-label whiteColor"></label>
-                  <input asp-for="Password" type="password" class="form-control" placeholder="Password" id="password" />
-                  <span asp-validation-for="Password" style="color:red;" id="passwordError"></span>
-               </div>
+               @if (ViewBag.Register == true)
+               {
+                  <div class="col-6">
+                     <label asp-for="ChannelName" class="col-form-label whiteColor"></label>
+                     <input asp-for="ChannelName" class="form-control" placeholder="Channel name" id="channelName" />
+                     <span asp-validation-for="ChannelName" style="color:red;" id="channelNameError"></span>
+                  </div>
+                  <div class="col-6">
+                     <label asp-for="Password" class="col-form-label whiteColor"></label>
+                     <input asp-for="Password" type="password" class="form-control" placeholder="Password" id="password" />
+                     <span asp-validation-for="Password" style="color:red;" id="passwordError"></span>
+                  </div>
+               }@if (ViewBag.Register != true)
+               {
+                  <div class="col-12">
+                     <label asp-for="ChannelName" class="col-form-label whiteColor"></label>
+                     <input asp-for="ChannelName" class="form-control" placeholder="Channel name" id="channelName" />
+                     <span asp-validation-for="ChannelName" style="color:red;" id="channelNameError"></span>
+                  </div>
+               }
             </div>
             <div class="col-12">
                <label asp-for="Email" class="col-form-label whiteColor"></label>
@@ -77,7 +103,7 @@
             </div>
             <div class="col-12">
                <button class="purpleBtn" type="button" onclick="OpenAboutTab()" id="btnBack">Back</button>
-               <button class="purpleBtn" type="submit" id="btnRegister">Register</button>
+               <button class="purpleBtn" type="submit" id="btnRegister">@ViewBag.Title</button>
             </div>
          </div>
       </form>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EduTube.DAL.Enums
+namespace EduTube.BLL.Enums
 {
    public enum VideoVisibilityModel
    {

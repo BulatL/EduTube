@@ -9,6 +9,6 @@ namespace EduTube.DAL.Entities
       public string Name { get; set; }
       public bool Deleted { get; set; }
       public List<ChatMessage> Messages { get; set; }
-      public List<HashTagRelationship> Hashtags { get; set; }
+      public List<TagRelationship> TagRelationspis { get; set; }
    }
 }

@@ -1,4 +1,5 @@
-﻿using EduTube.BLL.Models;
+﻿using EduTube.BLL.Enums;
+using EduTube.BLL.Models;
 using EduTube.DAL.Enums;
 using System;
 using System.Collections.Generic;
@@ -12,13 +13,13 @@ namespace EduTube.GUI.ViewModels
    {
       public int Id { get; set; }
       public string Name { get; set; }
-      public string Hashtags { get; set; }
+      public string Tags { get; set; }
       public string OwnerProfileImage { get; set; }
       public string OwnerChannelName { get; set; }
       public DateTime DateCreatedOn { get; set; }
       public string Description { get; set; }
       public string YoutubeUrl { get; set; }
-      public string FilePath { get; set; }
+      public string FileName { get; set; }
       [Display(Name = "Allow Comments")]
       public bool AllowComments { get; set; }
       public VideoVisibilityModel Visibility { get; set; }
@@ -35,13 +36,13 @@ namespace EduTube.GUI.ViewModels
       {
          Id = model.Id;
          Name = model.Name;
-         Hashtags = model.Hashtags;
+         Tags = model.Tags;
          OwnerProfileImage = model.User?.ProfileImage;
          OwnerChannelName = model.UserChannelName;
          DateCreatedOn = model.DateCreatedOn;
          Description = model.Description;
          YoutubeUrl = model.YoutubeUrl;
-         FilePath = model.FilePath;
+         FileName = model.FileName;
          AllowComments = model.AllowComments;
          Visibility = model.VideoVisibility;
          UserReactionOnVideo = userReactionOnVideo;
@@ -56,11 +57,11 @@ namespace EduTube.GUI.ViewModels
          {
             Id = viewModel.Id,
             Name = viewModel.Name,
-            Hashtags = viewModel.Hashtags,
+            Tags = viewModel.Tags,
             DateCreatedOn = viewModel.DateCreatedOn,
             Description = viewModel.Description,
             YoutubeUrl = viewModel.YoutubeUrl,
-            FilePath = viewModel.FilePath,
+            FileName = viewModel.FileName,
             AllowComments = viewModel.AllowComments,
             VideoVisibility = viewModel.Visibility
          };

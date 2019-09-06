@@ -19,11 +19,11 @@ namespace EduTube.BLL.Mappers
          model.Deleted = entity.Deleted;
          model.VideoId = entity.VideoId;
          model.CommentId = entity.CommentId;
-         model.EmoticonId = entity.EmoticonId;
+         model.EmojiId = entity.EmojiId;
          model.DateCreatedOn = entity.DateCreatedOn;
 
-         if (entity.Emoticon != null)
-            model.Emoticon = EmoticonMapper.EntityToModel(entity.Emoticon);
+         if (entity.Emoji != null)
+            model.Emoji = EmojiMapper.EntityToModel(entity.Emoji);
 
          if (entity.User != null)
             model.User = UserMapper.EntityToModel(entity.User);
@@ -50,11 +50,11 @@ namespace EduTube.BLL.Mappers
          entity.Deleted = model.Deleted;
          entity.VideoId = model.VideoId;
          entity.CommentId = model.CommentId;
-         entity.EmoticonId = model.EmoticonId;
+         entity.EmojiId = model.EmojiId;
          entity.DateCreatedOn = model.DateCreatedOn;
 
-         if (model.Emoticon != null)
-            entity.Emoticon = EmoticonMapper.ModelToEntity(model.Emoticon);
+         if (model.Emoji != null)
+            entity.Emoji = EmojiMapper.ModelToEntity(model.Emoji);
 
 
          if (model.User != null)

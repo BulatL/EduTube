@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using EduTube.DAL.Data;
-using EduTube.DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using EduTube.BLL.Managers.Interfaces;
 using EduTube.BLL.Models;
@@ -14,37 +10,40 @@ using System.Diagnostics;
 using EduTube.GUI.ViewModels;
 using EduTube.GUI.Services.Interface;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using EduTube.DAL.Enums;
+using System.Xml;
+using EduTube.BLL.Enums;
 
 namespace EduTube.GUI.Controllers
 {
    public class VideosController : Controller
    {
       private readonly IVideoManager _videoManager;
-      private readonly IHashtagRelationshipManager _hashtagRelationshipManager;
-      private readonly IHashtagManager _hashtagManager;
+      private readonly ITagRelationshipManager _tagRelationshipManager;
+      private readonly ITagManager _tagManager;
       private readonly IApplicationUserManager _userManager;
-      private readonly ApplicationDbContext _context;
       private readonly IUploadService _uploadService;
       private readonly IViewManager _viewManager;
       private readonly IReactionManager _reactionManager;
-      private readonly IEmoticonManager _emoticonManager;
-      private readonly ICommentManager _commentManager;
+      private readonly IEmojiManager _emojiManager;
+      private readonly IHostingEnvironment _hostingEnvironment;
 
-      public VideosController(IVideoManager videoManager, IHashtagRelationshipManager hashtagRelationshipManager,
-          IHashtagManager hashtagManager, IApplicationUserManager userManager, ApplicationDbContext context,
+      public VideosController(IVideoManager videoManager, ITagRelationshipManager tagRelationshipManager,
+          ITagManager tagManager, IApplicationUserManager userManager,
           IUploadService uploadService, IViewManager viewManager, IReactionManager reactionManager,
-          IEmoticonManager emoticonManager, ICommentManager commentManager)
+          IEmojiManager emojiManager, IHostingEnvironment hostingEnvironment)
       {
          _videoManager = videoManager;
-         _hashtagRelationshipManager = hashtagRelationshipManager;
-         _hashtagManager = hashtagManager;
+         _tagRelationshipManager = tagRelationshipManager;
+         _tagManager = tagManager;
          _userManager = userManager;
-         _context = context;
          _uploadService = uploadService;
          _viewManager = viewManager;
          _reactionManager = reactionManager;
-         _emoticonManager = emoticonManager;
-         _commentManager = commentManager;
+         _emojiManager = emojiManager;
+         _hostingEnvironment = hostingEnvironment;
       }
 
       // GET: Videos
@@ -54,50 +53,83 @@ namespace EduTube.GUI.Controllers
 
          return View(await _videoManager.GetTop5Videos(user?.Id));
       }
+
       [Route("Videos/RecommendedVideos/{ipAddress}")]
       public async Task<IActionResult> RecomendedVideos(string ipAddress)
       {
          List<VideoModel> firstRecommendedVideos = new List<VideoModel>();
          List<VideoModel> secondRecommendedVideos = new List<VideoModel>();
-         HashtagModel firstHashtag = null;
-         HashtagModel secondHashtag = null;
+         TagModel firstTag = null;
+         TagModel secondTag = null;
 
          Debug.WriteLine("usao u kontroler" + DateTime.Now);
          ApplicationUserModel user = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
          Debug.WriteLine("nasao usera " + DateTime.Now);
 
          List<int> seenVideosId = await _videoManager.GetVideosIdByView(user?.Id, null);
-         List<int?> hashtagsId = await _hashtagManager.Get2MostPopularHashtagsIdByVideoId(seenVideosId);
-         if (hashtagsId != null)
+         List<int?> tagsId = await _tagManager.Get2MostPopularTagsIdByVideoId(seenVideosId);
+         if (tagsId != null && tagsId?.Count() > 0)
          {
-            if (hashtagsId[0] != null)
+            if (tagsId[0] != null)
             {
-               firstHashtag = await _hashtagManager.GetById(int.Parse(hashtagsId[0].ToString()));
-               firstRecommendedVideos = await _videoManager.Get6VideosByHashtag(user?.Id, hashtagsId[0]);
+               firstTag = await _tagManager.GetById(int.Parse(tagsId[0].ToString()));
+               firstRecommendedVideos = await _videoManager.Get6VideosByTag(user?.Id, tagsId[0]);
             }
-            if (hashtagsId[1] != null)
+            if (tagsId[1] != null)
             {
-               secondHashtag = await _hashtagManager.GetById(int.Parse(hashtagsId[1].ToString()));
-               secondRecommendedVideos = await _videoManager.Get6VideosByHashtag(user?.Id, hashtagsId[1]);
+               secondTag = await _tagManager.GetById(int.Parse(tagsId[1].ToString()));
+               secondRecommendedVideos = await _videoManager.Get6VideosByTag(user?.Id, tagsId[1]);
             }
          }
 
          Debug.WriteLine("nazad u kontroleru " + DateTime.Now);
          HomeRecommendedVideos viewModel = new HomeRecommendedVideos(firstRecommendedVideos,
-             secondRecommendedVideos, firstHashtag.Name, secondHashtag.Name);
+             secondRecommendedVideos, firstTag.Name, secondTag.Name);
          return Json(viewModel);
       }
+
       [Route("Videos/{id}")]
       public async Task<IActionResult> SingleVideo(int id)
       {
          VideoModel video = await _videoManager.GetById(id, true);
-         ApplicationUserModel user = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
-         int? userReaction = await _emoticonManager.GetEmoticonId(id, user?.Id);
-         List<ReactionModel> commentReactions = await _reactionManager.GetCommentsReactionsByUserAndVideo(video.Comments?.Select(x => x.Id).ToList(), user?.Id);
-         
-         return View(new VideoViewModel(video, userReaction, commentReactions));
-      }
+         if (video != null)
+         {
+            ApplicationUserModel user = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
+            if (video.VideoVisibility == VideoVisibilityModel.Invitation)
+            {
+               if (user == null)
+               {
+                  ViewData["allowAccess"] = false;
+               }
+               else
+               {
+                  string userRole = await _userManager.GetCurrentUserRole(user.Id);
+                  if (userRole.Equals("ADMIN") || user.Id.Equals(video.UserId))
+                  {
+                     ViewData["allowAccess"] = true;
+                  }
+                  else
+                  {
+                     ViewData["allowAccess"] = false;
+                  }
+               }
+            }
+            else if (video.VideoVisibility == VideoVisibilityModel.Private && user == null)
+            {
+               return LocalRedirect("/Login?redirectUrl=/Videos/" + id);
+            }
+            else
+            {
+               ViewData["allowAccess"] = true;
+            }
 
+            int? userReaction = await _emojiManager.GetEmojiId(id, user?.Id);
+            List<ReactionModel> commentReactions = await _reactionManager.GetCommentsReactionsByUserAndVideo(video.Comments?.Select(x => x.Id).ToList(), user?.Id);
+
+            return View(new VideoViewModel(video, userReaction, commentReactions));
+         }
+         return StatusCode(404);
+      }
 
       [Route("Videos/Search/{search}")]
       public async Task<IActionResult> Search(string search)
@@ -108,8 +140,11 @@ namespace EduTube.GUI.Controllers
       }
 
       // GET: Videos/Create
-      public IActionResult Create()
+      [Authorize]
+      public async Task<IActionResult> Create()
       {
+         ViewData["HashtagsSelectList"] = new SelectList(await _tagManager.GetAll(), "Id", "Name");
+         ViewBag.Hashtags = await _tagManager.GetAll();
          return View();
       }
 
@@ -118,7 +153,7 @@ namespace EduTube.GUI.Controllers
       // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
       [Authorize]
       [HttpPost]
-      [ValidateAntiForgeryToken]
+      //[ValidateAntiForgeryToken]
       [RequestFormLimits(ValueLengthLimit = int.MaxValue, MultipartBodyLengthLimit = int.MaxValue)]
       public async Task<IActionResult> Create(VideoCreateViewModel viewModel)
       {
@@ -128,25 +163,47 @@ namespace EduTube.GUI.Controllers
 
             if (viewModel.Video != null)
             {
-               video.FilePath = await _uploadService.UploadVideo(viewModel.Video);
+               video.FileName = await _uploadService.UploadVideo(viewModel.Video);
                Debug.WriteLine("Zavrsio sa snimanjem fajla" + DateTime.Now);
-               video.Duration = _uploadService.VideoDuration(video.FilePath);
+               video.Duration = _uploadService.VideoDuration(video.FileName);
             }
+            else
+               video.Duration = XmlConvert.ToTimeSpan(viewModel.VideoDuration);
+            
+            if(viewModel.Thumbnail != null)
+               video.Thumbnail = _uploadService.UploadImage(viewModel.Thumbnail, "thumbnails");
+
+            else
+            {
+               if (viewModel.Video != null)
+                  video.Thumbnail = _uploadService.CreateThumbnail(video.FileName);
+               else
+                  video.Thumbnail = String.Format(@"https://img.youtube.com/vi/" + viewModel.YoutubeId + "/0.jpg");
+            }
+            if (video.VideoVisibility != VideoVisibilityModel.Invitation)
+               video.InvitationCode = null;
+
             ApplicationUserModel currentUser = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
-            video.UserId = currentUser.Id;
-            await _videoManager.Create(video);
-            return RedirectToAction(nameof(Index));
+            video.UserId = currentUser?.Id;
+            video = await _videoManager.Create(video);
+            return LocalRedirect("/Videos/" + video.Id);
          }
          return View(viewModel);
       }
+
       [Authorize]
       [HttpPost]
       public async Task<IActionResult> Edit(VideoViewModel viewModel, string InviteCode)
       {
          VideoModel video = VideoViewModel.CopyToModel(viewModel);
-         video.IvniteCode = InviteCode;
+         video.InvitationCode = InviteCode;
          await _videoManager.Update(video);
          return LocalRedirect("/Videos/"+viewModel.Id);
+      }
+      
+      public async Task<IActionResult> InvitationCode(int videoId,string invitationCode)
+      {
+         return Json(await _videoManager.CheckInvitationCode(videoId, invitationCode));
       }
 
       // GET: Videos/Delete/5

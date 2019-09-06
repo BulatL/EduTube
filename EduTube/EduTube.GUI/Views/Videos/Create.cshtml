@@ -1,71 +1,102 @@
 ﻿@model EduTube.GUI.ViewModels.VideoCreateViewModel
 
 @{
-    ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+   ViewData["Title"] = "Create";
+   Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
-
-<h4>Video</h4>
-<hr />
+@section Styles{
+   <link href="~/css/CreateVideo.css" rel="stylesheet" />
+}
 <div class="row">
-    <div class="col-md-4">
-        <form method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+   <div class="col-md-4">
+      <form method="post" enctype="multipart/form-data" action="Create" id="form">
+         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+         <div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" id="videoName" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+         </div>
+         <div class="form-group">
+            <label asp-for="Description" class="control-label"></label>
+            <input asp-for="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+         </div>
+         <div class="form-group">
+            <select multiple class="form-control" asp-for="Tags" asp-items="ViewBag.HashtagsSelectList"></select>
+         </div>
+         <div class="form-group">
+            <label asp-for="VideoVisibility" class="control-label"></label>
+            <select asp-for="VideoVisibility" class="form-control" id="visibilitySelect">
+               <option value="0">Public</option>
+               <option value="1">Private</option>
+               <option value="2">Invite</option>
+            </select>
+            <span asp-validation-for="VideoVisibility" class="text-danger"></span>
+         </div>
+         <div class="form-group" id="InvitationCodeDiv">
+            <label asp-for="InvitationCode" class="control-label"></label>
+            <input asp-for="InvitationCode" class="form-control" id="InvitationCode" />
+            <span asp-validation-for="InvitationCode" class="text-danger"></span>
+         </div>
+         <div class="form-group form-check">
+            <label class="form-check-label">
+               <input class="form-check-input" asp-for="AllowComments" /> @Html.DisplayNameFor(model => model.AllowComments)
+            </label>
+         </div>
+         <div class="form-group">
+            <label asp-for="YoutubeUrl" class="control-label"></label>
+            <input asp-for="YoutubeUrl" class="form-control" id="youtubeUrl" />
+            <input type="hidden" asp-for="YoutubeId" class="form-control" id="youtubeId" />
+            <input type="hidden" asp-for="VideoDuration" class="form-control" id="videoDuration" />
+            <span asp-validation-for="YoutubeId" class="text-danger" id="youtubeUrlError"></span>
+         </div>
+         <div class="form-group">
+            <label class="control-label">Video</label>
+            <input class="form-control" asp-for="Video" type="file" id="videoFile" />
+         </div>
+         <div class="form-group">
+            <label asp-for="Thumbnail" class="control-label"></label>
+            <input class="form-control" asp-for="Thumbnail" type="file" id="customThumbnail" />
+         </div>
+         <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+         </div>
+      </form>
+   </div>
+   <div class="modal fade" id="modalDialog">
+      <div class="modal-dialog">
+         <div class="modal-content greyBackground">
+            <!-- Modal Header -->
+            <div class="modal-header">
+               <h4 class='col-12 modal-title text-center'>
+                  <span id="modalHeader"></span>
+                  <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                     <span aria-hidden='true'>&times;</span>
+                  </button>
+               </h4>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+            <!-- Modal body -->
+            <div class="modal-body">
+               <h5 class="text-center">We are uploading video, please don't leave this page</h5>
+               <div class="d-flex justify-content-center">
+                  <div class="loader">Loading...</div>
+               </div>
             </div>
-            <div class="form-group">
-                <label asp-for="YoutubeUrl" class="control-label"></label>
-                <input asp-for="YoutubeUrl" class="form-control" />
-                <span asp-validation-for="YoutubeUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="AllowComments" /> @Html.DisplayNameFor(model => model.AllowComments)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="IvniteCode" class="control-label"></label>
-                <input asp-for="IvniteCode" class="form-control" />
-                <span asp-validation-for="IvniteCode" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="VideoVisibility" class="control-label"></label>
-                <select asp-for="VideoVisibility" class="form-control">
-                    <option value="1">Public</option>
-                    <option value="2">Private</option>
-                    <option value="3">Invite</option>
-                </select>   
-                <span asp-validation-for="VideoVisibility" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <select multiple data-role="tagsinput" asp-for="Hashtags">
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Video</label>
-                <input class="form-control" asp-for="Video" type="file"/>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+            <!-- Modal footer -->
+         </div>
+      </div>
+   </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@if (User.Identity.IsAuthenticated)
+{
+   <div>
+      <a href="/Users/@User.Claims.FirstOrDefault(x=> x.Type.Equals("channelName"))">Back to Profile</a>
+   </div>
+}
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   <script src="~/js/CreateVideo.js"></script>
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

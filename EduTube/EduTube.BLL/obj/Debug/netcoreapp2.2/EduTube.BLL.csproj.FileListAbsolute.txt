@@ -22,6 +22,9 @@ C:\Users\Bulat\Desktop\Diplomski\EduTube\EduTube.BLL\obj\Debug\netcoreapp2.2\Edu
 C:\Users\Bulat\Desktop\Diplomski\EduTube\EduTube.BLL\obj\Debug\netcoreapp2.2\EduTube.BLL.csproj.CopyComplete
 C:\Users\Bulat\Desktop\Diplomski\EduTube\EduTube.BLL\obj\Debug\netcoreapp2.2\EduTube.BLL.dll
 C:\Users\Bulat\Desktop\Diplomski\EduTube\EduTube.BLL\obj\Debug\netcoreapp2.2\EduTube.BLL.pdb
+D:\Projects\Diplomski\EduTube\EduTube.BLL\bin\Debug\netcoreapp2.2\EduTube.BLL.deps.json
+D:\Projects\Diplomski\EduTube\EduTube.BLL\bin\Debug\netcoreapp2.2\EduTube.BLL.dll
+D:\Projects\Diplomski\EduTube\EduTube.BLL\bin\Debug\netcoreapp2.2\EduTube.BLL.pdb
 D:\Projects\Diplomski\EduTube\EduTube.BLL\bin\Debug\netcoreapp2.2\EduTube.DAL.dll
 D:\Projects\Diplomski\EduTube\EduTube.BLL\bin\Debug\netcoreapp2.2\EduTube.DAL.pdb
 D:\Projects\Diplomski\EduTube\EduTube.BLL\obj\Debug\netcoreapp2.2\EduTube.BLL.csprojAssemblyReference.cache
@@ -31,6 +34,3 @@ D:\Projects\Diplomski\EduTube\EduTube.BLL\obj\Debug\netcoreapp2.2\EduTube.BLL.As
 D:\Projects\Diplomski\EduTube\EduTube.BLL\obj\Debug\netcoreapp2.2\EduTube.BLL.csproj.CopyComplete
 D:\Projects\Diplomski\EduTube\EduTube.BLL\obj\Debug\netcoreapp2.2\EduTube.BLL.dll
 D:\Projects\Diplomski\EduTube\EduTube.BLL\obj\Debug\netcoreapp2.2\EduTube.BLL.pdb
-D:\Projects\Diplomski\EduTube\EduTube.BLL\bin\Debug\netcoreapp2.2\EduTube.BLL.deps.json
-D:\Projects\Diplomski\EduTube\EduTube.BLL\bin\Debug\netcoreapp2.2\EduTube.BLL.dll
-D:\Projects\Diplomski\EduTube\EduTube.BLL\bin\Debug\netcoreapp2.2\EduTube.BLL.pdb

@@ -1,18 +1,30 @@
 ﻿$(function () {
+   let videoVisibility = $('#videoVisibility').val();
+   let allowAccess = $('#allowAccess').val();
+   if (videoVisibility == 'Invitation' && allowAccess == false) {
+      $('#firstDiv').hide();
+      $('#inviteCodeDialog').modal('show');
+   }
+   else {
+      SetViewsAndReactions();
+   }
+})
+
+function SetViewsAndReactions() {
    let reaction = $('#reactionHidden').val();
    let videoId = $('#videoId').val();
    let userReactionsComentId = $('.userReactionsComentId');
 
    if (reaction != undefined || reaction != "" || reaction != 0) {
-      $(`#emoticon${reaction}`).addClass("resizeVideoEmoticon");
-      $(`#emoticonCount${reaction}`).addClass("resizeVideoEmoticonCount");
+      $(`#emoji${reaction}`).addClass("resizeVideoEmoji");
+      $(`#emojiCount${reaction}`).addClass("resizeVideoEmojiCount");
    }
    if (userReactionsComentId != undefined) {
       for (var i = 0; i < userReactionsComentId.length; i++) {
          let commentId = userReactionsComentId[i].value;
-         let emoticonId = $(`#userReactionEmoticonId_${commentId}`).val();
-         $(`#commentEmoticon${emoticonId}_${commentId}`).addClass('resizeCommentEmoticon');
-         $(`#emoticonCount${emoticonId}Comment_${commentId}`).addClass('resizeCommentEmoticonCount');
+         let emojiId = $(`#userReactionEmojiId_${commentId}`).val();
+         $(`#commentEmoji${emojiId}_${commentId}`).addClass('resizeCommentEmoji');
+         $(`#emojiCount${emojiId}Comment_${commentId}`).addClass('resizeCommentEmojiCount');
       }
    }
 
@@ -35,34 +47,58 @@
       error: function (response, jqXHR) {
       }
    });
-})
+}
 
-function Reaction(emoticonId, videoId, commentId) {
+function CheckInvitationCode() {
+   let videoId = $('#videoId').val();
+   let invitationCode = $('#invatationCode').val();
+   $.ajax({
+      url: `/Videos/InvitationCode?videoId=${videoId}&invitationCode=${invitationCode}`,
+      type: 'GET',
+      dataType: 'json',
+      success: function (response) {
+         if (response == true) {
+            SetViewsAndReactions();
+            $('#firstDiv').show();
+            $('#inviteCodeDialog').modal('hide');
+         }
+         else 
+            $('#invitationCodeError').text('Wrong invatation code');
+      },
+      error: function (response, jqXHR) {
+      }
+   });
+}
+
+function Reaction(emojiId, videoId, commentId) {
    let oldReaction = $('#reactionHidden').val();
+   console.log(oldReaction);
    $.ajax({
       url: '/Reactions/Create',
       type: 'POST',
       data: {
          'videoId': videoId,
-         'emoticonId': emoticonId,
+         'emojiId': emojiId,
          'commentId': commentId
       },
       dataType: 'json',
       success: function (data, textStatus, xhr) {
+         console.log(data);
       },
       error: function (data, xhr) {
+         console.log(data);
          if (data.status == 201) {
             if (videoId != null) {
-               $('.resizeVideoEmoticon').removeClass('resizeVideoEmoticon');
-               $('.resizeVideoEmoticonCount').removeClass('resizeVideoEmoticonCount');
-               //decrease emotion reactions count for new reaction
-               $(`#emoticonCount${oldReaction}`).html(parseInt($(`#emoticonCount${oldReaction}`).html()) - 1);
-               if (oldReaction != emoticonId) {
-                  $(`#emoticon${emoticonId}`).addClass("resizeVideoEmoticon");
-                  $(`#emoticonCount${emoticonId}`).addClass("resizeVideoEmoticonCount");
-                  //increase emotion reactions count for new reaction
-                  $(`#emoticonCount${emoticonId}`).html(parseInt($(`#emoticonCount${emoticonId}`).html()) + 1);
-                  $('#reactionHidden').val(emoticonId);
+               $('.resizeVideoEmoji').removeClass('resizeVideoEmoji');
+               $('.resizeVideoEmojiCount').removeClass('resizeVideoEmojiCount');
+               //decrease emoji reactions count for new reaction
+               $(`#emojiCount${oldReaction}`).html(parseInt($(`#emojiCount${oldReaction}`).html()) - 1);
+               if (oldReaction != emojiId) {
+                  $(`#emoji${emojiId}`).addClass("resizeVideoEmoji");
+                  $(`#emojiCount${emojiId}`).addClass("resizeVideoEmojiCount");
+                  //increase emoji reactions count for new reaction
+                  $(`#emojiCount${emojiId}`).html(parseInt($(`#emojiCount${emojiId}`).html()) + 1);
+                  $('#reactionHidden').val(emojiId);
                }
             }
             else if (commentId != null) {
@@ -71,61 +107,61 @@ function Reaction(emoticonId, videoId, commentId) {
                if (oldCommentReaction == undefined) {
 
                   //if user first time liked/disliked this comment
-                  $(`#commentEmoticon${emoticonId}_${commentId}`).addClass("resizeCommentEmoticon");
-                  let reactionsCount = $(`#emoticonCount${emoticonId}Comment_${commentId}`);
-                  reactionsCount.addClass('resizeCommentEmoticonCount');
+                  $(`#commentEmoji${emojiId}_${commentId}`).addClass("resizeCommentEmoji");
+                  let reactionsCount = $(`#emojiCount${emojiId}Comment_${commentId}`);
+                  reactionsCount.addClass('resizeCommentEmojiCount');
                   reactionsCount.html(parseInt(reactionsCount.html()) + 1);
                   userReactionsCommentDiv.append(
                      `<input type="hidden" value="${commentId}" class="userReactionsComentId" id="userReactionCommentId_${commentId}" />
-                      <input type="hidden" value="${emoticonId}" id="userReactionEmoticonId_${commentId}" />`
+                      <input type="hidden" value="${emojiId}" id="userReactionEmojiId_${commentId}" />`
                   );
                }
                else {
                   //if user already liked/disliked this comment
-                  let oldEmoticon = $(`#userReactionEmoticonId_${commentId}`).val();
-                  if (oldEmoticon == emoticonId) {
+                  let oldEmoji = $(`#userReactionEmojiId_${commentId}`).val();
+                  if (oldEmoji == emojiId) {
 
-                     //if the user want to remove like/dislike on decrease size of emoticon
-                     $(`#commentEmoticon${emoticonId}_${commentId}`).removeClass('resizeCommentEmoticon');
-                     let reactionsCount = $(`#emoticonCount${emoticonId}Comment_${commentId}`);
-                     reactionsCount.removeClass('resizeCommentEmoticonCount');
+                     //if the user want to remove like/dislike on decrease size of emoji
+                     $(`#commentEmoji${emojiId}_${commentId}`).removeClass('resizeCommentEmoji');
+                     let reactionsCount = $(`#emojiCount${emojiId}Comment_${commentId}`);
+                     reactionsCount.removeClass('resizeCommentEmojiCount');
                      reactionsCount.html(parseInt(reactionsCount.html()) - 1);
 
                      //remove reaction for this comment in hidden inputs
                      $(`#userReactionCommentId_${commentId}`).remove();
-                     $(`#userReactionEmoticonId_${commentId}`).remove();
+                     $(`#userReactionEmojiId_${commentId}`).remove();
 
                   }
                   else {
-                     //if user first time like/dislike this comment with this emoticon
-                     //resize selected emoticon and incrise count
-                     $(`#commentEmoticon${emoticonId}_${commentId}`).addClass('resizeCommentEmoticon');
-                     let reactionsCount = $(`#emoticonCount${emoticonId}Comment_${commentId}`);
-                     reactionsCount.addClass('resizeCommentEmoticonCount');
+                     //if user first time like/dislike this comment with this emoji
+                     //resize selected emoji and incrise count
+                     $(`#commentEmoji${emojiId}_${commentId}`).addClass('resizeCommentEmoji');
+                     let reactionsCount = $(`#emojiCount${emojiId}Comment_${commentId}`);
+                     reactionsCount.addClass('resizeCommentEmojiCount');
                      reactionsCount.html(parseInt(reactionsCount.html()) + 1);
 
                      //remove reaction for this comment in hidden inputs
                      $(`#userReactionCommentId_${commentId}`).remove();
-                     $(`#userReactionEmoticonId_${commentId}`).remove();
+                     $(`#userReactionEmojiId_${commentId}`).remove();
 
                      //add new user reaction to hidden input
                      userReactionsCommentDiv.append(
                         `<input type="hidden" value="${commentId}" class="userReactionsComentId" id="userReactionCommentId_${commentId}" />
-                      <input type="hidden" value="${emoticonId}" id="userReactionEmoticonId_${commentId}" />`
+                      <input type="hidden" value="${emojiId}" id="userReactionEmojiId_${commentId}" />`
                      );
 
-                     //decrise previouse emoticon of this comment and decrise count
-                     let previouseEmoticon = $(`#userReactionEmoticonId_${commentId}`).val();
-                     if (emoticonId == 1) {
-                        $(`#commentEmoticon${2}_${commentId}`).removeClass('resizeCommentEmoticon');
-                        let reactionsCount = $(`#emoticonCount${2}Comment_${commentId}`);
-                        reactionsCount.removeClass('resizeCommentEmoticonCount');
+                     //decrise previouse emoji of this comment and decrise count
+                     let previouseEmoji = $(`#userReactionEmojiId_${commentId}`).val();
+                     if (emojiId == 1) {
+                        $(`#commentEmoji${2}_${commentId}`).removeClass('resizeCommentEmoji');
+                        let reactionsCount = $(`#emojiCount${2}Comment_${commentId}`);
+                        reactionsCount.removeClass('resizeCommentEmojiCount');
                         reactionsCount.html(parseInt(reactionsCount.html()) - 1);
                      }
                      else {
-                        $(`#commentEmoticon${1}_${commentId}`).removeClass('resizeCommentEmoticon');
-                        let reactionsCount = $(`#emoticonCount${1}Comment_${commentId}`);
-                        reactionsCount.removeClass('resizeCommentEmoticonCount');
+                        $(`#commentEmoji${1}_${commentId}`).removeClass('resizeCommentEmoji');
+                        let reactionsCount = $(`#emojiCount${1}Comment_${commentId}`);
+                        reactionsCount.removeClass('resizeCommentEmojiCount');
                         reactionsCount.html(parseInt(reactionsCount.html()) - 1);
                      }
                   }
@@ -197,15 +233,15 @@ function populateCommentDiv(comment) {
                </div>
                <div class="col-12 inline-flex noPadding">
                   <div>
-                     <button class="commentEmoticonBtn" onclick="Reaction(1, null, ${comment.commentId})" id="emoticonBtn1">
-                        <img src="/images/likeEmoticon.png" id="commentEmoticon1_${comment.commentId}" class="" />
-                        <h6 class="whiteColor moveLeft" id="emoticonCount1Comment_${comment.commentId}">0</h6>
+                     <button class="commentEmojiBtn" onclick="Reaction(1, null, ${comment.commentId})" id="emojiBtn1">
+                        <img src="/images/likeEmoji.png" id="commentEmoji1_${comment.commentId}" class="" />
+                        <h6 class="whiteColor moveLeft" id="emojiCount1Comment_${comment.commentId}">0</h6>
                      </button>
                   </div>
                   <div>
-                     <button class="commentEmoticonBtn" onclick="Reaction(2, null, ${comment.commentId})" id="emoticonBtn1">
-                        <img src="/images/dislikeEmoticon.png" id="commentEmoticon2_${comment.commentId}" class="" />
-                        <h6 class="whiteColor moveLeft" id="emoticonCount2Comment_${comment.commentId}">0</h6>
+                     <button class="commentEmojiBtn" onclick="Reaction(2, null, ${comment.commentId})" id="emojiBtn1">
+                        <img src="/images/dislikeEmoji.png" id="commentEmoji2_${comment.commentId}" class="" />
+                        <h6 class="whiteColor moveLeft" id="emojiCount2Comment_${comment.commentId}">0</h6>
                      </button>
                   </div>
                </div>

@@ -4,8 +4,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.WindowsAPICodePack.Shell;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
+using MediaToolkit.Model;
+using MediaToolkit.Options;
+using MediaToolkit;
+using LazZiya.ImageResize;
 
 namespace EduTube.GUI.Services
 {
@@ -17,16 +22,19 @@ namespace EduTube.GUI.Services
          _hostingEnvironment = hostingEnvironment;
       }
 
-      public async Task<string> UploadImage(IFormFile file)
+      public string UploadImage(IFormFile file, string folderName)
       {
-         Debug.WriteLine("poceo sa snimanjem fajla" + DateTime.Now);
          string extension = Path.GetExtension(file.FileName);
          var fileName = string.Format(@"{0}{1}", Guid.NewGuid(), extension);
-         var uploads = Path.Combine(_hostingEnvironment.WebRootPath, @"profileImages");
+         var uploads = Path.Combine(_hostingEnvironment.WebRootPath, folderName);
          var filePath = Path.Combine(uploads, fileName);
-         FileStream fileStream = new FileStream(filePath, FileMode.Create);
-         await file.CopyToAsync(fileStream);
-         fileStream.Close();
+
+         using (Image img = Image.FromStream(file.OpenReadStream()))
+         {
+            //Scale by height : Scales image by provided height value, auto adjusts new width according to aspect ratio.
+            Image resizedImage = ImageResize.ScaleByHeight(img, 150);
+            resizedImage.Save(filePath);
+         }
          return fileName;
       }
 
@@ -35,9 +43,9 @@ namespace EduTube.GUI.Services
          Debug.WriteLine("poceo sa snimanjem fajla" + DateTime.Now);
          string extension = Path.GetExtension(file.FileName);
          var fileName = string.Format(@"{0}{1}", Guid.NewGuid(), extension);
-         var uploads = Path.Combine(_hostingEnvironment.WebRootPath, @"videos");
-         var filePath = Path.Combine(uploads, fileName);
-         FileStream fileStream = new FileStream(filePath, FileMode.Create);
+         var folderPath = Path.Combine(_hostingEnvironment.WebRootPath, @"videos");
+         var fullFilePath = Path.Combine(folderPath, fileName);
+         FileStream fileStream = new FileStream(fullFilePath, FileMode.Create);
          await file.CopyToAsync(fileStream);
          fileStream.Close();
          return fileName;
@@ -56,6 +64,29 @@ namespace EduTube.GUI.Services
             time = TimeSpan.FromSeconds(ttl_seconds);
          }
          return time;
+      }
+      
+      public string CreateThumbnail(string videoName)
+      {
+         var videoFolder = Path.Combine(_hostingEnvironment.WebRootPath, @"videos");
+         var videoPath = Path.Combine(videoFolder, videoName);
+
+         var thumbnailFolder = Path.Combine(_hostingEnvironment.WebRootPath, @"thumbnails");
+         var thumbnailName = string.Format(@"{0}.jpg", Guid.NewGuid());
+         var thumbnailPath = Path.Combine(thumbnailFolder, thumbnailName);
+
+         var inputFile = new MediaFile { Filename = videoPath };
+         var outputFile = new MediaFile { Filename = thumbnailPath };
+
+         using (var engine = new Engine())
+         {
+            engine.GetMetadata(inputFile);
+
+            // Saves the frame located on the 5th second of the video.
+            var options = new ConversionOptions { Seek = TimeSpan.FromSeconds(5) };
+            engine.GetThumbnail(inputFile, outputFile, options);
+         }
+         return thumbnailName;
       }
    }
 }

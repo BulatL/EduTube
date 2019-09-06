@@ -4,16 +4,20 @@
 }
 
 @section Styles{ }
-<div id="backgroundImage">
-   <img src="~/images/keyboard.jpg" width="900" />
-</div>
 <h2 class="text-center">Popular videos</h2>
 <div class="row">
    @foreach (var video in Model)
    {
       <div class="col-lg-2">
          <a href="/Videos/@video.Id">
-            <img src="~/thumbnails/@video.Thumbnail" width="160" height="180" />
+            @if (video.FileName != null)
+            {
+               <img src="~/thumbnails/@video.Thumbnail" width="160" height="180" />
+            }
+            @if (video.FileName == null)
+            {
+               <img src="@video.Thumbnail" width="160" height="180" />
+            }
             <h6 class="text-white">@video.Name</h6>
          </a>
          <a href="/Users/@video.UserChannelName.Replace(" ", "-")">

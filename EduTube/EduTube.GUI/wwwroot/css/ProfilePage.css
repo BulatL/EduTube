@@ -10,30 +10,38 @@
     max-width: 100%;
     height: auto;
 }*/
-
+#subscribeBtn {
+   position: initial;
+   margin-top: 1rem;
+   margin-right: 1rem;
+}
+#deleteProfileBtn {
+   margin-top:1rem;
+}
 #profileImageDiv {
-    position: relative;
-    width: 200px;
-    height: 200px;
-    overflow: hidden;
-    border-radius: 50%;
-    margin-bottom: 2em;
+   position: relative;
+   width: 200px;
+   height: 200px;
+   overflow: hidden;
+   border-radius: 50%;
+   margin-bottom: 2em;
+   display: inline-block;
 }
 
     #profileImageDiv img {
         width: 100%;
         height: auto;
     }
-#subProfileImageDiv {
+.subProfileImageDiv {
     position: relative;
     width: 100px;
     height: 100px;
     overflow: hidden;
     border-radius: 50%;
-    margin-bottom: 1em;
+    margin: 1rem;
 }
 
-    #subProfileImageDiv img {
+    .subProfileImageDiv img {
     width: 100%;
     height: auto;
 }
@@ -91,4 +99,57 @@
 }
 #tab-content-subscribers div{
     margin-right:1em;
+}
+
+#tabs{
+   display:flex;
+   padding:1rem;
+}
+.tabsDiv {
+   padding: 0.3rem;
+   cursor: pointer;
+}
+   .tabsDiv button {
+      background: transparent;
+      border: none;
+      outline: none;
+      width: inherit;
+      cursor: pointer;
+   }
+.tabsDivActiv {
+   box-shadow: 0 10px 30px rgba(0,0,0,.2);
+   background: linear-gradient(to right,#f05a28 0,#e80a89 100%);
+   color: #fff;
+}
+
+.leftBorderRadius {
+   border-bottom-left-radius: 5px;
+   border-top-left-radius: 5px;
+}
+
+.rightBorderRadius {
+   border-bottom-right-radius: 5px;
+   border-top-right-radius: 5px;
+}
+#mainTabDiv {
+   padding: 0rem 1rem;
+}
+#addVideoBtn{
+   position:initial;
+   margin-bottom: 1rem;
+}
+#addVideoDiv {
+   padding: 1rem 3rem;
+}
+#userVideosDiv{
+   padding: 1rem 1.3rem;
+}
+#subscribersDiv, #subscribedOnDiv {
+   display: none;
+}
+.subsDiv {
+   word-break: break-word;
+   width: 8rem;
+   margin-right: 1rem;
+   vertical-align: top;
 }

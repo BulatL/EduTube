@@ -1,12 +1,16 @@
-﻿.resizeVideoEmoticonCount, .resizeCommentEmoticonCount {
+﻿#videoPlayer:focus {
+   outline: none;
+}
+
+.resizeVideoEmojiCount, .resizeCommentEmojiCount {
    margin-top: 1rem;
 }
-.resizeVideoEmoticon, .resizeVideoEmoticonCount {
+.resizeVideoEmoji, .resizeVideoEmojiCount {
    -moz-transform: scale(1.5);
    -webkit-transform: scale(1.5);
    transform: scale(1.5);
 }
-.resizeCommentEmoticon, .resizeCommentEmoticonCount {
+.resizeCommentEmoji, .resizeCommentEmojiCount {
    -moz-transform: scale(1.2);
    -webkit-transform: scale(1.2);
    transform: scale(1.2);
@@ -14,16 +18,16 @@
 button:focus {
    outline: 0;
 }
-.emoticonBtn, .commentEmoticonBtn {
+.emojiBtn, .commentEmojiBtn {
    background-color: transparent;
-   border:none;
-   cursor:pointer;
-   margin-top:1em;
+   border: none;
+   cursor: pointer;
+   margin-top: 1em;
 }
-   .emoticonBtn:focus, .commentEmoticonBtn :focus{
+   .emojiBtn:focus, .commentEmojiBtn :focus {
       border: none;
    }
-   .emoticonBtn img, .commentEmoticonBtn img{
+   .emojiBtn img, .commentEmojiBtn img {
       object-fit: cover;
       -moz-transition: all 0.3s;
       -webkit-transition: all 0.3s;
@@ -32,20 +36,20 @@ button:focus {
       margin-right: 1rem;
    }
 
-   .emoticonBtn:hover img, .emoticonBtn:hover h6 {
+   .emojiBtn:hover img, .emojiBtn:hover h6 {
       -moz-transform: scale(1.5);
       -webkit-transform: scale(1.5);
       transform: scale(1.5);
    }
-   .emoticonBtn:hover h6 {
+   .emojiBtn:hover h6 {
       margin-top: 1rem;
    }
-   .commentEmoticonBtn:hover img {
+   .commentEmojiBtn:hover img {
       -moz-transform: scale(1.2);
       -webkit-transform: scale(1.2);
       transform: scale(1.2);
    }
-   .commentEmoticonBtn:hover h6 {
+   .commentEmojiBtn:hover h6 {
       margin-top: 1rem;
    }
 .breakLine {
@@ -59,7 +63,7 @@ button:focus {
    .inheritDiv {
       display: inherit !important;
    }
-   #btnSubscribeOwner, #emoticonsDiv {
+   #btnSubscribeOwner, #emojisDiv {
       float: right;
    }
 }
@@ -183,4 +187,9 @@ textarea {
    border-bottom: solid;
    border-width: 1px;
    border-color: #e80a89;
+}
+#invatationCodeBtn {
+   margin-top: 1rem;
+   width: inherit;
+   position: inherit !important;
 }

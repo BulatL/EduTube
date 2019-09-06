@@ -10,7 +10,9 @@
    <link href="~/css/EditVideoModal.css" rel="stylesheet" />
 }
 <div class="container">
-   <div class="row">
+   <input type="hidden" id="allowAccess" value="@ViewData["allowAccess"]" />
+   <input type="hidden" asp-for="Visibility" id="videoVisibility" />
+   <div class="row" id="firstDiv">
       <!--Div with video player-->
       <div class="col-12">
          <input type="hidden" id="videoId" value="@Model.Id" />
@@ -18,10 +20,10 @@
          {
             <iframe id="videoPlayer" class="widthInherit" height="550" src="@Model.YoutubeUrl" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
          }
-         @if (Model.FilePath != null && Model.FilePath != "")
+         @if (Model.FileName != null && Model.FileName != "")
          {
             <video controls id="videoPlayer" class="widthInherit">
-               <source src="~/videos/@Model.FilePath" type="video/mp4">
+               <source src="~/videos/@Model.FileName" type="video/mp4">
                Your browser does not support HTML5 video.
             </video>
          }
@@ -33,53 +35,53 @@
             <h5 class="float-right" id="viewsCount"></h5>
          </div>
       </div>
-      <!--Div with hashtags and emoticons-->
+      <!--Div with hashtags and emoji-->
       <div class="col-12 inheritDiv">
          <div class="col-lg-3 col-md-3 col-sm-12 noPadding">
-            <span class="breakWord"><strong>Hashtags: </strong>@Model.Hashtags</span>
+            <span class="breakWord"><strong>Hashtags: </strong>@Model.Tags</span>
          </div>
          <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 noPadding">
-            <div class="row justify-content-center" id="emoticonsDiv">
+            <div class="row justify-content-center" id="emojisDiv">
                <div>
-                  <button class="emoticonBtn" onclick="Reaction(1, @Model.Id, null)" id="emoticonBtn1">
-                     <img src="~/images/likeEmoticon.png" id="emoticon1" class="" />
-                     <h6 class="whiteColor moveLeft" id="emoticonCount1">@Model.Reactions?.Where(x => x.EmoticonId == 1).Count()</h6>
+                  <button class="emojiBtn" onclick="Reaction(1, @Model.Id, null)" id="emojiBtn1">
+                     <img src="~/images/likeEmoji.png" id="emoji1" class="" />
+                     <h6 class="whiteColor moveLeft" id="emojiCount1">@Model.Reactions?.Where(x => x.EmojiId == 1).Count()</h6>
                   </button>
                </div>
                <div>
-                  <button class="emoticonBtn" onclick="Reaction(3, @Model.Id, null)" id="emoticonBtn3">
-                     <img src="~/images/loveEmoticon.png" id="emoticon3" class="" />
-                     <h6 class="whiteColor moveLeft" id="emoticonCount3">@Model.Reactions?.Where(x => x.EmoticonId == 3).Count()</h6>
+                  <button class="emojiBtn" onclick="Reaction(3, @Model.Id, null)" id="emojiBtn3">
+                     <img src="~/images/loveEmoji.png" id="emoji3" class="" />
+                     <h6 class="whiteColor moveLeft" id="emojiCount3">@Model.Reactions?.Where(x => x.EmojiId == 3).Count()</h6>
                   </button>
                </div>
                <div>
-                  <button class="emoticonBtn" onclick="Reaction(5, @Model.Id, null)" id="emoticonBtn5">
-                     <img src="~/images/LaughtEmoticon.png" id="emoticon5" class="" />
-                     <h6 class="whiteColor moveLeft" id="emoticonCount5">@Model.Reactions?.Where(x => x.EmoticonId == 5).Count()</h6>
+                  <button class="emojiBtn" onclick="Reaction(5, @Model.Id, null)" id="emojiBtn5">
+                     <img src="~/images/LaughtEmoji.png" id="emoji5" class="" />
+                     <h6 class="whiteColor moveLeft" id="emojiCount5">@Model.Reactions?.Where(x => x.EmojiId == 5).Count()</h6>
                   </button>
                </div>
                <div>
-                  <button class="emoticonBtn" onclick="Reaction(4, @Model.Id, null)" id="emoticonBtn4">
-                     <img src="~/images/wowEmoticon.png" id="emoticon4" class="" />
-                     <h6 class="whiteColor moveLeft" id="emoticonCount4">@Model.Reactions?.Where(x => x.EmoticonId == 4).Count()</h6>
+                  <button class="emojiBtn" onclick="Reaction(4, @Model.Id, null)" id="emojiBtn4">
+                     <img src="~/images/wowEmoji.png" id="emoji4" class="" />
+                     <h6 class="whiteColor moveLeft" id="emojiCount4">@Model.Reactions?.Where(x => x.EmojiId == 4).Count()</h6>
                   </button>
                </div>
                <div>
-                  <button class="emoticonBtn" onclick="Reaction(6, @Model.Id, null)" id="emoticonBtn6">
-                     <img src="~/images/sadEmoticon.png" id="emoticon6" class="" />
-                     <h6 class="whiteColor moveLeft" id="emoticonCount6">@Model.Reactions?.Where(x => x.EmoticonId == 6).Count()</h6>
+                  <button class="emojiBtn" onclick="Reaction(6, @Model.Id, null)" id="emojiBtn6">
+                     <img src="~/images/sadEmoji.png" id="emoji6" class="" />
+                     <h6 class="whiteColor moveLeft" id="emojiCount6">@Model.Reactions?.Where(x => x.EmojiId == 6).Count()</h6>
                   </button>
                </div>
                <div>
-                  <button class="emoticonBtn" onclick="Reaction(7, @Model.Id, null)" id="emoticonBtn7">
-                     <img src="~/images/angry2Emoticon.png" id="emoticon7" class="" />
-                     <h6 class="whiteColor moveLeft" id="emoticonCount7">@Model.Reactions?.Where(x => x.EmoticonId == 7).Count()</h6>
+                  <button class="emojiBtn" onclick="Reaction(7, @Model.Id, null)" id="emojiBtn7">
+                     <img src="~/images/angry2Emoji.png" id="emoji7" class="" />
+                     <h6 class="whiteColor moveLeft" id="emojiCount7">@Model.Reactions?.Where(x => x.EmojiId == 7).Count()</h6>
                   </button>
                </div>
                <div>
-                  <button class="emoticonBtn" onclick="Reaction(2, @Model.Id, null)" id="emoticonBtn2">
-                     <img src="~/images/dislikeEmoticon.png" id="emoticon2" class="" />
-                     <h6 class="whiteColor moveLeft" id="emoticonCount2">@Model.Reactions?.Where(x => x.EmoticonId == 2).Count()</h6>
+                  <button class="emojiBtn" onclick="Reaction(2, @Model.Id, null)" id="emojiBtn2">
+                     <img src="~/images/dislikeEmoji.png" id="emoji2" class="" />
+                     <h6 class="whiteColor moveLeft" id="emojiCount2">@Model.Reactions?.Where(x => x.EmojiId == 2).Count()</h6>
                   </button>
                </div>
             </div>
@@ -137,7 +139,6 @@
       <div class="col-12" id="breakAfterOwner">
          <div class="breakLine"></div>
       </div>
-
       <!--Comments not allowed-->
       @if (Model.AllowComments != true)
       {
@@ -226,15 +227,15 @@
                            </div>
                            <div class="col-12 inline-flex noPadding">
                               <div>
-                                 <button class="commentEmoticonBtn" onclick="Reaction(1, null, @comment.Id)" id="emoticonBtn1">
-                                    <img src="~/images/likeEmoticon.png" id="commentEmoticon1_@comment.Id" class="" />
-                                    <h6 class="whiteColor moveLeft" id="emoticonCount1Comment_@comment.Id">@comment.Reactions?.Where(x => x.EmoticonId == 1).Count()</h6>
+                                 <button class="commentEmojiBtn" onclick="Reaction(1, null, @comment.Id)" id="emojiBtn1">
+                                    <img src="~/images/likeEmoji.png" id="commentEmoji1_@comment.Id" class="" />
+                                    <h6 class="whiteColor moveLeft" id="emojiCount1Comment_@comment.Id">@comment.Reactions?.Where(x => x.EmojiId == 1).Count()</h6>
                                  </button>
                               </div>
                               <div>
-                                 <button class="commentEmoticonBtn" onclick="Reaction(2, null, @comment.Id)" id="emoticonBtn1">
-                                    <img src="~/images/dislikeEmoticon.png" id="commentEmoticon2_@comment.Id" class="" />
-                                    <h6 class="whiteColor moveLeft" id="emoticonCount2Comment_@comment.Id">@comment.Reactions?.Where(x => x.EmoticonId == 2).Count()</h6>
+                                 <button class="commentEmojiBtn" onclick="Reaction(2, null, @comment.Id)" id="emojiBtn1">
+                                    <img src="~/images/dislikeEmoji.png" id="commentEmoji2_@comment.Id" class="" />
+                                    <h6 class="whiteColor moveLeft" id="emojiCount2Comment_@comment.Id">@comment.Reactions?.Where(x => x.EmojiId == 2).Count()</h6>
                                  </button>
                               </div>
                            </div>
@@ -257,7 +258,7 @@
          @foreach (var item in Model.UserReactionOnComments)
          {
             <input type="hidden" value="@item.CommentId" class="userReactionsComentId" id="userReactionCommentId_@item.CommentId" />
-            <input type="hidden" value="@item.EmoticonId" id="userReactionEmoticonId_@item.CommentId" />
+            <input type="hidden" value="@item.EmojiId" id="userReactionEmojiId_@item.CommentId" />
          }
       </div>
       <!--Div with modal dialog for editing video-->
@@ -276,7 +277,7 @@
                         </button>
                      </h4>
                   </div>
-                  <form method="post"  asp-action="Edit" asp-controller="Videos">
+                  <form method="post" asp-action="Edit" asp-controller="Videos">
                      <!-- Modal body -->
                      <div class="modal-body">
                         <div class="form-group">
@@ -296,9 +297,9 @@
                            <span asp-validation-for="AllowComments" style="color:red;" id="firstnameError"></span>
                         </div>
                         <div class="form-group">
-                           <label asp-for="Hashtags" class="col-form-label whiteColor"></label>
-                           <input asp-for="Hashtags" class="form-control" id="firstname" />
-                           <span asp-validation-for="Hashtags" style="color:red;" id="firstnameError"></span>
+                           <label asp-for="Tags" class="col-form-label whiteColor"></label>
+                           <input asp-for="Tags" class="form-control" id="firstname" />
+                           <span asp-validation-for="Tags" style="color:red;" id="firstnameError"></span>
                         </div>
                         <div class="form-group">
                            <label asp-for="Visibility" class="col-form-label whiteColor"></label>
@@ -331,6 +332,35 @@
                         </div>
                      </div>
                   </form>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!--Div with modal dialog for invite code-->
+   <div>
+      <!-- The Modal -->
+      <div class="modal fade" id="inviteCodeDialog">
+         <div class="modal-dialog">
+            <div class="modal-content">
+               <!-- Modal Header -->
+               <div class="modal-header">
+                  <h4 class='col-12 modal-title text-center'>
+                     @Model.Name
+                  </h4>
+               </div>
+               <!-- Modal body -->
+               <div class="modal-body" style="height: 12rem !important;">
+                  <div class="col-12">
+                     <h5 class="text-center">You need invatation code to see this video</h5>
+                  </div>
+                  <div class="col-12">
+                     <input class="form-control" placeholder="Invatation code" id="invatationCode" />
+                     <span style="color:red;" id="invitationCodeError"></span>
+                  </div>
+                  <div class="col-12">
+                     <button class="purpleBtn" id="invatationCodeBtn" onclick="CheckInvitationCode()">Submit</button>
+                  </div>
                </div>
             </div>
          </div>

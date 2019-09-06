@@ -7,6 +7,22 @@ namespace EduTube.BLL.Mappers
 {
    public class UserMapper
    {
+
+      public static void CopyModelToEntity(ApplicationUserModel model, ApplicationUser entity)
+      {
+         entity.ChannelDescription = model.ChannelDescription;
+         entity.ChannelName = model.ChannelName;
+         entity.DateOfBirth = model.DateOfBirth;
+         entity.Email = model.Email;
+         entity.NormalizedEmail = model.Email.ToUpper();
+         entity.UserName = model.Email;
+         entity.NormalizedUserName = model.Email.ToUpper();
+         entity.Firstname = model.Firstname;
+         entity.Lastname = model.Lastname;
+         entity.PhoneNumber = model.PhoneNumber;
+         entity.ProfileImage = model.ProfileImage;
+
+      }
       public static ApplicationUserModel EntityToModel(ApplicationUser entity)
       {
          if (entity == null)

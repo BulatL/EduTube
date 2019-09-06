@@ -165,7 +165,7 @@ namespace EduTube.DAL.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("EduTube.DAL.Entities.Emoticon", b =>
+            modelBuilder.Entity("EduTube.DAL.Entities.Emoji", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -179,84 +179,138 @@ namespace EduTube.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Emoticons");
+                    b.ToTable("Emojis");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
                             Deleted = false,
-                            ImagePath = "likeEmoticon.png",
+                            ImagePath = "likeEmoji.png",
                             Name = "Like"
                         },
                         new
                         {
                             Id = 2,
                             Deleted = false,
-                            ImagePath = "dislikeEmoticon.png",
+                            ImagePath = "dislikeEmoji.png",
                             Name = "Dislike"
                         },
                         new
                         {
                             Id = 3,
                             Deleted = false,
-                            ImagePath = "loveEmoticon.png",
+                            ImagePath = "loveEmoji.png",
                             Name = "Love"
                         },
                         new
                         {
                             Id = 4,
                             Deleted = false,
-                            ImagePath = "wowEmoticon.png",
+                            ImagePath = "wowEmoji.png",
                             Name = "WoW"
                         },
                         new
                         {
                             Id = 5,
                             Deleted = false,
-                            ImagePath = "laughtEmoticon.png",
+                            ImagePath = "laughtEmoji.png",
                             Name = "Hahaha"
                         },
                         new
                         {
                             Id = 6,
                             Deleted = false,
-                            ImagePath = "sadEmoticon.png",
+                            ImagePath = "sadEmoji.png",
                             Name = "Sad"
                         },
                         new
                         {
                             Id = 7,
                             Deleted = false,
-                            ImagePath = "angryEmoticon.png",
+                            ImagePath = "angryEmoji.png",
                             Name = "Angry"
                         });
                 });
 
-            modelBuilder.Entity("EduTube.DAL.Entities.HashTagRelationship", b =>
+            modelBuilder.Entity("EduTube.DAL.Entities.Notification", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ChatId");
+                    b.Property<string>("ApplicationUserId");
 
-                    b.Property<int?>("HashTagId");
+                    b.Property<string>("Content");
+
+                    b.Property<bool>("Deleted");
+
+                    b.Property<string>("RedirectPath");
+
+                    b.Property<bool>("Seen");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("EduTube.DAL.Entities.Reaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CommentId");
+
+                    b.Property<DateTime>("DateCreatedOn");
+
+                    b.Property<bool>("Deleted");
+
+                    b.Property<int>("EmojiId");
+
+                    b.Property<string>("UserId");
 
                     b.Property<int?>("VideoId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChatId");
+                    b.HasIndex("CommentId");
 
-                    b.HasIndex("HashTagId");
+                    b.HasIndex("EmojiId");
+
+                    b.HasIndex("UserId");
 
                     b.HasIndex("VideoId");
 
-                    b.ToTable("HashTagRelationships");
+                    b.ToTable("Reactions");
                 });
 
-            modelBuilder.Entity("EduTube.DAL.Entities.Hashtag", b =>
+            modelBuilder.Entity("EduTube.DAL.Entities.Subscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Deleted");
+
+                    b.Property<string>("SubscribedOnId");
+
+                    b.Property<string>("SubscriberId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubscribedOnId");
+
+                    b.HasIndex("SubscriberId");
+
+                    b.ToTable("Subscriptions");
+                });
+
+            modelBuilder.Entity("EduTube.DAL.Entities.Tag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -266,7 +320,7 @@ namespace EduTube.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Hashtags");
+                    b.ToTable("Tags");
 
                     b.HasData(
                         new
@@ -336,81 +390,27 @@ namespace EduTube.DAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("EduTube.DAL.Entities.Notification", b =>
+            modelBuilder.Entity("EduTube.DAL.Entities.TagRelationship", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApplicationUserId");
+                    b.Property<int?>("ChatId");
 
-                    b.Property<string>("Content");
-
-                    b.Property<bool>("Deleted");
-
-                    b.Property<string>("RedirectPath");
-
-                    b.Property<bool>("Seen");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.ToTable("Notifications");
-                });
-
-            modelBuilder.Entity("EduTube.DAL.Entities.Reaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("CommentId");
-
-                    b.Property<DateTime>("DateCreatedOn");
-
-                    b.Property<bool>("Deleted");
-
-                    b.Property<int>("EmoticonId");
-
-                    b.Property<string>("UserId");
+                    b.Property<int?>("TagId");
 
                     b.Property<int?>("VideoId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CommentId");
+                    b.HasIndex("ChatId");
 
-                    b.HasIndex("EmoticonId");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("TagId");
 
                     b.HasIndex("VideoId");
 
-                    b.ToTable("Reactions");
-                });
-
-            modelBuilder.Entity("EduTube.DAL.Entities.Subscription", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Deleted");
-
-                    b.Property<string>("SubscribedOnId");
-
-                    b.Property<string>("SubscriberId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SubscribedOnId");
-
-                    b.HasIndex("SubscriberId");
-
-                    b.ToTable("Subscriptions");
+                    b.ToTable("TagRelationships");
                 });
 
             modelBuilder.Entity("EduTube.DAL.Entities.Video", b =>
@@ -431,9 +431,9 @@ namespace EduTube.DAL.Migrations
 
                     b.Property<TimeSpan>("Duration");
 
-                    b.Property<string>("FilePath");
+                    b.Property<string>("FileName");
 
-                    b.Property<string>("IvniteCode");
+                    b.Property<string>("InvitationCode");
 
                     b.Property<string>("Name");
 
@@ -611,24 +611,6 @@ namespace EduTube.DAL.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("EduTube.DAL.Entities.HashTagRelationship", b =>
-                {
-                    b.HasOne("EduTube.DAL.Entities.Chat", "Chat")
-                        .WithMany("Hashtags")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("EduTube.DAL.Entities.Hashtag", "Hashtag")
-                        .WithMany()
-                        .HasForeignKey("HashTagId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("EduTube.DAL.Entities.Video", "Video")
-                        .WithMany("HashtagRelationships")
-                        .HasForeignKey("VideoId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
             modelBuilder.Entity("EduTube.DAL.Entities.Notification", b =>
                 {
                     b.HasOne("EduTube.DAL.Entities.ApplicationUser")
@@ -644,9 +626,9 @@ namespace EduTube.DAL.Migrations
                         .HasForeignKey("CommentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("EduTube.DAL.Entities.Emoticon", "Emoticon")
+                    b.HasOne("EduTube.DAL.Entities.Emoji", "Emoji")
                         .WithMany()
-                        .HasForeignKey("EmoticonId")
+                        .HasForeignKey("EmojiId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("EduTube.DAL.Entities.ApplicationUser", "User")
@@ -670,6 +652,24 @@ namespace EduTube.DAL.Migrations
                     b.HasOne("EduTube.DAL.Entities.ApplicationUser", "Subscriber")
                         .WithMany("SubscribedOn")
                         .HasForeignKey("SubscriberId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("EduTube.DAL.Entities.TagRelationship", b =>
+                {
+                    b.HasOne("EduTube.DAL.Entities.Chat", "Chat")
+                        .WithMany("TagRelationspis")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("EduTube.DAL.Entities.Tag", "Tag")
+                        .WithMany()
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("EduTube.DAL.Entities.Video", "Video")
+                        .WithMany("TagRelationships")
+                        .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

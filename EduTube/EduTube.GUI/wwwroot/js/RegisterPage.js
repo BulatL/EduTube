@@ -7,6 +7,7 @@
       fasterPreview(this);
    });
    $('#form').submit(function () {
+      let userId = $('#userId').val();
       let channelName = $('#channelName').val();
       let password = $('#password').val();
       let email = $('#email').val();
@@ -23,7 +24,7 @@
 
       if (channelName != "" && password != "" && email != "" && channelDescription != "") {
          $.ajax({
-            url: `/Users/ChannelnameExist?channelName=${channelName}&email=${email}`,
+            url: `/Users/ChannelNameEmailExist?channelName=${channelName}&email=${email}&userId=${userId}`,
             type: 'GET',
             dataType: 'json',
             contentType: "application/json",
@@ -31,6 +32,7 @@
                console.log(response);
                if (response.channelNameExist == true) {
                   $('#channelNameError').text("Channel name already taken");
+                  console.log()
                }
                if (response.emailExist == true) {
                   $('#emailError').text("Email already taken");
@@ -38,10 +40,11 @@
                if (response.emailExist == true || response.channelNameExist == true) {
                   return false
                }
-               else 
+               else if (response.emailExist != true && response.channelNameExist != true)
                   return true;
             },
             error: function (response) {
+               return false;
             }
          });
       }

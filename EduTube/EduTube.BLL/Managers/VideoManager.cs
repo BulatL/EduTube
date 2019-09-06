@@ -81,16 +81,16 @@ namespace EduTube.BLL.Managers
                  .Select(x => x.VideoId).Distinct().ToListAsync();
       }
 
-      public async Task<List<VideoModel>> Get6VideosByHashtag(string userId, int? hashtagId)
+      public async Task<List<VideoModel>> Get6VideosByTag(string userId, int? tagId)
       {
          List<Video> videos = new List<Video>();
          if (userId != null)
          {
-            videos.AddRange(await _context.HashTagRelationships
+            videos.AddRange(await _context.TagRelationships
                 .Include(h => h.Video)
                 .Where(h => !h.Video.Deleted && (h.Video.VideoVisibility != VideoVisibility.Invitation ||
                 (h.Video.VideoVisibility == VideoVisibility.Invitation && h.Video.UserId == userId)) &&
-                h.HashTagId == hashtagId)
+                h.TagId == tagId)
                 .Select(h => h.Video)
                 .Include(h => h.User)
                 .Take(6)
@@ -100,9 +100,9 @@ namespace EduTube.BLL.Managers
          }
          else
          {
-            videos.AddRange(await _context.HashTagRelationships
+            videos.AddRange(await _context.TagRelationships
                 .Include(h => h.Video)
-                .Where(h => !h.Video.Deleted && h.Video.VideoVisibility == VideoVisibility.Public && h.HashTagId == hashtagId)
+                .Where(h => !h.Video.Deleted && h.Video.VideoVisibility == VideoVisibility.Public && h.TagId == tagId)
                 .Select(h => h.Video)
                 .Include(h => h.User)
                 .Take(6)
@@ -125,9 +125,9 @@ namespace EduTube.BLL.Managers
                 .Select(x => x.VideoId).Distinct().ToListAsync();
 
             Debug.WriteLine("nasao videoId " + DateTime.Now);
-            hashtagsId = await _context.HashTagRelationships
+            hashtagsId = await _context.TagRelationships
                 .Where(x => videosId.Contains(int.Parse(x.VideoId.ToString())))
-                .GroupBy(x => x.HashTagId)
+                .GroupBy(x => x.TagId)
                 .OrderByDescending(g => g.Count())
                 .Take(2)
                 .Select(x => x.Key)
@@ -137,11 +137,11 @@ namespace EduTube.BLL.Managers
             Debug.WriteLine("nasao hastagsId " + DateTime.Now);
             foreach (var id in hashtagsId)
             {
-               videos.AddRange(await _context.HashTagRelationships
+               videos.AddRange(await _context.TagRelationships
                    .Include(h => h.Video)
                    .Where(h => !h.Video.Deleted && (h.Video.VideoVisibility != VideoVisibility.Invitation ||
                    (h.Video.VideoVisibility == VideoVisibility.Invitation && h.Video.UserId == userId)) &&
-                   h.HashTagId == id)
+                   h.TagId == id)
                    .Select(h => h.Video)
                    .Take(6)
                    .ToListAsync()
@@ -157,9 +157,9 @@ namespace EduTube.BLL.Managers
                 .Select(x => x.VideoId).Distinct().ToListAsync();
 
             Debug.WriteLine("nasao videoId " + DateTime.Now);
-            hashtagsId = await _context.HashTagRelationships
+            hashtagsId = await _context.TagRelationships
                 .Where(x => videosId.Contains(int.Parse(x.VideoId.ToString())))
-                .GroupBy(x => x.HashTagId)
+                .GroupBy(x => x.TagId)
                 .OrderByDescending(g => g.Count())
                 .Take(2)
                 .Select(x => x.Key)
@@ -169,10 +169,10 @@ namespace EduTube.BLL.Managers
             Debug.WriteLine("nasao hastagsId " + DateTime.Now);
             foreach (var id in hashtagsId)
             {
-               videos.AddRange(await _context.HashTagRelationships
+               videos.AddRange(await _context.TagRelationships
                    .Include(h => h.Video)
                    .Where(h => !h.Video.Deleted && h.Video.VideoVisibility == VideoVisibility.Public &&
-                   h.HashTagId == id)
+                   h.TagId == id)
                    .Select(h => h.Video)
                    .Take(6)
                    .ToListAsync()
@@ -188,7 +188,7 @@ namespace EduTube.BLL.Managers
          if (includeAll)
          {
             entity = await _context.Videos
-            .Include(x => x.HashtagRelationships).ThenInclude(x => x.Hashtag)
+            .Include(x => x.TagRelationships).ThenInclude(x => x.Tag)
             .Include(x => x.User)
             .FirstOrDefaultAsync(x => x.Id == id && !x.Deleted);
             if(entity != null)
@@ -203,6 +203,11 @@ namespace EduTube.BLL.Managers
             entity = await _context.Videos.FirstOrDefaultAsync(x => x.Id == id && !x.Deleted);
          }
          return VideoMapper.EntityToModel(entity);
+      }
+
+      public async Task<bool> CheckInvitationCode(int videoId, string invitationCode)
+      {
+         return await _context.Videos.AnyAsync(x => x.Id == videoId && x.InvitationCode.Equals(invitationCode));
       }
 
       public async Task<VideoModel> Create(VideoModel model)

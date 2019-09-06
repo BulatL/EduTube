@@ -20,14 +20,14 @@ namespace EduTube.DAL.Data
       public DbSet<Chat> Chats { get; set; }
       public DbSet<ChatMessage> ChatMessages { get; set; }
       public DbSet<Comment> Comments { get; set; }
-      public DbSet<Emoticon> Emoticons { get; set; }
-      public DbSet<Hashtag> Hashtags { get; set; }
+      public DbSet<Emoji> Emojis { get; set; }
+      public DbSet<Tag> Tags { get; set; }
       public DbSet<Notification> Notifications { get; set; }
       public DbSet<Reaction> Reactions { get; set; }
       //public DbSet<User> User { get; set; }
       public DbSet<Video> Videos { get; set; }
       public DbSet<View> Views { get; set; }
-      public DbSet<HashTagRelationship> HashTagRelationships { get; set; }
+      public DbSet<TagRelationship> TagRelationships { get; set; }
       public DbSet<Subscription> Subscriptions { get; set; }
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -35,14 +35,14 @@ namespace EduTube.DAL.Data
          modelBuilder.Entity<Chat>(ConfigureChat);
          modelBuilder.Entity<ChatMessage>(ConfigureChatMessage);
          modelBuilder.Entity<Comment>(ConfigureComment);
-         modelBuilder.Entity<Emoticon>(ConfigureEmoticon);
-         modelBuilder.Entity<Hashtag>(ConfigureHashtag);
+         modelBuilder.Entity<Emoji>(ConfigureEmoji);
+         modelBuilder.Entity<Tag>(ConfigureTag);
          modelBuilder.Entity<Notification>(ConfigureNotification);
          modelBuilder.Entity<Reaction>(ConfigureReaction);
          //modelBuilder.Entity<User>(ConfigureUser);
          modelBuilder.Entity<Video>(ConfigureVideo);
          modelBuilder.Entity<View>(ConfigureView);
-         modelBuilder.Entity<HashTagRelationship>(ConfigureHashTagRelationship);
+         modelBuilder.Entity<TagRelationship>(ConfigureTagRelationship);
          modelBuilder.Entity<Subscription>(ConfigureSubscription);
 
          foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
@@ -56,7 +56,7 @@ namespace EduTube.DAL.Data
       private void ConfigureChat(EntityTypeBuilder<Chat> builder)
       {
          //builder.HasMany(x => x.Messages).WithOne(x => x.Chat);
-         builder.HasMany(x => x.Hashtags).WithOne(x => x.Chat);
+         builder.HasMany(x => x.TagRelationspis).WithOne(x => x.Chat);
 
       }
       private void ConfigureChatMessage(EntityTypeBuilder<ChatMessage> builder)
@@ -67,11 +67,11 @@ namespace EduTube.DAL.Data
       {
 
       }
-      private void ConfigureEmoticon(EntityTypeBuilder<Emoticon> builder)
+      private void ConfigureEmoji(EntityTypeBuilder<Emoji> builder)
       {
 
       }
-      private void ConfigureHashtag(EntityTypeBuilder<Hashtag> builder)
+      private void ConfigureTag(EntityTypeBuilder<Tag> builder)
       {
          //builder.HasMany(x => x.Videos);
          //builder.HasMany(x => x.Chats);
@@ -90,17 +90,17 @@ namespace EduTube.DAL.Data
       //}
       private void ConfigureVideo(EntityTypeBuilder<Video> builder)
       {
-         builder.HasMany(x => x.HashtagRelationships);
+         builder.HasMany(x => x.TagRelationships);
          //builder.HasMany(x => x.Views).WithOne(x => x.Video).HasForeignKey(x => x.VideoId);
       }
       private void ConfigureView(EntityTypeBuilder<View> builder)
       {
 
       }
-      private void ConfigureHashTagRelationship(EntityTypeBuilder<HashTagRelationship> builder)
+      private void ConfigureTagRelationship(EntityTypeBuilder<TagRelationship> builder)
       {
-         builder.HasOne(x => x.Chat).WithMany(x => x.Hashtags).HasForeignKey(x => x.ChatId);
-         builder.HasOne(x => x.Video).WithMany(x => x.HashtagRelationships).HasForeignKey(x => x.VideoId);
+         builder.HasOne(x => x.Chat).WithMany(x => x.TagRelationspis).HasForeignKey(x => x.ChatId);
+         builder.HasOne(x => x.Video).WithMany(x => x.TagRelationships).HasForeignKey(x => x.VideoId);
       }
       private void ConfigureSubscription(EntityTypeBuilder<Subscription> builder)
       {

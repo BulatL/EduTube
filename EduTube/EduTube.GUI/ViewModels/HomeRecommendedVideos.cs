@@ -10,20 +10,20 @@ namespace EduTube.GUI.ViewModels
    {
       public List<VideoModel> FirstRecommended { get; set; }
       public List<VideoModel> SecondRecommended { get; set; }
-      public string FirstHashtag { get; set; }
-      public string SecondHashtag { get; set; }
+      public string FirstTag { get; set; }
+      public string SecondTag { get; set; }
 
       public HomeRecommendedVideos()
       {
       }
 
       public HomeRecommendedVideos(List<VideoModel> firstRecommended, List<VideoModel> secondRecommended,
-          string firstHashtag, string secondHashtag)
+          string firstTag, string secondTag)
       {
          FirstRecommended = firstRecommended;
          SecondRecommended = secondRecommended;
-         FirstHashtag = firstHashtag;
-         SecondHashtag = secondHashtag;
+         FirstTag = firstTag;
+         SecondTag = secondTag;
       }
    }
 }

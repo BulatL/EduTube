@@ -7,8 +7,8 @@ namespace EduTube.BLL.Models
    public class ReactionModel : Model
    {
       public DateTime DateCreatedOn { get; set; }
-      public int EmoticonId { get; set; }
-      public EmoticonModel Emoticon { get; set; }
+      public int EmojiId { get; set; }
+      public EmojiModel Emoji { get; set; }
       public string UserId { get; set; }
       public ApplicationUserModel User { get; set; }
       public int? VideoId { get; set; }

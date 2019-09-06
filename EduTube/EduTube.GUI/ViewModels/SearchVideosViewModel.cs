@@ -12,21 +12,21 @@ namespace EduTube.GUI.ViewModels
       public string Description { get; set; }
       public string UserChannelName { get; set; }
       public string UserId { get; set; }
-      public string Hashtags { get; set; }
+      public string Tags { get; set; }
 
       public SearchVideosViewModel()
       {
       }
 
       public SearchVideosViewModel(int id, string name, string description, string userChannelName,
-          string userId, string hashtags)
+          string userId, string tags)
       {
          Id = id;
          Name = name;
          Description = description;
          UserChannelName = userChannelName;
          UserId = userId;
-         Hashtags = hashtags;
+         Tags = tags;
       }
    }
 }

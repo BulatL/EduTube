@@ -10,7 +10,7 @@ namespace EduTube.GUI.ViewModels
    {
       public int VideoId { get; set; }
       public int CommentId { get; set; }
-      public int EmoticonId { get; set; }
+      public int EmojiId { get; set; }
 
       public ReactionCreateViewModel()
       {
@@ -20,7 +20,7 @@ namespace EduTube.GUI.ViewModels
       {
          ReactionModel model = new ReactionModel();
          model.DateCreatedOn = DateTime.Now;
-         model.EmoticonId = viewModel.EmoticonId;
+         model.EmojiId = viewModel.EmojiId;
          model.Deleted = false;
          if (viewModel.CommentId == 0)
             model.CommentId = null;

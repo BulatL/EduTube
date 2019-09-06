@@ -15,9 +15,9 @@ namespace EduTube.BLL.Extensions
          services.AddScoped<IChatManager, ChatManager>();
          services.AddScoped<IChatMessageManager, ChatMessageManager>();
          services.AddScoped<ICommentManager, CommentManager>();
-         services.AddScoped<IEmoticonManager, EmoticonManager>();
-         services.AddScoped<IHashtagManager, HashtagManager>();
-         services.AddScoped<IHashtagRelationshipManager, HashtagRelationshipManager>();
+         services.AddScoped<IEmojiManager, EmojiManager>();
+         services.AddScoped<ITagManager, TagManager>();
+         services.AddScoped<ITagRelationshipManager, TagRelationshipManager>();
          services.AddScoped<INotificationManager, NotificationManager>();
          services.AddScoped<IReactionManager, ReactionManager>();
          services.AddScoped<ISubscriptionManager, SubscriptionManager>();

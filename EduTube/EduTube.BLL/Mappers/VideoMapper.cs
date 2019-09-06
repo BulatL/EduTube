@@ -11,8 +11,8 @@ namespace EduTube.BLL.Mappers
       {
          entity.Name = model.Name;
          entity.UserId = model.UserId;
-         entity.FilePath = model.FilePath;
-         entity.IvniteCode = model.IvniteCode;
+         entity.FileName = model.FileName;
+         entity.InvitationCode = model.InvitationCode;
          entity.Description = model.Description;
          entity.AllowComments = model.AllowComments;
          entity.VideoVisibility = VideoVisibilityMapper.ModelToEntity(model.VideoVisibility);
@@ -29,10 +29,10 @@ namespace EduTube.BLL.Mappers
          model.UserId = entity.UserId;
          model.Blocked = entity.Blocked;
          model.Deleted = entity.Deleted;
-         model.FilePath = entity.FilePath;
+         model.FileName = entity.FileName;
          model.Duration = entity.Duration;
          model.Thumbnail = entity.Thumbnail;
-         model.IvniteCode = entity.IvniteCode;
+         model.InvitationCode = entity.InvitationCode;
          model.YoutubeUrl = entity.YoutubeUrl;
          model.Description = entity.Description;
          model.DateCreatedOn = entity.DateCreatedOn;
@@ -46,11 +46,11 @@ namespace EduTube.BLL.Mappers
             model.User = UserMapper.EntityToModel(entity.User);
          }
 
-         if (entity.HashtagRelationships != null)
+         if (entity.TagRelationships != null)
          {
-            entity.HashtagRelationships.ForEach(x => x.Video = null);
-            model.HashtagRelationships = HashtagRelationshipMapper.EntitiesToModels(entity.HashtagRelationships);
-            model.Hashtags = string.Join(",", entity.HashtagRelationships.Select(x => x.Hashtag).Select(x => x.Name));
+            entity.TagRelationships.ForEach(x => x.Video = null);
+            model.TagRelationships = TagRelationshipMapper.EntitiesToModels(entity.TagRelationships);
+            model.Tags = string.Join(",", entity.TagRelationships.Select(x => x.Tag).Select(x => x.Name));
          }
 
          if (entity.Comments != null)
@@ -81,10 +81,10 @@ namespace EduTube.BLL.Mappers
          entity.UserId = model.UserId;
          entity.Blocked = model.Blocked;
          entity.Deleted = model.Deleted;
-         entity.FilePath = model.FilePath;
+         entity.FileName = model.FileName;
          entity.Duration = model.Duration;
          entity.Thumbnail = model.Thumbnail;
-         entity.IvniteCode = model.IvniteCode;
+         entity.InvitationCode = model.InvitationCode;
          entity.YoutubeUrl = model.YoutubeUrl;
          entity.Description = model.Description;
          entity.DateCreatedOn = model.DateCreatedOn;
@@ -97,10 +97,10 @@ namespace EduTube.BLL.Mappers
             entity.User = UserMapper.ModelToEntity(model.User);
          }
 
-         if (model.HashtagRelationships != null)
+         if (model.TagRelationships != null)
          {
-            model.HashtagRelationships.Select(x => x.Video = null);
-            entity.HashtagRelationships = HashtagRelationshipMapper.ModelsToEntities(model.HashtagRelationships);
+            model.TagRelationships.Select(x => x.Video = null);
+            entity.TagRelationships = TagRelationshipMapper.ModelsToEntities(model.TagRelationships);
          }
 
          if (model.Comments != null)
