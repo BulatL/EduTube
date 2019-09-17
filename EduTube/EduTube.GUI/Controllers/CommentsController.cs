@@ -26,6 +26,11 @@ namespace EduTube.GUI.Controllers
          _userManager = userManager;
       }
 
+      public async Task<IActionResult> GetByVideo(int videoId, int lastCommentId)
+      {
+         return Json(await _commentManager.GetByVideo(videoId, lastCommentId));
+      }
+
       // POST: Comments/Create
       // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
       // more details see http://go.microsoft.com/fwlink/?LinkId=317598.

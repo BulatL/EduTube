@@ -10,7 +10,7 @@ namespace EduTube.BLL.Managers.Interfaces
       Task<List<ApplicationUserModel>> GetAll();
       Task<string> GetCurrentUserRole(string id);
       Task<ApplicationUserModel> GetById(string id, bool includeAll);
-      Task<ApplicationUserModel> GetByChannelName(string channelName);
+      Task<ApplicationUserModel> GetByChannelName(string channelName, string userId, string userRole);
       Task<ApplicationUserModel> GetByEmail(string email);
       Task<ApplicationUserModel> GetByEmailAndPassword(string email, string password);
       Task<bool> ChannelNameExist(string channelName, string userId);
@@ -19,7 +19,7 @@ namespace EduTube.BLL.Managers.Interfaces
       Task Logout();
       //ApplicationUserModel Create(int id);
       Task<ApplicationUserModel> Update(ApplicationUserModel userModel);
-      Task Register(ApplicationUserModel user, string password);
+      Task<IEnumerable<IdentityError>> Register(ApplicationUserModel user, string password);
       Task<IdentityResult> Delete(string id);
       Task Activate(string id);
       //Task SetNewClaims(ApplicationUserModel user);

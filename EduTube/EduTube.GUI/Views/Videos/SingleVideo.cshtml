@@ -38,49 +38,49 @@
       <!--Div with hashtags and emoji-->
       <div class="col-12 inheritDiv">
          <div class="col-lg-3 col-md-3 col-sm-12 noPadding">
-            <span class="breakWord"><strong>Hashtags: </strong>@Model.Tags</span>
+            <span class="breakWord"><strong>Tags: </strong>@Model.Tags</span>
          </div>
          <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 noPadding">
             <div class="row justify-content-center" id="emojisDiv">
                <div>
                   <button class="emojiBtn" onclick="Reaction(1, @Model.Id, null)" id="emojiBtn1">
-                     <img src="~/images/likeEmoji.png" id="emoji1" class="" />
+                     <img src="~/images/likeEmoji.png" title="Like it" id="emoji1" class="" />
                      <h6 class="whiteColor moveLeft" id="emojiCount1">@Model.Reactions?.Where(x => x.EmojiId == 1).Count()</h6>
                   </button>
                </div>
                <div>
                   <button class="emojiBtn" onclick="Reaction(3, @Model.Id, null)" id="emojiBtn3">
-                     <img src="~/images/loveEmoji.png" id="emoji3" class="" />
+                     <img src="~/images/loveEmoji.png" title="Love it" id="emoji3" class="" />
                      <h6 class="whiteColor moveLeft" id="emojiCount3">@Model.Reactions?.Where(x => x.EmojiId == 3).Count()</h6>
                   </button>
                </div>
                <div>
                   <button class="emojiBtn" onclick="Reaction(5, @Model.Id, null)" id="emojiBtn5">
-                     <img src="~/images/LaughtEmoji.png" id="emoji5" class="" />
+                     <img src="~/images/LaughtEmoji.png" title="Funny" id="emoji5" class="" />
                      <h6 class="whiteColor moveLeft" id="emojiCount5">@Model.Reactions?.Where(x => x.EmojiId == 5).Count()</h6>
                   </button>
                </div>
                <div>
                   <button class="emojiBtn" onclick="Reaction(4, @Model.Id, null)" id="emojiBtn4">
-                     <img src="~/images/wowEmoji.png" id="emoji4" class="" />
+                     <img src="~/images/wowEmoji.png" title="Shocking" id="emoji4" class="" />
                      <h6 class="whiteColor moveLeft" id="emojiCount4">@Model.Reactions?.Where(x => x.EmojiId == 4).Count()</h6>
                   </button>
                </div>
                <div>
                   <button class="emojiBtn" onclick="Reaction(6, @Model.Id, null)" id="emojiBtn6">
-                     <img src="~/images/sadEmoji.png" id="emoji6" class="" />
+                     <img src="~/images/sadEmoji.png" title="Sad" id="emoji6" class="" />
                      <h6 class="whiteColor moveLeft" id="emojiCount6">@Model.Reactions?.Where(x => x.EmojiId == 6).Count()</h6>
                   </button>
                </div>
                <div>
                   <button class="emojiBtn" onclick="Reaction(7, @Model.Id, null)" id="emojiBtn7">
-                     <img src="~/images/angry2Emoji.png" id="emoji7" class="" />
+                     <img src="~/images/angry2Emoji.png" title="Frustrating" id="emoji7" class="" />
                      <h6 class="whiteColor moveLeft" id="emojiCount7">@Model.Reactions?.Where(x => x.EmojiId == 7).Count()</h6>
                   </button>
                </div>
                <div>
                   <button class="emojiBtn" onclick="Reaction(2, @Model.Id, null)" id="emojiBtn2">
-                     <img src="~/images/dislikeEmoji.png" id="emoji2" class="" />
+                     <img src="~/images/dislikeEmoji.png" title="Dislike it" id="emoji2" class="" />
                      <h6 class="whiteColor moveLeft" id="emojiCount2">@Model.Reactions?.Where(x => x.EmojiId == 2).Count()</h6>
                   </button>
                </div>
@@ -94,20 +94,25 @@
       </div>
       <!--Div with owner and description-->
       <div class="col-12" id="ownerInfo">
+         <input type="hidden" value="@Model.UserId" id="userIdHidden" />
          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <div id="profileImageDiv">
-               <img src="/profileImages/@Model.OwnerProfileImage" />
-            </div>
+            <a href="/Users/@Model.OwnerChannelName.Replace(" ", "-")">
+               <div id="profileImageDiv">
+                  <img src="/profileImages/@Model.OwnerProfileImage" />
+               </div>
+            </a>
          </div>
          <!--Div with video description-->
          <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 noPadding ">
-            <div class="">
-               <h4>@Model.OwnerChannelName</h4>
+            <div style="display:inline-block;">
+               <a href="/Users/@Model.OwnerChannelName.Replace(" ", "-")">
+                  <h4>@Model.OwnerChannelName</h4>
+               </a>
                <span>@Model.DateCreatedOn</span>
             </div>
             <div class="panel-wrapper">
-               <a href="#show" class="show orangeBtn btn" id="show">Show More</a>
-               <a href="#hide" class="hide grayBtn btn" id="hide">Show Less</a>
+               <a class="showBtn orangeBtn btn" id="show" onclick="ShowMore()">Show More</a>
+               <a class="hideBtn grayBtn btn" id="hide" onclick="ShowLess()">Show Less</a>
                <div class="panel">
                   @Model.Description
                </div><!-- end panel -->
@@ -123,9 +128,11 @@
                      <button class="greenBtn position-initial fillAvailable" id="btnSubscribeOwner" onclick="OpenEditVideoModal()">Edit info</button>
                      <button class="redBtn position-initial fillAvailable margin-top" id="btnSubscribeOwner" onclick="DeleteVideo(@Model.Id)">Delete video</button>
                   }
-                  @if (!Model.OwnerChannelName.Equals(User.Claims.FirstOrDefault(x => x.Type.Equals("channelName")).Value))
+
+                  @if (!ViewData["Subscribed"].Equals("SameUser"))
                   {
-                     <button class="purpleBtn position-initial" id="btnSubscribeOwner">Subscribe</button>
+                     <input type="hidden" value="@ViewData["Subscribed"]" id="subscribedHidden" />
+                     <button class="purpleBtn position-initial" onclick="Subscribe()" id="subscribeBtn">Subscribe</button>
                   }
                }
                @if (!User.Identity.IsAuthenticated)
@@ -155,11 +162,12 @@
                <div class="commentImageDiv">
                   @if (Context.User.Identity.IsAuthenticated)
                   {
-                     @if (User.Claims.FirstOrDefault(x => x.Type.Equals("channelName")).Value != "")
+                     <input type="hidden" id="currentUserId" value="@User.Claims.FirstOrDefault(x => x.Type.Equals("id")).Value" />
+                     @if (User.Claims.FirstOrDefault(x => x.Type.Equals("profileImage"))?.Value != "")
                      {
-                        <img src="/profileImages/@Model.OwnerProfileImage" />
+                        <img src="/profileImages/@User.Claims.FirstOrDefault(x => x.Type.Equals("profileImage")).Value" />
                      }
-                     @if (User.Claims.FirstOrDefault(x => x.Type.Equals("channelName")).Value == "")
+                     @if (User.Claims.FirstOrDefault(x => x.Type.Equals("profileImage"))?.Value == "")
                      {
                         <img src="~/profileImages/default-avatar.png" />
                      }
@@ -209,7 +217,7 @@
                               {
                                  @if (User.Claims.FirstOrDefault(x => x.Type.Equals("channelName")).Value.Equals(comment.OwnerChannelName) || User.Claims.FirstOrDefault(x => x.Type.Equals("role")).Value.Equals("ADMIN"))
                                  {
-                                    <div class="col-4">
+                                    <div class="col-4" id="mainCommentOptionsDiv_@comment.Id">
                                        <button class="dotBtn" onclick="showCommentOptionDiv(@comment.Id)">
                                           <div class="dotMenu float-right">
                                           </div>
@@ -252,6 +260,13 @@
                }
             }
          </div>
+         @if (Model.Comments?.Count() > 4)
+         {
+            <input type="hidden" value="@Model.Comments.Last().Id" id="lastCommentId" />
+            <div class="container text-center">
+               <button class="orangeBtn" id="showMoreComments" onclick="ShowMoreComments()">Show more comments</button>
+            </div>
+         }
       }
       <!--Hidden div for current user reactions-->
       <div class="col-12" id="userReactionsCommentDiv">
@@ -340,7 +355,7 @@
    <!--Div with modal dialog for invite code-->
    <div>
       <!-- The Modal -->
-      <div class="modal fade" id="inviteCodeDialog">
+      <div class="modal hide" data-backdrop="static" data-keyboard="false" id="inviteCodeDialog">
          <div class="modal-dialog">
             <div class="modal-content">
                <!-- Modal Header -->
@@ -371,4 +386,5 @@
    <script src="~/selectivity-3.1.0/selectivity.min.js"></script>
    <script src="~/selectivity-3.1.0/selectivity-jquery.min.js"></script>
    <script src="~/js/VideoPage.js"></script>
+   <script src="~/js/Subscribe.js"></script>
 }

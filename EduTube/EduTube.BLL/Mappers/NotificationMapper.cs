@@ -17,13 +17,10 @@ namespace EduTube.BLL.Mappers
          model.Id = entity.Id;
          model.UserId = entity.UserId;
          model.Content = entity.Content;
-         model.RedirectPath = entity.RedirectPath;
+         model.Seen = entity.Seen;
+         model.Deleted = entity.Deleted;
+         model.DateCreatedOn = entity.DateCreatedOn;
 
-         /*if (entity.User != null)
-         {
-            entity.User.Notifications = null;
-            model.User = UserMapper.EntityToModel(entity.User);
-         }*/
 
          return model;
       }
@@ -33,13 +30,9 @@ namespace EduTube.BLL.Mappers
          entity.Id = model.Id;
          entity.UserId = model.UserId;
          entity.Content = model.Content;
-         entity.RedirectPath = model.RedirectPath;
-
-         /*if (model.User != null)
-         {
-            model.User.Notifications = null;
-            entity.User = UserMapper.ModelToEntity(model.User);
-         }*/
+         entity.Seen = model.Seen;
+         entity.Deleted = model.Deleted;
+         entity.DateCreatedOn = model.DateCreatedOn;
 
          return entity;
       }

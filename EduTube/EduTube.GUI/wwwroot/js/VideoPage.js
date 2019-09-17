@@ -3,12 +3,158 @@
    let allowAccess = $('#allowAccess').val();
    if (videoVisibility == 'Invitation' && allowAccess == false) {
       $('#firstDiv').hide();
-      $('#inviteCodeDialog').modal('show');
+      $('#inviteCodeDialog').modal({
+         show: true
+      });
    }
    else {
       SetViewsAndReactions();
    }
 })
+
+function ShowMoreComments() {
+   let lastCommentId = $('#lastCommentId').val();
+   if (lastCommentId == undefined)
+      return;
+
+   let videoId = $('#videoId').val();
+   console.log(videoId);
+   $.ajax({
+      url: `/Comments/GetByVideo?videoId=${videoId}&lastCommentId=${lastCommentId}`,
+      type: 'GET',
+      dataType: 'json',
+      success: function (response) {
+         console.log(response);
+         if (response.length > 0) {
+            PopulateComments(response);
+            $('#lastCommentId').val(response[response.length - 1].id);
+            //response.reverse();
+            if (response.length < 5) {
+               $('#showMoreComments').hide();
+            }
+            else {
+               $('#commentsCount').val(response.length);
+            }
+         }
+         else {
+            $('#showMoreComments').hide();
+         }
+      },
+      error: function (response, jqXHR) {
+      }
+   });
+}
+
+function PopulateComments(comments) {
+   console.log("usao u populate");
+   let currentUserId = $('#currentUserId').val();
+   let commentsDiv = $('#commentsDiv');
+   let commentsContent = [];
+   for (var i = 0; i < comments.length; i++) {
+      console.log(comments[i].id);
+      let likeCount = 0;
+      let dislikeCount = 0;
+      let likeResizeCommentEmoji = '';
+      let likeResizeCommentEmojiCount = '';
+      let dislikeResizeCommentEmoji = '';
+      let dislikeResizeCommentEmojiCount = '';
+
+      for (var j = 0; j < comments[i].reactions.length; j++) {
+         if (comments[i].reactions[j].emojiId == 1) {
+            likeCount++;
+            if (comments[i].reactions[j].userId == currentUserId) {
+               likeResizeCommentEmoji = 'resizeCommentEmoji';
+               likeResizeCommentEmojiCount = 'resizeCommentEmojiCount';
+            }
+         }
+         else {
+            dislikeCount++;
+            if (comments[i].reactions[j].userId == currentUserId) {
+               dislikeResizeCommentEmoji = 'resizeCommentEmoji';
+               dislikeResizeCommentEmojiCount = 'resizeCommentEmojiCount';
+            }
+         }
+      }
+
+
+      console.log(comments[i].userId);
+      console.log(currentUserId);
+
+      commentsContent.push(
+         `<div class="col-12 comment_${comments[i].id}" id="comment_${comments[i].id}">
+            <div class="row">
+               <div class="col-1">
+                  <a href="/Users/${comments[i].user.channelName.replace(' ', '-')}">
+                     <div class="commentImageDiv">
+                        <img src="/profileImages/${comments[i].user.profileImage}" />
+                     </div>
+                  </a>
+               </div>
+               <div class="col-11">
+                  <div class="row">
+                     <div class="col-8">
+                        <span><a href="/Users/${comments[i].user.channelName.replace(' ', '-')}"><strong>   ${comments[i].user.channelName}</strong></a> ${comments[i].dateCreatedOn}</span>
+                     </div>`);
+
+      if (comments[i].userId == currentUserId) {
+         commentsContent.push(
+                     `<div class="col-4" id="mainCommentOptionsDiv_${comments[i].id}">
+                        <button class="dotBtn" onclick="showCommentOptionDiv(${comments[i].id})">
+                           <div class="dotMenu float-right">
+                           </div>
+                        </button>
+                        <div class="commentsOptionsDiv float-right" style="display: none;" id="commentOptionsDiv_${comments[i].id}">
+                           <div class="hoverGray"><button class="transparentBtn" onclick="MakeCommentEditable(${comments[i].id})">Edit <i class='fas fa-edit'></i></button></div>
+                           <div class="hoverGray"><button class="transparentBtn" onclick="DeleteComment(${comments[i].id})">Delete <i class='far fa-trash-alt'></i></button></div>
+                        </div>
+                     </div>`);
+      }
+
+
+      commentsContent.push(
+                  `<div class="col-12" id="commentContentDiv_${comments[i].id}">
+                     <span id="commentContentSpan_${comments[i].id}">${comments[i].content}</span>
+                  </div>
+                  </div>
+                  <div class="col-12 inline-flex noPadding">
+                     <div>
+                        <button class="commentEmojiBtn" onclick="Reaction(1, null, ${comments[i].id})">
+                           <img src="/images/likeEmoji.png" class="${likeResizeCommentEmoji}" id="commentEmoji1_${comments[i].id}" class="" />
+                           <h6 class="whiteColor moveLeft ${likeResizeCommentEmojiCount}" id="emojiCount1Comment_${comments[i].id}">${likeCount}</h6>
+                        </button>
+                     </div>
+                     <div>
+                        <button class="commentEmojiBtn" onclick="Reaction(2, null, ${comments[i].id})">
+                           <img src="/images/dislikeEmoji.png" class="${dislikeResizeCommentEmoji}" id="commentEmoji2_${comments[i].id}" class="" />
+                           <h6 class="whiteColor moveLeft ${dislikeResizeCommentEmojiCount}" id="emojiCount2Comment_${comments[i].id}">${dislikeCount}</h6>
+                        </button>
+                     </div>
+                  </div>`);
+
+      if (comments[i].userId == currentUserId) {
+         commentsContent.push(
+                  `<div class="float-right displayNone" id="editCommentBtnDiv_${comments[i].id}">
+                     <button class="grayBtn" id="cancelComment" onclick="CancelCommentEdit(${comments[i].id})">Cancel</button>
+                     <button class="orangeBtn" id="saveComment" onclick="EditComment(${comments[i].id})">Save</button>
+                  </div>`
+         );
+      }
+      commentsContent.push(
+            `</div>
+            </div>
+         </div>
+         <div class="col-12 comment_${comments[i].id}" id="breakAfterOwner">
+            <div class="breakLine"></div>
+         </div>`
+      );
+      console.log(commentsContent);
+      console.log("--------------------------------------------------");
+   }
+   commentsDiv.append(commentsContent.join(''));
+   $('html, body').animate({
+      scrollTop: $(`#comment_${comments[0].id}`).offset().top
+   }, 1000);
+}
 
 function SetViewsAndReactions() {
    let reaction = $('#reactionHidden').val();
@@ -53,7 +199,7 @@ function CheckInvitationCode() {
    let videoId = $('#videoId').val();
    let invitationCode = $('#invatationCode').val();
    $.ajax({
-      url: `/Videos/InvitationCode?videoId=${videoId}&invitationCode=${invitationCode}`,
+      url: `/Videos/CheckInvitationCode?videoId=${videoId}&invitationCode=${invitationCode}`,
       type: 'GET',
       dataType: 'json',
       success: function (response) {
@@ -192,7 +338,9 @@ function CreateComment(videoId) {
       dataType: 'json',
       success: function (response) {
          ResetTextarea();
-         populateCommentDiv(response);
+         populateNewCommentDiv(response);
+         let oldCommentsCount = $('#commentsCount').val();
+         $('#commentsCount').val(parseInt(oldCommentsCount) + 1);
       },
       error: function (response, jqXHR) {
          console.log(response);
@@ -200,9 +348,9 @@ function CreateComment(videoId) {
    });
 }
 
-function populateCommentDiv(comment) {
+function populateNewCommentDiv(comment) {
    let commentsDiv = $('#commentsDiv');
-   commentsDiv.append(
+   commentsDiv.prepend(
       `<div class="col-12 comment_${comment.commentId}" id="comment_${comment.commentId}">
          <div class="row">
             <div class="col-1">
@@ -217,33 +365,37 @@ function populateCommentDiv(comment) {
                   <div class="col-8">
                      <span><a href="/Users/${comment.ownerChannelName.replace(' ', '-')}"><strong>   ${comment.ownerChannelName}</strong></a> ${comment.dateCreatedOn}</span>
                   </div>
-                     <div class="col-4">
+                     <div class="col-4" id="mainCommentOptionsDiv_${comment.commentId}">
                         <button class="dotBtn" onclick="showCommentOptionDiv(${comment.commentId})">
                            <div class="dotMenu float-right">
                            </div>
                         </button>
                         <div class="commentsOptionsDiv float-right" style="display: none;" id="commentOptionsDiv_${comment.commentId}">
-                           <div class="hoverGray"><button class="transparentBtn">Edit <i class='fas fa-edit'></i></button></div>
+                           <div class="hoverGray"><button class="transparentBtn" onclick="MakeCommentEditable(${comment.commentId})">Edit <i class='fas fa-edit'></i></button></div>
                            <div class="hoverGray"><button class="transparentBtn" onclick="DeleteComment(${comment.commentId})">Delete <i class='far fa-trash-alt'></i></button></div>
                         </div>
                      </div>
-                  <div class="col-12">
-                     <span id="commentContent_${comment.commentContent}">${comment.commentContent}</span>
+                  <div class="col-12" id="commentContentDiv_${comment.commentId}">
+                     <span id="commentContentSpan_${comment.commentId}">${comment.commentContent}</span>
                   </div>
                </div>
                <div class="col-12 inline-flex noPadding">
                   <div>
-                     <button class="commentEmojiBtn" onclick="Reaction(1, null, ${comment.commentId})" id="emojiBtn1">
+                     <button class="commentEmojiBtn" onclick="Reaction(1, null, ${comment.commentId})">
                         <img src="/images/likeEmoji.png" id="commentEmoji1_${comment.commentId}" class="" />
                         <h6 class="whiteColor moveLeft" id="emojiCount1Comment_${comment.commentId}">0</h6>
                      </button>
                   </div>
                   <div>
-                     <button class="commentEmojiBtn" onclick="Reaction(2, null, ${comment.commentId})" id="emojiBtn1">
+                     <button class="commentEmojiBtn" onclick="Reaction(2, null, ${comment.commentId})">
                         <img src="/images/dislikeEmoji.png" id="commentEmoji2_${comment.commentId}" class="" />
                         <h6 class="whiteColor moveLeft" id="emojiCount2Comment_${comment.commentId}">0</h6>
                      </button>
                   </div>
+               </div>
+               <div class="float-right displayNone" id="editCommentBtnDiv_${comment.commentId}">
+                  <button class="grayBtn" id="cancelComment" onclick="CancelCommentEdit(${comment.commentId})">Cancel</button>
+                  <button class="orangeBtn" id="saveComment" onclick="EditComment(${comment.commentId})">Save</button>
                </div>
             </div>
          </div>
@@ -313,6 +465,7 @@ function showCommentOptionDiv(commentId) {
 }
 
 function MakeCommentEditable(commentId) {
+   console.log("usao");
    $(`#commentOptionsDiv_${commentId}`).hide();
    $(`#editCommentBtnDiv_${commentId}`).show();
    let commentContent = $(`#commentContentSpan_${commentId}`);
@@ -434,4 +587,24 @@ function EditVideo() {
 
 function RedirectToLogin(videoId) {
    window.location.replace(`/Login?redirectUrl=/Videos/${pageVideoId}`);
+}
+
+function ShowMore() {
+   let previouseHeight = $('.panel').css('height');
+   console.log(previouseHeight);
+   $('.panel').css('max-height', 'max-content');
+   let newHeight = $('.panel').css('height');
+   console.log(newHeight);
+   $('#show').hide();
+   if (previouseHeight == newHeight) {
+      $('#hide').hide();
+      return;
+   }
+   $('#hide').show();
+}
+
+function ShowLess() {
+   $('.panel').css('max-height', '4.5rem');
+   $('#show').show();
+   $('#hide').hide();
 }

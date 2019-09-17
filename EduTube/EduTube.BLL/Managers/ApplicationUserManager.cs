@@ -11,22 +11,24 @@ using EduTube.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using EduTube.DAL.Enums;
 
 namespace EduTube.BLL.Managers
 {
    public class ApplicationUserManager : IApplicationUserManager
    {
-      private UserManager<ApplicationUser> _userManager;
-      private SignInManager<ApplicationUser> _signInManager;
-      private IChatMessageManager _chatMessageManager;
-      private IReactionManager _reactionManager;
-      private ISubscriptionManager _subscriptionManager;
-      private IVideoManager _videoManager;
+      private readonly UserManager<ApplicationUser> _userManager;
+      private readonly SignInManager<ApplicationUser> _signInManager;
+      private readonly IChatMessageManager _chatMessageManager;
+      private readonly IReactionManager _reactionManager;
+      private readonly ISubscriptionManager _subscriptionManager;
+      private readonly IVideoManager _videoManager;
+      private readonly ApplicationDbContext _context;
 
       public ApplicationUserManager(UserManager<ApplicationUser> userManager,
          SignInManager<ApplicationUser> signInManager, IChatMessageManager chatMessageManager,
          IReactionManager reactionManager, ISubscriptionManager subscriptionManager,
-         IVideoManager videoManager)
+         IVideoManager videoManager, ApplicationDbContext contex)
       {
          _userManager = userManager;
          _signInManager = signInManager;
@@ -34,13 +36,18 @@ namespace EduTube.BLL.Managers
          _reactionManager = reactionManager;
          _subscriptionManager = subscriptionManager;
          _videoManager = videoManager;
+         _context = contex;
       }
       public async Task<string> GetCurrentUserRole(string id)
       {
          ApplicationUser user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id.Equals(id));
+         if (user == null)
+            return "";
+         
          IList<string> roles = await _userManager.GetRolesAsync(user);
          return roles[0];
       }
+
       public async Task<List<ApplicationUserModel>> GetAll()
       {
          return UserMapper.EntitiesToModels(await _userManager.Users.Where(x => !x.Deleted).ToListAsync());
@@ -74,13 +81,32 @@ namespace EduTube.BLL.Managers
          return await _userManager.Users.AnyAsync(x => !x.Id.Equals(userId) && x.NormalizedEmail.Equals(email.ToUpper()));
       }
 
-      public async Task<ApplicationUserModel> GetByChannelName(string channelname)
+      public async Task<ApplicationUserModel> GetByChannelName(string channelname, string userId, string userRole)
       {
-         return UserMapper.EntityToModel(await _userManager.Users
-               .Include(x => x.Subscribers).ThenInclude(x => x.Subscriber)
-               .Include(x => x.SubscribedOn).ThenInclude(x => x.SubscribedOn)
-               .Include(x => x.Videos)
-               .FirstOrDefaultAsync(x => x.ChannelName.Equals(channelname) && !x.Deleted));
+         ApplicationUserModel user = UserMapper.EntityToModel(await _userManager.Users.FirstOrDefaultAsync(x => x.ChannelName.Equals(channelname) && !x.Deleted));
+         if(user != null)
+         {
+            user.Subscribers = SubscriptionMapper.EntitiesToModels(await _context.Subscriptions.Include(x => x.Subscriber).Where(x => x.SubscribedOnId.Equals(user.Id) && !x.Deleted).ToListAsync());
+            user.SubscribedOn = SubscriptionMapper.EntitiesToModels(await _context.Subscriptions.Include(x => x.SubscribedOn).Where(x => x.SubscriberId.Equals(user.Id) && !x.Deleted).ToListAsync());
+            if (userRole.Equals("ADMIN"))
+            {
+               user.Videos = VideoMapper.EntitiesToModels(await _context.Videos.Where(x => x.UserId.Equals(user.Id) && !x.Deleted).ToListAsync());
+            }
+            else
+            {
+               if(userId == null)
+               {
+                  user.Videos = VideoMapper.EntitiesToModels(await _context.Videos.Where(x => x.UserId.Equals(user.Id) && !x.Deleted 
+                  && x.VideoVisibility == VideoVisibility.Public).ToListAsync());
+               }
+               else
+               {
+                  user.Videos = VideoMapper.EntitiesToModels(await _context.Videos
+                     .Where(x => x.UserId.Equals(user.Id) && !x.Deleted && (x.VideoVisibility != VideoVisibility.Invitation || x.UserId.Equals(userId))).ToListAsync());
+               }
+            }
+         }
+         return user;
       }
       public async Task<ApplicationUserModel> GetByEmail(string email)
       {
@@ -148,15 +174,20 @@ namespace EduTube.BLL.Managers
          //return await _signInManager.PasswordSignInAsync(email, password, rememberMe, lockoutOnFailure: false);
 
          ApplicationUser user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email.Equals(email) && !x.Deleted);
+         if (user == null)
+            return false;
+
          IPasswordHasher<ApplicationUser> passwordHasher = _userManager.PasswordHasher;
          PasswordVerificationResult verificationResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
          if (verificationResult == PasswordVerificationResult.Success)
          {
             IList<string> roles = await _userManager.GetRolesAsync(user);
             List<Claim> claims = new List<Claim>();
+            Claim id = new Claim("id", user.Id);
             Claim profileImage = new Claim("profileImage", user.ProfileImage);
             Claim channelName = new Claim("channelName", user.ChannelName.Replace(" ", "-"));
             Claim role = new Claim("role", roles[0]);
+            claims.Add(id);
             claims.Add(profileImage);
             claims.Add(channelName);
             claims.Add(role);
@@ -176,24 +207,32 @@ namespace EduTube.BLL.Managers
          await _signInManager.SignOutAsync();
       }
 
-      public async Task Register(ApplicationUserModel model, string password)
+      public async Task<IEnumerable<IdentityError>> Register(ApplicationUserModel model, string password)
       {
          ApplicationUser entity = UserMapper.ModelToEntity(model);
          IdentityResult result = await _userManager.CreateAsync(entity);
          if (result.Succeeded)
          {
-            await _userManager.AddPasswordAsync(entity, password);
+            IdentityResult passwordResult = await _userManager.AddPasswordAsync(entity, password);
+            if(!passwordResult.Succeeded)
+            {
+               return passwordResult.Errors;
+            }
             await _userManager.AddToRoleAsync(entity, "User");
+            return result.Errors;
          }
+         return result.Errors;
       }
 
       public async Task<bool> SetClaims(ApplicationUser user)
       {
          IList<string> roles = await _userManager.GetRolesAsync(user);
          List<Claim> claims = new List<Claim>();
+         Claim id = new Claim("id", user.Id);
          Claim profileImage = new Claim("profileImage", user.ProfileImage);
          Claim channelName = new Claim("channelName", user.ChannelName.Replace(" ", "-"));
          Claim role = new Claim("role", roles[0]);
+         claims.Add(id);
          claims.Add(profileImage);
          claims.Add(channelName);
          claims.Add(role);

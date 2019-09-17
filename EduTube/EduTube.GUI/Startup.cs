@@ -17,6 +17,7 @@ using EduTube.BLL.Extensions;
 using EduTube.GUI.Services.Interface;
 using EduTube.GUI.Services;
 using Microsoft.AspNetCore.Http.Features;
+using EduTube.GUI.Validators;
 
 namespace EduTube.GUI
 {
@@ -43,6 +44,8 @@ namespace EduTube.GUI
          services.AddDbContext<ApplicationDbContext>(options =>
               options.UseSqlServer(
                    Configuration.GetConnectionString("DefaultConnection")));
+
+         services.AddScoped<IPasswordValidator<ApplicationUser>, MyPasswordValidator>();
 
          services.AddIdentity<ApplicationUser, IdentityRole>(
              options =>

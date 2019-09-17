@@ -78,7 +78,7 @@ namespace EduTube.DAL.Data
       }
       private void ConfigureNotification(EntityTypeBuilder<Notification> builder)
       {
-
+         builder.HasOne<ApplicationUser>().WithMany(x => x.Notifications).HasForeignKey(x => x.UserId);
       }
       private void ConfigureReaction(EntityTypeBuilder<Reaction> builder)
       {

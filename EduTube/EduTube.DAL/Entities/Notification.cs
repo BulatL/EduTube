@@ -7,7 +7,7 @@ namespace EduTube.DAL.Entities
    public class Notification : Entity
    {
       public string Content { get; set; }
-      public string RedirectPath { get; set; }
+      public DateTime DateCreatedOn { get; set; }
       public string UserId { get; set; }
       //public ApplicationUser User { get; set; }
       public bool Seen { get; set; }

@@ -6,6 +6,17 @@
    $("#imageUpload").change(function () {
       fasterPreview(this);
    });
+
+   $(".toggle-password").click(function () {
+
+      $(this).toggleClass("fa-eye fa-eye-slash");
+      var input = $($(this).attr("toggle"));
+      if (input.attr("type") == "password") {
+         input.attr("type", "text");
+      } else {
+         input.attr("type", "password");
+      }
+   });
    $('#form').submit(function () {
       let userId = $('#userId').val();
       let channelName = $('#channelName').val();
@@ -13,7 +24,7 @@
       let email = $('#email').val();
       let channelDescription = $('#channelDescription').val();
 
-      if (channelName == "")
+      /*if (channelName == "")
          $('#channelNameError').text('The Channel name field is required.')
       if (password == "")
          $('#passwordError').text('The Password field is required.')
@@ -50,7 +61,32 @@
       }
       else {
          return false;
-      }
+      }*/
+
+      $.ajax({
+         url: `/Users/ChannelNameEmailExist?channelName=${channelName}&email=${email}&userId=${0}`,
+         type: 'GET',
+         dataType: 'json',
+         contentType: "application/json",
+         async: false,
+         success: function (response) {
+            if (response.channelNameExist == true) {
+               $('#channelNameError').text("Channel name already taken");
+            }
+            if (response.emailExist == true) {
+               $('#emailError').text("Email already taken");
+            }
+            if (response.emailExist == true || response.channelNameExist == true) {
+               return false
+            }
+            else if (response.emailExist != true && response.channelNameExist != true) {
+               return true;
+            }
+         },
+         error: function (response) {
+            return false;
+         }
+      });
    });
    //$('#datepicker').datepicker();
 });

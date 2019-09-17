@@ -39,7 +39,10 @@ namespace EduTube.GUI.Controllers
       {
          channelName = channelName.Replace("-", " ");
 
-         ApplicationUserModel user = await _userManager.GetByChannelName(channelName);
+         ApplicationUserModel currentUser = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
+         string userRole = await _userManager.GetCurrentUserRole(currentUser?.Id);
+
+         ApplicationUserModel user = await _userManager.GetByChannelName(channelName, currentUser?.Id, userRole);
 
          if (user == null)
             return StatusCode(404);
@@ -48,7 +51,6 @@ namespace EduTube.GUI.Controllers
             user.Videos = user.Videos.OrderBy(x => x.Id).ToList();
 
          //currentUser = await _identityManager.GetUserAsync(User);
-         ApplicationUserModel currentUser = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
 
          if (currentUser != null)
          {
@@ -138,10 +140,8 @@ namespace EduTube.GUI.Controllers
          ApplicationUserModel currentUser = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
          if (id.Equals(currentUser?.Id))
          {
-            ViewBag.Register = false;
-            ViewBag.Title = "Edit";
-            UserInfoViewModel viewModel = new UserInfoViewModel(currentUser);
-            return View("Register", viewModel);
+            EditUserViewModel viewModel = new EditUserViewModel(currentUser);
+            return View(viewModel);
          }
          return StatusCode(401);
       }
@@ -149,33 +149,29 @@ namespace EduTube.GUI.Controllers
       [Authorize]
       [Route("Users/Edit/{id}")]
       [HttpPost]
-      public async Task<IActionResult> Edit(string id,UserInfoViewModel viewModel)
+      public async Task<IActionResult> Edit(string id, EditUserViewModel viewModel)
       {
          if (ModelState.IsValid)
          {
-            ApplicationUserModel user = UserInfoViewModel.CopyToModel(viewModel);
+            ApplicationUserModel user = EditUserViewModel.CopyToModel(viewModel);
             if(viewModel.ProfileImage != null)
                user.ProfileImage = _uploadSerice.UploadImage(viewModel.ProfileImage, "profileImages");
 
             user = await _userManager.Update(user);
             return LocalRedirect("/Users/" + user.ChannelName);
          }
-         ViewBag.Register = false;
-         ViewBag.Title = "Edit";
-         return View("Register", viewModel);
+         return View(viewModel);
       }
 
       [Route("Register")]
       public IActionResult Register()
       {
-         ViewBag.Register = true;
-         ViewBag.Title = "Register";
-         return View(new UserInfoViewModel());
+         return View(new RegisterViewModel());
       }
 
       [Route("Register")]
       [HttpPost]
-      public async Task<IActionResult> Register(UserInfoViewModel viewModel)
+      public async Task<IActionResult> Register(RegisterViewModel viewModel)
       {
          if (ModelState.IsValid)
          {
@@ -195,11 +191,35 @@ namespace EduTube.GUI.Controllers
             if (viewModel.ProfileImage != null)
                user.ProfileImage = _uploadSerice.UploadImage(viewModel.ProfileImage, "profileImages");
 
-            await _userManager.Register(user, viewModel.Password);
+            if (user.ProfileImage == null || user.ProfileImage == "")
+               user.ProfileImage = "default-avatar.png";
+
+            var result = await _userManager.Register(user, viewModel.Password);
+            foreach (var error in result)
+            {
+               if(error.Code.Equals("PasswordTooShort"))
+                  ModelState.AddModelError("Password", error.Description);
+
+               if (error.Code.Equals("ChannelnameInPassword"))
+                  ModelState.AddModelError("Password", error.Description);
+
+               if (error.Code.Equals("UppercaseCharacterInPassword"))
+                  ModelState.AddModelError("Password", error.Description);
+
+               if (error.Code.Equals("NonUppercaseCharacterInPassword"))
+                  ModelState.AddModelError("Password", error.Description);
+
+               if (error.Code.Equals("UppercaseCharacterInPassword"))
+                  ModelState.AddModelError("Password", error.Description);
+
+               if (error.Code.Equals("DuplicateUserName"))
+                  ModelState.AddModelError("Email", error.Description);
+
+               return View(viewModel);
+
+            }
             return RedirectToAction("Login");
          }
-         ViewBag.Register = true;
-         ViewBag.Title = "Register";
          return View(viewModel);
       }
 

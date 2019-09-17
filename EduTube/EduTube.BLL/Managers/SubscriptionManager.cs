@@ -49,12 +49,28 @@ namespace EduTube.BLL.Managers
          return SubscriptionMapper.EntityToModel(await _context.Subscriptions.FirstOrDefaultAsync(x => x.SubscriberId.Equals(subscriberId) && x.SubscribedOnId.Equals(subscribedOnId) && !x.Deleted));
       }
 
+      public async Task<bool> IsUserSubscribed(string subscribedOn, string subscriber)
+      {
+         return (await _context.Subscriptions.AnyAsync(x => x.SubscribedOnId.Equals(subscribedOn) && x.SubscriberId.Equals(subscriber) && !x.Deleted));
+      }
+
       public async Task<SubscriptionModel> Create(SubscriptionModel subscription)
       {
-         Subscription entity = SubscriptionMapper.ModelToEntity(subscription);
-         _context.Subscriptions.Add(entity);
-         await _context.SaveChangesAsync();
-         return SubscriptionMapper.EntityToModel(entity);
+         Subscription exist = await _context.Subscriptions.FirstOrDefaultAsync(x => x.SubscribedOnId.Equals(subscription.SubscribedOnId)
+         && x.SubscriberId.Equals(subscription.SubscriberId) && x.Deleted);
+         if (exist != null)
+         {
+            exist.Deleted = false;
+            await _context.SaveChangesAsync();
+            return SubscriptionMapper.EntityToModel(exist);
+         }
+         else
+         {
+            Subscription entity = SubscriptionMapper.ModelToEntity(subscription);
+            _context.Subscriptions.Add(entity);
+            await _context.SaveChangesAsync();
+            return SubscriptionMapper.EntityToModel(entity);
+         }
       }
 
       public async Task<SubscriptionModel> Update(SubscriptionModel subscription)

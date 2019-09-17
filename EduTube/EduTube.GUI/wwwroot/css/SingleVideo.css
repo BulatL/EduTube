@@ -84,20 +84,31 @@ button:focus {
    height: 3.5rem;
    margin-right: 2rem;
 }
+   .commentImageDiv img {
+      width: 3.5rem;
+      height: 3.5rem;
+   }
+
 #profileImageDiv {
    width: 4.5rem;
    height: 4.5rem;
 }
+   #profileImageDiv img {
+      width: 4.5rem;
+      height: 4.5rem;
+   }
+
 #profileImageDiv, .commentImageDiv {
    position: relative;
    overflow: hidden;
    border-radius: 50%;
 }
 
-   #profileImageDiv img, .commentImageDiv img {
-      width: 100%;
-      height: auto;
-   }
+#showMoreComments {
+   width: 30%;
+   font-size: 1.1rem;
+   padding: 0.8rem !important;
+}
 
 /*showMore*/
 
@@ -111,32 +122,16 @@ button:focus {
    width: 30%;
 }
 
-.show, .hide {
+.showBtn, .hideBtn {
    position: absolute;
    bottom: -4em;
    z-index: 100;
    text-align: center;
 }
 
-.hide {
+.hideBtn {
    display: none;
 }
-
-.show:target {
-   display: none;
-}
-
-   .show:target ~ .hide {
-      display: block;
-   }
-
-   .show:target ~ .panel {
-      max-height: 2000px;
-   }
-
-   .show:target ~ .fade {
-      margin-top: 0;
-   }
 
 .panel {
    position: relative;

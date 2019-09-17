@@ -1,0 +1,23 @@
+﻿#invitationDiv {
+   padding: 1rem 1rem 2rem 1rem;
+   margin: 0 auto;
+}
+@media (min-width: 768px) {
+   #invitationDiv {
+      width: 35%;
+   }
+}
+
+@media (max-width: 768px) {
+   #invitationDiv {
+      width: 80%;
+   }
+}
+#invatationCodeBtn {
+   position: inherit !important;
+   margin-top: 2rem;
+   width: 100%;
+}
+input{
+   margin-top: 2rem;
+}

@@ -4,7 +4,9 @@
 }
 
 @section Styles{ }
-<h2 class="text-center">Popular videos</h2>
+
+
+<h4>Popular videos</h4>
 <div class="row">
    @foreach (var video in Model)
    {
@@ -12,11 +14,11 @@
          <a href="/Videos/@video.Id">
             @if (video.FileName != null)
             {
-               <img src="~/thumbnails/@video.Thumbnail" width="160" height="180" />
+               <img src="~/thumbnails/@video.Thumbnail" class="videoThumbnails" />
             }
             @if (video.FileName == null)
             {
-               <img src="@video.Thumbnail" width="160" height="180" />
+               <img src="@video.Thumbnail" class="videoThumbnails" />
             }
             <h6 class="text-white">@video.Name</h6>
          </a>
@@ -28,10 +30,10 @@
    }
 </div>
 
-<h2 id="firstRecommendedHeading"></h2>
+<h4 style="margin-top: 2rem;" id="firstRecommendedHeading"></h4>
 <div class="row" id="firstRecommendedVideosRow">
 </div>
-<h2 id="secondRecommendedHeading"></h2>
+<h4 style="margin-top: 2rem;" id="secondRecommendedHeading"></h4>
 <div class="row" id="secondRecommendedVideosRow">
 </div>
 

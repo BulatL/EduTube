@@ -34,12 +34,12 @@ namespace EduTube.BLL.Managers
              : CommentMapper.EntityToModel(await _context.Comments
              .FirstOrDefaultAsync(x => x.Id == id && !x.Deleted));
       }
-      public async Task<List<CommentModel>> GetByVideo(int videoId)
+      public async Task<List<CommentModel>> GetByVideo(int videoId, int lastCommentId)
       {
          return CommentMapper.EntitiesToModels(await _context.Comments
              .Include(x => x.Reactions)
              .Include(x => x.User)
-             .Where(x => x.VideoId == videoId && !x.Deleted).ToListAsync());
+             .Where(x => x.VideoId == videoId && x.Id < lastCommentId && !x.Deleted).OrderByDescending(x => x.DateCreatedOn).Take(5).ToListAsync());
       }
 
       public async Task<CommentModel> Create(CommentModel comment)

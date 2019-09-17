@@ -11,6 +11,7 @@ namespace EduTube.BLL.Managers.Interfaces
       Task<List<SubscriptionModel>> GetBySubscriber(string id);
       Task<List<SubscriptionModel>> GetBySubscribedOn(string id);
       Task<SubscriptionModel> GetBySubscriberAndSubscribedOn(string subscriberId, string subscribedOnId);
+      Task<bool> IsUserSubscribed(string subscribedOn, string subscriber);
       Task<SubscriptionModel> Create(SubscriptionModel subscription);
       Task<SubscriptionModel> Update(SubscriptionModel subscription);
       Task Delete(string subscriberId, string subscribedOnId);

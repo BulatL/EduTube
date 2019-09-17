@@ -20,31 +20,33 @@
 }
 #profileImageDiv {
    position: relative;
-   width: 200px;
-   height: 200px;
+   width: 10rem;
+   height: 10rem;
    overflow: hidden;
    border-radius: 50%;
    margin-bottom: 2em;
    display: inline-block;
 }
 
-    #profileImageDiv img {
-        width: 100%;
-        height: auto;
-    }
+   #profileImageDiv img {
+      width: 10rem;
+      height: 10rem;
+      /*width: 100%;
+        height: auto;*/
+   }
 .subProfileImageDiv {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    overflow: hidden;
-    border-radius: 50%;
-    margin: 1rem;
+   position: relative;
+   width: 6rem;
+   height: 6rem;
+   overflow: hidden;
+   border-radius: 50%;
+   margin: 1rem;
 }
 
-    .subProfileImageDiv img {
-    width: 100%;
-    height: auto;
-}
+   .subProfileImageDiv img {
+      width: 6rem;
+      height: 6rem;
+   }
 #userTabDiv {
     padding: 1em 3em;
 }
@@ -56,15 +58,6 @@
 .display-inline-block {
     display: inline-block;
     margin-top: 1em;
-}
-.videoThumbnailsDiv {
-    position: relative;
-    text-align: center;
-    
-}
-.videoThumbnails {
-    max-width: 13em;
-    max-height: 10em;
 }
 .bottom-right {
     position: absolute;
@@ -152,4 +145,7 @@
    width: 8rem;
    margin-right: 1rem;
    vertical-align: top;
+}
+.videoDiv {
+   max-width: 12rem;
 }

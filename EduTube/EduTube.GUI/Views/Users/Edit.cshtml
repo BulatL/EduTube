@@ -1,0 +1,86 @@
+﻿@model EduTube.GUI.ViewModels.EditUserViewModel
+@{
+   ViewData["Title"] = "Edit";
+}
+@section Styles{
+   <link href="~/css/RegisterPage.css" rel="stylesheet" />
+}
+<div class="" id="registerDiv">
+   <h5 class="whiteColor text-center">Edit you'r profile</h5>
+   <div id="tabs">
+      <div class="col-6 text-center blackBackground tabsDiv tabsDivActiv leftBorderRadius" id="aboutTab">
+         <span class="whiteColor">About</span>
+      </div>
+      <div class="col-6 text-center blackBackground tabsDiv rightBorderRadius" id="accountTab">
+         <span class="whiteColor">Account</span>
+      </div>
+   </div>
+   <div id="mainTabDiv">
+      <form id="form" method="post" enctype="multipart/form-data">
+         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+         <input type="hidden" asp-for="Id" id="userId" />
+         <input type="hidden" asp-for="OldImage" />
+         <div id="aboutTabDiv">
+            <div class="displayInline">
+               <div id="profileImageDiv" class="text-center">
+                  <div id="profile-container">
+                     <img id="profileImage" src="~/profileImages/@Model.OldImage" />
+                  </div>
+                  <input id="imageUpload" type="file"
+                         asp-for="ProfileImage" placeholder="Photo">
+                  <span class="whiteColor">Profile picture</span>
+               </div>
+               <div id="basicInfoDiv">
+                  <div class="displayInline">
+                     <div class="col-6">
+                        <label asp-for="Firstname" class="col-form-label whiteColor"></label>
+                        <input asp-for="Firstname" class="form-control" placeholder="First name" id="firstname" />
+                        <span asp-validation-for="Firstname" style="color:red;" id="firstnameError"></span>
+                     </div>
+                     <div class="col-6">
+                        <label asp-for="Lastname" class="col-form-label whiteColor"></label>
+                        <input asp-for="Lastname" class="form-control" placeholder="Last name" id="lastname" />
+                        <span asp-validation-for="Lastname" style="color:red;" id="lastnameError"></span>
+                     </div>
+                  </div>
+                  <div class="col-12">
+                     <label asp-for="DateOfBirth" class="col-form-label whiteColor"></label>
+                     <input asp-for="DateOfBirth" class="form-control" id="datepicker" />
+                     <span asp-validation-for="DateOfBirth" style="color:red;"></span>
+                  </div>
+               </div>
+            </div>
+            <div class="col-12">
+               <button class="purpleBtn" type="button" onclick="OpenAccountTab()" id="btnNext">Next</button>
+            </div>
+         </div>
+         <div class="" id="accountTabDiv">
+            <div class="displayInline">
+               <div class="col-6">
+                  <label asp-for="ChannelName" class="col-form-label whiteColor"></label>
+                  <input asp-for="ChannelName" class="form-control" placeholder="Channel name" id="channelName" />
+                  <span asp-validation-for="ChannelName" style="color:red;" id="channelNameError"></span>
+               </div>
+               <div class="col-6">
+                  <label asp-for="Email" class="col-form-label whiteColor"></label>
+                  <input asp-for="Email" class="form-control" placeholder="Email" id="email" />
+                  <span asp-validation-for="Email" style="color:red;" id="emailError"></span>
+               </div>
+            </div>
+            <div class="col-12">
+               <label asp-for="ChannelDescription" class="col-form-label whiteColor"></label>
+               <textarea asp-for="ChannelDescription" class="form-control" placeholder="Channel description" id="channelDescription"></textarea>
+               <span asp-validation-for="ChannelDescription" style="color:red;" id="channelDescriptionError"></span>
+            </div>
+            <div class="col-12">
+               <button class="purpleBtn" type="button" onclick="OpenAboutTab()" id="btnBack">Back</button>
+               <button class="purpleBtn" type="submit" id="btnRegister">Save</button>
+            </div>
+         </div>
+      </form>
+   </div>
+</div>
+@section Scripts{
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   <script src="~/js/EditUser.js"></script>
+}

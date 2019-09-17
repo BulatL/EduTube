@@ -25,6 +25,22 @@ namespace EduTube.BLL.Managers
          return TagMapper.EntitiesToModels(await _context.Tags.ToListAsync());
       }
 
+      public async Task<List<TagModel>> GetByNames(string names)
+      {
+         List<Tag> tags = new List<Tag>();
+         string[] tagNames = names.Split(',');
+         foreach (var tagName in tagNames)
+         {
+            Tag tag = await _context.Tags.FirstOrDefaultAsync(x => x.Name.Equals(tagName));
+
+            if(tag == null)
+               tag = new Tag() { Id = 0, Name = tagName };
+
+            tags.Add(tag);
+         }
+         return TagMapper.EntitiesToModels(tags);
+      }
+
       public async Task<TagModel> GetById(int id)
       {
          return TagMapper.EntityToModel(await _context.Tags.FirstOrDefaultAsync(x => x.Id == id));

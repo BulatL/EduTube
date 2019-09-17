@@ -1,0 +1,21 @@
+﻿#dateSpan{
+   
+}
+
+#showMore {
+   margin-top: 1rem;
+   width: 30%;
+   font-size: 17px;
+}
+.notificationUserImageDiv {
+   position: relative;
+   width: 3rem;
+   height: 3rem;
+   overflow: hidden;
+   border-radius: 50%;
+}
+
+   .notificationUserImageDiv img {
+      width: 100%;
+      height: auto;
+   }

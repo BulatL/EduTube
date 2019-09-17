@@ -239,13 +239,11 @@ namespace EduTube.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApplicationUserId");
-
                     b.Property<string>("Content");
 
-                    b.Property<bool>("Deleted");
+                    b.Property<DateTime>("DateCreatedOn");
 
-                    b.Property<string>("RedirectPath");
+                    b.Property<bool>("Deleted");
 
                     b.Property<bool>("Seen");
 
@@ -253,7 +251,7 @@ namespace EduTube.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Notifications");
                 });
@@ -615,7 +613,7 @@ namespace EduTube.DAL.Migrations
                 {
                     b.HasOne("EduTube.DAL.Entities.ApplicationUser")
                         .WithMany("Notifications")
-                        .HasForeignKey("ApplicationUserId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

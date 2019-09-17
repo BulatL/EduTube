@@ -92,3 +92,12 @@ textarea {
       width: 8em;
       height: 8em;
    }
+
+.field-icon {
+   color: black;
+   float: right;
+   margin-right: 1rem;
+   margin-top: -25px;
+   position: relative;
+   z-index: 2;
+}

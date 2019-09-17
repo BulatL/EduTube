@@ -26,7 +26,7 @@ namespace EduTube.GUI.ViewModels
       public string InvitationCode { get; set; }
       public int VideoVisibility { get; set; }
       public string VideoDuration { get; set; }
-      public List<String> Tags { get; set; }
+      public string Tags { get; set; }
 
       public VideoCreateViewModel() { }
 

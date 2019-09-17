@@ -1,5 +1,6 @@
 ﻿$(function () {
    $('#InvitationCodeDiv').hide();
+   //create invitation code
    $('#visibilitySelect').on('change', function () {
       if (this.value == 2) {
          var result = '';
@@ -8,16 +9,55 @@
          for (var i = 0; i < 18; i++) {
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
          }
-
+         $('#InvitationCodeHidden').val(result);
          $('#InvitationCodeDiv').show();
          $('#InvitationCode').val(result);
       }
       else 
          $('#InvitationCodeDiv').hide();
    });
+   //get all tags 
+   $.ajax({
+      url: '/Tags/GetAll',
+      type: 'GET',
+      dataType: 'json',
+      async: false,
+      success: function (data) {
+         $('#tagsInput').tagsInput({
+            'delimiter': [',', ';'],
+            'autocomplete': {
+               source: data
+            }
+         });
+      },
+      error: function (response, jqXHR) {
+      }
+   });
+   //preview img of youtube video
+   $("#youtubeUrl").on("change paste keyup", function () {
+      let youtubeId = GetYoutubeId(this.value);
+      if (this.value != '') {
+         if (youtubeId != 'error') {
+            $('#thumbnail').attr('src', `https://img.youtube.com/vi/${youtubeId}/0.jpg`);
+            $('#youtubeUrlError').text('');
+         }
+         else {
+            $('#youtubeUrlError').text('Youtube url is not valid');
+            $('#thumbnail').attr('src', ``);
+         }
+      }
+      else {
+         $('#youtubeUrlError').text('');
+      }
+   });
    $('#form').submit(function () {
       let video = $('#videoFile').val();
       let youtubeUrl = $('#youtubeUrl').val();
+
+      $("#modalDialog").modal("show");
+      let videoName = $("#videoName").val();
+      $("modalHeader").text(videoName);
+
       if (video == null || video == '') {
          let id = GetYoutubeId(youtubeUrl)
          if (id == 'error') {
@@ -28,6 +68,7 @@
             url: 'https://www.googleapis.com/youtube/v3/videos?id=' + id + '&key=AIzaSyDYwPzLevXauI-kTSVXTLroLyHEONuF9Rw&part=snippet,contentDetails',
             type: 'GET',
             dataType: 'json',
+            async: false,
             success: function (data) {
                if (data.items.length > 0) {
                   console.log(data.items[0])
@@ -35,6 +76,8 @@
                   //let convertedDuration = convert_time(duration);
                   console.log(duration);
                   $('#videoDuration').val(duration);
+
+                  return true;
                }
             },
             error: function (response, jqXHR) {
@@ -43,11 +86,10 @@
          $('#videoDuration').val();
          $('#youtubeId').val(id);
       }
-      $("#modalDialog").modal("show");
-      let videoName = $("#videoName").val();
-      console.log(videoName)
-      $("modalHeader").text(videoName);
-      return true; // return false to cancel form action
+      else
+         return true;
+
+      //return true; // return false to cancel form action
    });
 })
 
@@ -96,4 +138,8 @@ function convert_time(duration) {
    var m = Math.floor(duration % 3600 / 60);
    var s = Math.floor(duration % 3600 % 60);
    return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);
+}
+
+function Redirect(redirectUrl) {
+   window.location.replace(redirectUrl);
 }

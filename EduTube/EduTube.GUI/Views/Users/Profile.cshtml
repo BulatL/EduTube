@@ -63,7 +63,7 @@
                {
                   @foreach (var video in Model.Videos)
                   {
-                     <div class="display-inline-block">
+                     <div class="display-inline-block videoDiv">
                         <a href="/Videos/@video.Id">
                            <div class="videoThumbnailsDiv">
                               @if (video.FileName != null)
@@ -76,7 +76,9 @@
                               }
                               <p class="bottom-right greyBackground" id="videoDuration">@video.Duration</p>
                            </div>
-                           <h6>@video.Name</h6>
+                           <p style="font-size:0.8rem;">
+                              @video.Name
+                           </p>
                         </a>
                      </div>
                   }

@@ -22,6 +22,7 @@ namespace EduTube.GUI.ViewModels
       public string FileName { get; set; }
       [Display(Name = "Allow Comments")]
       public bool AllowComments { get; set; }
+      public string UserId { get; set; }
       public VideoVisibilityModel Visibility { get; set; }
       public int? UserReactionOnVideo { get; set; }
       public List<ReactionViewModel> UserReactionOnComments { get; set; }
@@ -49,6 +50,7 @@ namespace EduTube.GUI.ViewModels
          UserReactionOnComments = ReactionViewModel.CopyToViewModels(userReactionOnComments);
          Reactions = ReactionViewModel.CopyToViewModels(model.Reactions);
          Comments = CommentViewModel.CopyToViewModels(model.Comments);
+         UserId = model.UserId;
       }
 
       public static VideoModel CopyToModel(VideoViewModel viewModel)

@@ -99,7 +99,7 @@ namespace EduTube.BLL.Mappers
 
          if (model.TagRelationships != null)
          {
-            model.TagRelationships.Select(x => x.Video = null);
+            model.TagRelationships.ForEach(x => x.Video = null);
             entity.TagRelationships = TagRelationshipMapper.ModelsToEntities(model.TagRelationships);
          }
 

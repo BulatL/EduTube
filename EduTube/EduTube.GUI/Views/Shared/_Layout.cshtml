@@ -16,8 +16,10 @@
             crossorigin="anonymous"
             integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" />
    </environment>
+   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+   <link href="~/mdb/css/mdb.css" rel="stylesheet" />
    <link rel="stylesheet" href="~/css/site.css" />
-   <link href="~/lib/jquery/jquery-ui-1.11.4/jquery-ui.css" rel="stylesheet" />
+   <link href="~/tagInput/jquery.tagsinput-revisited.css" rel="stylesheet" />
    @RenderSection("Styles", required: false)
 </head>
 <body>
@@ -32,14 +34,38 @@
             <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                @if (Context.User.Identity.IsAuthenticated)
                {
-                  <a href="/Users/@User.Claims.FirstOrDefault(x => x.Type.Equals("channelName")).Value.Replace(" ", "-")">
-                     <div id="profileImageNavbarDiv">
-                        <img src="~/profileImages/@User.Claims.FirstOrDefault(x => x.Type.Equals("profileImage")).Value" />
-                     </div>
-                  </a>
+                  <input type="hidden" id="userLoggedIn" value="true" />
+                  <ul class="navbar-nav ml-auto nav-flex-icons">
+                     <li class="nav-item avatar dropdown dropleft">
+                        <a class="nav-link " id="notificationsIcon" data-toggle="dropdown" aria-expanded="false">
+                           <div class="notification"></div>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg-left greyBackground" aria-labelledby="notificationsIcon" id="notificationsDiv">
+                           <input type="hidden" id="lastNotificationId" />
+                        </div>
+                        <div id="newNotificationsDiv">
+
+                        </div>
+                     </li>
+
+                     <li class="nav-item avatar dropdown">
+                        <a class="nav-link " id="navbarDropdownMenuLink-55" data-toggle="dropdown" aria-expanded="false">
+                           <div id="profileImageNavbarDiv">
+                              <img src="~/profileImages/@User.Claims.FirstOrDefault(x => x.Type.Equals("profileImage")).Value" />
+                           </div>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg-right greyBackground"
+                             aria-labelledby="navbarDropdownMenuLink-55">
+                           <a class="dropdown-item" href="/Users/@User.Claims.FirstOrDefault(x => x.Type.Equals("channelName")).Value.Replace(" ", "-")">My profile</a>
+                           <a class="dropdown-item" href="/Logout">Log out</a>
+                        </div>
+                     </li>
+                  </ul>
                }
                @if (!Context.User.Identity.IsAuthenticated)
                {
+                  <input type="hidden" id="userLoggedIn" value="false" />
+                  <a class="nav-link" href="/Register">Register</a>
                   <a class="nav-link" href="/Login?redirectUrl=@Context.Request.Path">Login</a>
                }
                <div class="nav navbar-nav navbar-right">
@@ -89,7 +115,10 @@
    </environment>
    <script src="~/js/site.js" asp-append-version="true"></script>
 
-   <script src="~/lib/jquery/jquery-ui-1.11.4/jquery-ui.js"></script>
+   <script src="~/mdb/js/mdb.js"></script>
+   <script src="~/mdb/js/popper.min.js"></script>
+   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+   <script src="~/tagInput/jquery.tagsinput-revisited.js"></script>
    <script src="https://kit.fontawesome.com/b2138d02f2.js"></script>
    @RenderSection("Scripts", required: false)
 </body>

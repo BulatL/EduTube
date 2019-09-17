@@ -1,2 +1,23 @@
-﻿body {
+﻿#createVideoDiv {
+   background-color: #242424;
+   padding: 2rem;
 }
+#createBtn {
+   float: right;
+   position: inherit !important;
+}
+#createBtn, #backToProfileBtn {
+   width: 40%;
+}
+/*#tagsInput_tag{
+   color:white;
+}
+#tagsInput_tagsinput {
+   background-color: transparent;
+   border: none;
+   padding: 0;
+}
+.ui-autocomplete-input valid {
+   border-bottom: none !important;
+   box-shadow: none !important;
+}*/

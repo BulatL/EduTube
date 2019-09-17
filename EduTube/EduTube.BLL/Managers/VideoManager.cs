@@ -15,11 +15,13 @@ namespace EduTube.BLL.Managers
 {
    public class VideoManager : IVideoManager
    {
-      private ApplicationDbContext _context;
+      private readonly ApplicationDbContext _context;
+      private readonly INotificationManager _notificationManager;
 
-      public VideoManager(ApplicationDbContext context)
+      public VideoManager(ApplicationDbContext context, INotificationManager notificationManager)
       {
          _context = context;
+         _notificationManager = notificationManager;
       }
 
       public async Task<List<VideoModel>> GetAll()
@@ -75,9 +77,7 @@ namespace EduTube.BLL.Managers
 
       public async Task<List<int>> GetVideosIdByView(string userId, string ipAddress)
       {
-         return userId != null ? await _context.Views.Where(x => x.UserId == userId)
-                 .Select(x => x.VideoId).Distinct().ToListAsync()
-                 : await _context.Views.Where(x => x.IpAddress == ipAddress)
+         return await _context.Views.Where(x => x.UserId.Equals(userId) || x.IpAddress.Equals(ipAddress))
                  .Select(x => x.VideoId).Distinct().ToListAsync();
       }
 
@@ -194,7 +194,8 @@ namespace EduTube.BLL.Managers
             if(entity != null)
             {
                entity.Reactions = await _context.Reactions.Where(x => x.VideoId == id && !x.Deleted).ToListAsync();
-               entity.Comments = await _context.Comments.Include(x => x.User).Where(x => x.VideoId == id && !x.Deleted).ToListAsync();
+               entity.Comments = await _context.Comments.Include(x => x.User).Where(x => x.VideoId == id && !x.Deleted)
+                  .OrderByDescending(x => x.DateCreatedOn).Take(5).ToListAsync();
                entity.Comments.ForEach(x => x.Reactions = _context.Reactions.Where(r => r.CommentId == x.Id && !r.Deleted).ToList());
             }
          }
@@ -215,6 +216,7 @@ namespace EduTube.BLL.Managers
          Video entity = VideoMapper.ModelToEntity(model);
          _context.Videos.Add(entity);
          await _context.SaveChangesAsync();
+         await _notificationManager.CreateByVideo(model.UserChannelName, entity.UserId, model.User.ProfileImage, entity.Name, entity.Id, entity.DateCreatedOn);
          return VideoMapper.EntityToModel(entity);
 
       }
@@ -238,6 +240,7 @@ namespace EduTube.BLL.Managers
          _context.UpdateRange(comments);
          return await _context.SaveChangesAsync();
       }
+
       public async Task<int> Remove(int id)
       {
          Video entity = await _context.Videos.FirstOrDefaultAsync(x => x.Id == id);

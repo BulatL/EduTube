@@ -17,6 +17,9 @@
       <input asp-for="Password" type="password" class="form-control" placeholder="Password" />
       <span asp-validation-for="Password" style="color:red;"></span>
 
+      <input asp-for="RememberMe" id="rememberMe" />
+      <label class="col-form-label whiteColor">Remember me</label>
+
       <button type="submit" class="purpleBtn" id="signInButton">Sing in</button>
       <div class="text-center" id="optionsDiv">
          <a class="whiteColor">Forgot password?</a>
