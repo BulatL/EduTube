@@ -29,7 +29,7 @@
             @if (ViewBag.Subscribed == "SameUser")
             {
                <button class="redBtn position-initial" id="deleteProfileBtn" onclick='DeleteProfile("@Model.Id")'>Delete profile</button>
-               <a class="greenBtn position-initial" id="btnSubscribeOwner" href="/Users/Edit/@Model.Id">Edit info</a>
+               <button class="greenBtn position-initial" id="btnSubscribeOwner" onclick="RedirectTo('/Users/Edit/@Model.Id')">Edit info</button>
             }
          </div>
          <div class="col-12">
@@ -54,47 +54,49 @@
          <div id="videosDiv">
             <div class="row">
                <div class="col-12" id="addVideoDiv">
-                  <a href="/videos/Create" class="btn greenBtn float-right" id="addVideoBtn">Add video</a>
-                  <h4 class="text-center">@Model.ChannelName videos</h4>
+                  <button onclick="RedirectTo('/videos/Create')" class="greenBtn float-right" id="addVideoBtn">Add video</button>
+							
                </div>
             </div>
-            <div id="userVideosDiv">
-               @if (Model.Videos != null)
-               {
-                  @foreach (var video in Model.Videos)
-                  {
-                     <div class="display-inline-block videoDiv">
-                        <a href="/Videos/@video.Id">
-                           <div class="videoThumbnailsDiv">
-                              @if (video.FileName != null)
-                              {
-                                 <img class="videoThumbnails" src="~/thumbnails/@video.Thumbnail" />
-                              }
-                              @if (video.FileName == null)
-                              {
-                                 <img class="videoThumbnails" src="@video.Thumbnail" />
-                              }
-                              <p class="bottom-right greyBackground" id="videoDuration">@video.Duration</p>
-                           </div>
-                           <p style="font-size:0.8rem;">
-                              @video.Name
-                           </p>
-                        </a>
-                     </div>
-                  }
-               }
-               @if (Model.Videos == null)
-               {
-                  <h4 class="text-center">He does not have videos</h4>
-               }
-            </div>
+				<div id="userVideosDiv">
+					@if (Model.Videos != null)
+					{
+						@foreach (var video in Model.Videos)
+						{
+							<div class="display-inline-block videoDiv">
+								<a href="/Videos/@video.Id">
+									<div class="videoThumbnailsDiv">
+										@if (video.FileName != null)
+										{
+											<img class="videoThumbnails" src="~/thumbnails/@video.Thumbnail" />
+										}
+										@if (video.FileName == null)
+										{
+											<img class="videoThumbnails" src="@video.Thumbnail" />
+										}
+										<p class="bottom-right greyBackground" id="videoDuration">@video.Duration</p>
+									</div>
+									<p class="videoName" title="@video.Name">
+										@video.Name
+									</p>
+									<p class="fontSize08">
+										@video.DateCreatedOn
+									</p>
+								</a>
+							</div>
+						}
+						@if (Model.Videos.Count == 0)
+						{
+							<h4 class="text-center">@Model.ChannelName does not have videos</h4>
+						}
+					}
+					@if (Model.Videos == null)
+					{
+						<h4 class="text-center">He does not have videos</h4>
+					}
+				</div>
          </div>
          <div id="subscribersDiv">
-            <div class="row">
-               <div class="col-12">
-                  <h4 class="text-center">@Model.ChannelName Subscribers</h4>
-               </div>
-            </div>
             <div class="container">
                @if (Model.Subscribers != null)
                {
@@ -123,11 +125,6 @@
             </div>
          </div>
          <div id="subscribedOnDiv">
-            <div class="row">
-               <div class="col-12">
-                  <h4 class="text-center">@Model.ChannelName Subscribed On</h4>
-               </div>
-            </div>
             <div class="container">
                @if (Model.SubscribedOn != null)
                {

@@ -12,10 +12,10 @@ $(function () {
       }
    });
    let userLoggedIn = $('#userLoggedIn').val();
-   if (userLoggedIn == "true") {
+   if (userLoggedIn === "true") {
       let notificationsDiv = $('#notificationsDiv');
       //get last 5 notifications for current user
-      if (notificationsDiv.children().length == 1) {
+      if (notificationsDiv.children().length === 1) {
          $.ajax({
             url: '/Notifications/GetLast5',
             type: 'GET',
@@ -26,7 +26,7 @@ $(function () {
                if (data.length > 0) {
                   for (var i = 0; i < data.length; i++) {
                      let backgroundColor = '';
-                     if (data[i].seen == false)
+                     if (data[i].seen === false)
                         backgroundColor = 'unSeenNotification';
 
 
@@ -81,7 +81,7 @@ function GetNewNotifications() {
             data.reverse();
             for (var i = 0; i < data.length; i++) {
                let backgroundColor = '';
-               if (data[i].seen == false)
+               if (data[i].seen === false)
                   backgroundColor = 'unSeenNotification';
                notificationsDiv.prepend(
                   `<div class="row colorWhite ${backgroundColor} padding1">
@@ -113,4 +113,8 @@ function GetNewNotifications() {
 }
 function openNotificationDropdown() {
    document.getElementById("notificationDropdown").classList.toggle("show");
+}
+
+function RedirectTo(redirectUrl) {
+	window.location.replace(redirectUrl);
 }

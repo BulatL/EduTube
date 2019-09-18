@@ -29,6 +29,7 @@ namespace EduTube.BLL.Managers
          return ViewMapper.EntityToModel(await _context.Views
              .FirstOrDefaultAsync(x => x.Id == id));
       }
+
       public async Task<int> CountViewsByVideo(int videoId)
       {
          return await _context.Views.CountAsync(x => x.VideoId == videoId);

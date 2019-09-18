@@ -18,9 +18,35 @@ a.navbar-brand {
 -------------------------------------------------- */
 /*dropdown*/
 
-
+.dropdown-item:hover {
+	color: white !important;
+	text-decoration: none;
+	background-color: #e80a89;
+}
 
 /*dropdown
+-------------------------------------------------*/
+/*Custom scrollbar*/
+/* width */
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #888;
+}
+
+	/* Handle on hover */
+	::-webkit-scrollbar-thumb:hover {
+		background: #555;
+	}
+/*Custom scrollbar
 -------------------------------------------------*/
 .breakLineWhite {
    height: 0.1em;
@@ -182,7 +208,7 @@ button.accept-policy {
 
 .videoThumbnails {
    height: 7rem;
-   max-width: 12rem;
+   width: 10rem;
    /*max-height: 10rem;*/
 }
 
@@ -233,14 +259,18 @@ input[type=search] {
    }
 
 a {
-   color: #ffffff;
-   text-decoration: none;
+	color: #ffffff !important;
+	text-decoration: none !important;
 }
 
-   a:hover {
-      color: #e80a89;
-      text-decoration: none;
-   }
+	a:hover {
+		color: #e80a89 !important;
+		text-decoration: none !important;
+	}
+	a > p:hover {
+		color: #e80a89 !important;
+		text-decoration: none !important;
+	}
 
 h2 {
    color: white;
@@ -431,7 +461,7 @@ h2 {
    .greenBtn:hover {
       box-shadow: 0 10px 30px rgba(0,0,0,.2);
       background: linear-gradient(to right,#00d498 0,#04b533 100%);
-      color: #fff;
+      color: #fff !important;
    }
 
 .displayNone {
@@ -587,3 +617,15 @@ h2 {
 }
 /*Input modern
 -------------------------------------------------*/
+
+.videoName {
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
+	font-size: 0.8rem;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.fontSize08 {
+	font-size: 0.8rem;
+}

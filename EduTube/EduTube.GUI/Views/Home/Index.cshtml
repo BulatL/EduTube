@@ -20,12 +20,12 @@
             {
                <img src="@video.Thumbnail" class="videoThumbnails" />
             }
-            <h6 class="text-white">@video.Name</h6>
+            <p class="text-white videoName" title="@video.Name">@video.Name</p>
          </a>
          <a href="/Users/@video.UserChannelName.Replace(" ", "-")">
-            <h6 class="text-white">@video.UserChannelName</h6>
+            <p class="text-white fontSize08">@video.UserChannelName</p>
          </a>
-         <h6>@video.DateCreatedOn</h6>
+         <p class="fontSize08">@video.DateCreatedOn</p>
       </div>
    }
 </div>

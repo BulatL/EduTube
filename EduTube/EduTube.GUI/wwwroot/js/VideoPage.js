@@ -1,20 +1,20 @@
 ﻿$(function () {
-   let videoVisibility = $('#videoVisibility').val();
-   let allowAccess = $('#allowAccess').val();
-   if (videoVisibility == 'Invitation' && allowAccess == false) {
-      $('#firstDiv').hide();
-      $('#inviteCodeDialog').modal({
-         show: true
-      });
-   }
-   else {
-      SetViewsAndReactions();
-   }
-})
+	let videoVisibility = $('#videoVisibility').val();
+	let allowAccess = $('#allowAccess').val();
+	if (videoVisibility === 'Invitation' && allowAccess === 'False') {
+		$('#firstDiv').hide();
+		$('#inviteCodeDialog').modal({
+			show: true
+		});
+	}
+	else {
+		SetViewsAndReactions();
+	}
+});
 
 function ShowMoreComments() {
    let lastCommentId = $('#lastCommentId').val();
-   if (lastCommentId == undefined)
+   if (lastCommentId === undefined)
       return;
 
    let videoId = $('#videoId').val();
@@ -60,16 +60,16 @@ function PopulateComments(comments) {
       let dislikeResizeCommentEmojiCount = '';
 
       for (var j = 0; j < comments[i].reactions.length; j++) {
-         if (comments[i].reactions[j].emojiId == 1) {
+         if (comments[i].reactions[j].emojiId === 1) {
             likeCount++;
-            if (comments[i].reactions[j].userId == currentUserId) {
+            if (comments[i].reactions[j].userId === currentUserId) {
                likeResizeCommentEmoji = 'resizeCommentEmoji';
                likeResizeCommentEmojiCount = 'resizeCommentEmojiCount';
             }
          }
          else {
             dislikeCount++;
-            if (comments[i].reactions[j].userId == currentUserId) {
+            if (comments[i].reactions[j].userId === currentUserId) {
                dislikeResizeCommentEmoji = 'resizeCommentEmoji';
                dislikeResizeCommentEmojiCount = 'resizeCommentEmojiCount';
             }
@@ -96,7 +96,7 @@ function PopulateComments(comments) {
                         <span><a href="/Users/${comments[i].user.channelName.replace(' ', '-')}"><strong>   ${comments[i].user.channelName}</strong></a> ${comments[i].dateCreatedOn}</span>
                      </div>`);
 
-      if (comments[i].userId == currentUserId) {
+      if (comments[i].userId === currentUserId) {
          commentsContent.push(
                      `<div class="col-4" id="mainCommentOptionsDiv_${comments[i].id}">
                         <button class="dotBtn" onclick="showCommentOptionDiv(${comments[i].id})">
@@ -131,7 +131,7 @@ function PopulateComments(comments) {
                      </div>
                   </div>`);
 
-      if (comments[i].userId == currentUserId) {
+      if (comments[i].userId === currentUserId) {
          commentsContent.push(
                   `<div class="float-right displayNone" id="editCommentBtnDiv_${comments[i].id}">
                      <button class="grayBtn" id="cancelComment" onclick="CancelCommentEdit(${comments[i].id})">Cancel</button>
@@ -161,11 +161,11 @@ function SetViewsAndReactions() {
    let videoId = $('#videoId').val();
    let userReactionsComentId = $('.userReactionsComentId');
 
-   if (reaction != undefined || reaction != "" || reaction != 0) {
+   if (reaction !== undefined || reaction !== "" || reaction !== 0) {
       $(`#emoji${reaction}`).addClass("resizeVideoEmoji");
       $(`#emojiCount${reaction}`).addClass("resizeVideoEmojiCount");
    }
-   if (userReactionsComentId != undefined) {
+   if (userReactionsComentId !== undefined) {
       for (var i = 0; i < userReactionsComentId.length; i++) {
          let commentId = userReactionsComentId[i].value;
          let emojiId = $(`#userReactionEmojiId_${commentId}`).val();
@@ -203,7 +203,7 @@ function CheckInvitationCode() {
       type: 'GET',
       dataType: 'json',
       success: function (response) {
-         if (response == true) {
+         if (response === true) {
             SetViewsAndReactions();
             $('#firstDiv').show();
             $('#inviteCodeDialog').modal('hide');
@@ -233,13 +233,13 @@ function Reaction(emojiId, videoId, commentId) {
       },
       error: function (data, xhr) {
          console.log(data);
-         if (data.status == 201) {
-            if (videoId != null) {
+         if (data.status === 201) {
+            if (videoId !== null) {
                $('.resizeVideoEmoji').removeClass('resizeVideoEmoji');
                $('.resizeVideoEmojiCount').removeClass('resizeVideoEmojiCount');
                //decrease emoji reactions count for new reaction
                $(`#emojiCount${oldReaction}`).html(parseInt($(`#emojiCount${oldReaction}`).html()) - 1);
-               if (oldReaction != emojiId) {
+               if (oldReaction !== emojiId) {
                   $(`#emoji${emojiId}`).addClass("resizeVideoEmoji");
                   $(`#emojiCount${emojiId}`).addClass("resizeVideoEmojiCount");
                   //increase emoji reactions count for new reaction
@@ -247,10 +247,10 @@ function Reaction(emojiId, videoId, commentId) {
                   $('#reactionHidden').val(emojiId);
                }
             }
-            else if (commentId != null) {
+            else if (commentId !== null) {
                let userReactionsCommentDiv = $('#userReactionsCommentDiv');
                let oldCommentReaction = $(`#userReactionCommentId_${commentId}`).val();
-               if (oldCommentReaction == undefined) {
+               if (oldCommentReaction === undefined) {
 
                   //if user first time liked/disliked this comment
                   $(`#commentEmoji${emojiId}_${commentId}`).addClass("resizeCommentEmoji");
@@ -265,7 +265,7 @@ function Reaction(emojiId, videoId, commentId) {
                else {
                   //if user already liked/disliked this comment
                   let oldEmoji = $(`#userReactionEmojiId_${commentId}`).val();
-                  if (oldEmoji == emojiId) {
+                  if (oldEmoji === emojiId) {
 
                      //if the user want to remove like/dislike on decrease size of emoji
                      $(`#commentEmoji${emojiId}_${commentId}`).removeClass('resizeCommentEmoji');
@@ -298,7 +298,7 @@ function Reaction(emojiId, videoId, commentId) {
 
                      //decrise previouse emoji of this comment and decrise count
                      let previouseEmoji = $(`#userReactionEmojiId_${commentId}`).val();
-                     if (emojiId == 1) {
+                     if (emojiId === 1) {
                         $(`#commentEmoji${2}_${commentId}`).removeClass('resizeCommentEmoji');
                         let reactionsCount = $(`#emojiCount${2}Comment_${commentId}`);
                         reactionsCount.removeClass('resizeCommentEmojiCount');
@@ -314,7 +314,7 @@ function Reaction(emojiId, videoId, commentId) {
                }
             }
          }
-         else if (data.status == 401) {
+         else if (data.status === 401) {
             let pageVideoId = $("#videoId").val();
             RedirectToLogin(pageVideoId);
          }
@@ -325,7 +325,7 @@ function Reaction(emojiId, videoId, commentId) {
 function CreateComment(videoId) {
    let commentContent = $('#newComment').val();
 
-   if (commentContent == "")
+   if (commentContent === "")
       return;
 
    $.ajax({
@@ -415,7 +415,7 @@ function ResetTextarea() {
 
 function DeleteComment(commentId) {
    var r = confirm('Are u sure u want to delete this comment ' + commentId);
-   if (r == true) {
+   if (r === true) {
       $.ajax({
          url: `/Comments/Delete/${commentId}`,
          type: 'DELETE',
@@ -425,7 +425,7 @@ function DeleteComment(commentId) {
 
          },
          error: function (data, xhr) {
-            if (data.status == 200)
+            if (data.status === 200)
                $(`.comment_${commentId}`).remove();
 
             else
@@ -437,7 +437,7 @@ function DeleteComment(commentId) {
 
 function DeleteVideo(videoId) {
    var r = confirm('Are u sure u want to delete this video ' + videoId);
-   if (r == true) {
+   if (r === true) {
       $.ajax({
          url: `/Videos/Delete/${videoId}`,
          type: 'DELETE',
@@ -446,7 +446,7 @@ function DeleteVideo(videoId) {
             console.log(response);
          },
          error: function (data, xhr) {
-            if (data.status == 200)
+            if (data.status === 200)
                window.location.replace('/');
 
             else
@@ -490,9 +490,9 @@ function EditComment(commentId) {
    let commentContent = $(`#commentContentSpan_${commentId}`).text();
    let oldComment = $(`#oldComment_${commentId}`).val();
 
-   if (commentContent == "")
+   if (commentContent === "")
       return;
-   if (commentContent == oldComment) {
+   if (commentContent === oldComment) {
       CancelCommentEdit(commentId);
       return;
    }
@@ -506,7 +506,7 @@ function EditComment(commentId) {
          console.log(response);
       },
       error: function (data, xhr) {
-         if (data.status == 200) {
+         if (data.status === 200) {
             $(`#commentContent_${commentId}`).attr('contentEditable', false);
             $(`#editCommentBtnDiv_${commentId}`).hide();
             $(`#commentContentDiv_${commentId}`).removeClass('commentBorder');
@@ -540,23 +540,23 @@ function EditVideo() {
          textarea[0].originalOverflowY = textarea.css("overflow-y");
       }
       var maxWidth = textarea.css("max-width");
-      measurer.text(textarea.text())
-         .css("max-width", maxWidth == "none" ? textarea.width() + "px" : maxWidth)
-         .css('font', textarea.css('font'))
-         .css('overflow-y', textarea.css('overflow-y'))
-         .css("max-height", textarea.css("max-height"))
-         .css("min-height", textarea.css("min-height"))
-         .css("padding", textarea.css("padding"))
-         .css("border", textarea.css("border"))
-         .css("box-sizing", textarea.css("box-sizing"))
+		measurer.text(textarea.text())
+			.css("max-width", maxWidth === "none" ? textarea.width() + "px" : maxWidth)
+			.css('font', textarea.css('font'))
+			.css('overflow-y', textarea.css('overflow-y'))
+			.css("max-height", textarea.css("max-height"))
+			.css("min-height", textarea.css("min-height"))
+			.css("padding", textarea.css("padding"))
+			.css("border", textarea.css("border"))
+			.css("box-sizing", textarea.css("box-sizing"));
    }
    function updateTextAreaSize(textarea) {
       textarea.height(measurer.height());
       var w = measurer.width();
-      if (textarea[0].originalOverflowY == "auto") {
+      if (textarea[0].originalOverflowY === "auto") {
          var mw = textarea.css("max-width");
-         if (mw != "none") {
-            if (w == parseInt(mw)) {
+         if (mw !== "none") {
+            if (w === parseInt(mw)) {
                textarea.css("overflow-y", "auto");
             } else {
                textarea.css("overflow-y", "hidden");
@@ -568,7 +568,7 @@ function EditVideo() {
    $('textarea.autofit').on({
       input: function () {
          var text = $(this).val();
-         if ($(this).attr("preventEnter") == undefined) {
+         if ($(this).attr("preventEnter") === undefined) {
             text = text.replace(/[\n]/g, "<br>&#8203;");
          }
          measurer.html(text);
@@ -578,7 +578,7 @@ function EditVideo() {
          initMeasurerFor($(this));
       },
       keypress: function (e) {
-         if (e.which == 13 && $(this).attr("preventEnter") != undefined) {
+         if (e.which === 13 && $(this).attr("preventEnter") !== undefined) {
             e.preventDefault();
          }
       }
@@ -596,7 +596,7 @@ function ShowMore() {
    let newHeight = $('.panel').css('height');
    console.log(newHeight);
    $('#show').hide();
-   if (previouseHeight == newHeight) {
+   if (previouseHeight === newHeight) {
       $('#hide').hide();
       return;
    }

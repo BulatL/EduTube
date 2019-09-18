@@ -63,9 +63,9 @@
                   <div class="form-group">
                      <label asp-for="VideoVisibility" class="control-label"></label>
                      <select asp-for="VideoVisibility" class="form-control" id="visibilitySelect">
-                        <option value="0">Public</option>
-                        <option value="1">Private</option>
-                        <option value="2">Invite</option>
+                        <option value="0" title="Everyone can see this video">Public</option>
+                        <option value="1" title="Only logged users can see this video">Private</option>
+                        <option value="2" title="Only users whit invitation code can see this video">Invite</option>
                      </select>
                      <span asp-validation-for="VideoVisibility" class="text-danger"></span>
                   </div>

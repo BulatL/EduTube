@@ -1,24 +1,24 @@
 ﻿$(function () {
-   $.ajax({
-      url: 'https://api.ipify.org/?format=json',
-      type: 'GET',
-      dataType: 'json',
-      success: function (ipAddress) {
-         $.ajax({
-            url: '/Videos/RecommendedVideos/' + ipAddress.ip,
-            type: 'GET',
-            dataType: 'json',
-            success: function (videos) {
-               populateReccomendedVideo(videos);
-            },
-            error: function (response, jqXHR) {
-            }
-         });
-      },
-      error: function (response, jqXHR) {
-      }
-   });
-})
+	$.ajax({
+		url: 'https://api.ipify.org/?format=json',
+		type: 'GET',
+		dataType: 'json',
+		success: function (ipAddress) {
+			$.ajax({
+				url: '/Videos/RecommendedVideos/' + ipAddress.ip,
+				type: 'GET',
+				dataType: 'json',
+				success: function (videos) {
+					populateReccomendedVideo(videos);
+				},
+				error: function (response, jqXHR) {
+				}
+			});
+		},
+		error: function (response, jqXHR) {
+		}
+	});
+});
 
 function populateReccomendedVideo(videos) {
    let firstRecommendedVideosRow = $("#firstRecommendedVideosRow");
@@ -27,9 +27,9 @@ function populateReccomendedVideo(videos) {
    let secondRecommendedVideosContent = [];
 
    if (videos.firstRecommended.length > 0) {
-      for (var i = 0; i < videos.firstRecommended.length; i++) {
+      for (let i = 0; i < videos.firstRecommended.length; i++) {
          let thumbnail = "";
-         if (videos.firstRecommended[i].fileName == null) {
+         if (videos.firstRecommended[i].fileName === null) {
             thumbnail = videos.firstRecommended[i].thumbnail;
          }
          else {
@@ -39,12 +39,12 @@ function populateReccomendedVideo(videos) {
             `<div class="col-lg-2">
                <a href="/Videos/${videos.firstRecommended[i].id}">
                   <img src="${thumbnail}" class="videoThumbnails"/>
-                  <h6 class="text-white">${videos.firstRecommended[i].name}</h6>
+                  <p class="text-white videoName">${videos.firstRecommended[i].name}</p>
                </a>
                <a href="/Users/${videos.firstRecommended[i].userChannelName.replace(/ /g, '-')}">
-                  <h6 class="text-white">${videos.firstRecommended[i].userChannelName}</h6>
+                  <p class="text-white fontSize08">${videos.firstRecommended[i].userChannelName}</p>
                </a>
-               <h6>${videos.firstRecommended[i].dateCreatedOn}</h6>
+               <p class="fontSize08">${videos.firstRecommended[i].dateCreatedOn}</p>
             </div>`
          );
       }
@@ -57,9 +57,9 @@ function populateReccomendedVideo(videos) {
    }
 
    if (videos.secondRecommended.length > 0) {
-      for (var i = 0; i < videos.secondRecommended.length; i++) {
+      for (let i = 0; i < videos.secondRecommended.length; i++) {
          let thumbnail = "";
-         if (videos.secondRecommended[i].fileName == null) {
+         if (videos.secondRecommended[i].fileName === null) {
             thumbnail = videos.secondRecommended[i].thumbnail;
          }
          else {
@@ -69,12 +69,12 @@ function populateReccomendedVideo(videos) {
             `<div class="col-lg-2">
                <a href="/Videos/${videos.secondRecommended[i].id}">
                   <img src="${thumbnail}" class="videoThumbnails"/>
-                  <h6 class="text-white">${videos.secondRecommended[i].name}</h6>
+                  <p class="text-white videoName">${videos.secondRecommended[i].name}</p>
                </a>
                <a href="/Users/${videos.secondRecommended[i].userChannelName.replace(/ /g, '-')}">
-                  <h6 class="text-white">${videos.secondRecommended[i].userChannelName}</h6>
+                  <p class="text-white fontSize08">${videos.secondRecommended[i].userChannelName}</p>
                </a>
-               <h6>${videos.secondRecommended[i].dateCreatedOn}</h6>
+               <p class="fontSize08">${videos.secondRecommended[i].dateCreatedOn}</p>
             </div>`
          );
       }

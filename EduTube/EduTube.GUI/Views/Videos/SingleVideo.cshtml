@@ -10,7 +10,7 @@
    <link href="~/css/EditVideoModal.css" rel="stylesheet" />
 }
 <div class="container">
-   <input type="hidden" id="allowAccess" value="@ViewData["allowAccess"]" />
+   <input type="hidden" id="allowAccess" asp-for="AllowAccess" />
    <input type="hidden" asp-for="Visibility" id="videoVisibility" />
    <div class="row" id="firstDiv">
       <!--Div with video player-->
@@ -18,7 +18,7 @@
          <input type="hidden" id="videoId" value="@Model.Id" />
          @if (Model.YoutubeUrl != null && Model.YoutubeUrl != "")
          {
-            <iframe id="videoPlayer" class="widthInherit" height="550" src="@Model.YoutubeUrl" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+            <iframe id="videoPlayer" class="widthInherit" height="550" src="@Model.YoutubeUrl?rel=0&eneblejsapi=1" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
          }
          @if (Model.FileName != null && Model.FileName != "")
          {
@@ -123,15 +123,15 @@
             <div class="noPadding">
                @if (User.Identity.IsAuthenticated)
                {
-                  @if (Model.OwnerChannelName.Equals(User.Claims.FirstOrDefault(x => x.Type.Equals("channelName")).Value))
+                  @if (Model.OwnerChannelName.Equals(User.Claims.FirstOrDefault(x => x.Type.Equals("channelName"))?.Value))
                   {
                      <button class="greenBtn position-initial fillAvailable" id="btnSubscribeOwner" onclick="OpenEditVideoModal()">Edit info</button>
                      <button class="redBtn position-initial fillAvailable margin-top" id="btnSubscribeOwner" onclick="DeleteVideo(@Model.Id)">Delete video</button>
                   }
 
-                  @if (!ViewData["Subscribed"].Equals("SameUser"))
+                  @if (!Model.Subscribed.Equals("SameUser"))
                   {
-                     <input type="hidden" value="@ViewData["Subscribed"]" id="subscribedHidden" />
+                     <input type="hidden" asp-for="Subscribed" id="subscribedHidden" />
                      <button class="purpleBtn position-initial" onclick="Subscribe()" id="subscribeBtn">Subscribe</button>
                   }
                }
@@ -162,10 +162,10 @@
                <div class="commentImageDiv">
                   @if (Context.User.Identity.IsAuthenticated)
                   {
-                     <input type="hidden" id="currentUserId" value="@User.Claims.FirstOrDefault(x => x.Type.Equals("id")).Value" />
+                     <input type="hidden" id="currentUserId" value="@User.Claims.FirstOrDefault(x => x.Type.Equals("id"))?.Value" />
                      @if (User.Claims.FirstOrDefault(x => x.Type.Equals("profileImage"))?.Value != "")
                      {
-                        <img src="/profileImages/@User.Claims.FirstOrDefault(x => x.Type.Equals("profileImage")).Value" />
+                        <img src="/profileImages/@User.Claims.FirstOrDefault(x => x.Type.Equals("profileImage"))?.Value" />
                      }
                      @if (User.Claims.FirstOrDefault(x => x.Type.Equals("profileImage"))?.Value == "")
                      {

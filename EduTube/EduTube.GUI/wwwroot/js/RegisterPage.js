@@ -1,5 +1,4 @@
 ﻿$(function () {
-   $('#accountTabDiv').css('display', 'none');
    $("#profileImage").click(function (e) {
       $("#imageUpload").click();
    });
@@ -11,7 +10,7 @@
 
       $(this).toggleClass("fa-eye fa-eye-slash");
       var input = $($(this).attr("toggle"));
-      if (input.attr("type") == "password") {
+      if (input.attr("type") === "password") {
          input.attr("type", "text");
       } else {
          input.attr("type", "password");
@@ -23,6 +22,15 @@
       let password = $('#password').val();
       let email = $('#email').val();
       let channelDescription = $('#channelDescription').val();
+
+
+		let birthDay = $('#BirthDay').val();
+		let birthMonth = $('#BirthMonth').val();
+		let birthYear = $('#BirthYear').val();
+		$('#dateOfBirth').val(birthYear + "." + birthMonth + "." + birthDay);
+		/*birthday.setFullYear(birthYear);
+		birthday.setMonth(birthMonth);
+		birthday.setday(birthDay);*/
 
       /*if (channelName == "")
          $('#channelNameError').text('The Channel name field is required.')
@@ -70,16 +78,16 @@
          contentType: "application/json",
          async: false,
          success: function (response) {
-            if (response.channelNameExist == true) {
+            if (response.channelNameExist === true) {
                $('#channelNameError').text("Channel name already taken");
             }
-            if (response.emailExist == true) {
+            if (response.emailExist === true) {
                $('#emailError').text("Email already taken");
             }
-            if (response.emailExist == true || response.channelNameExist == true) {
+            if (response.emailExist === true || response.channelNameExist === true) {
                return false
             }
-            else if (response.emailExist != true && response.channelNameExist != true) {
+            else if (response.emailExist !== true && response.channelNameExist !== true) {
                return true;
             }
          },
@@ -101,13 +109,13 @@ function fasterPreview(uploader) {
 function OpenAccountTab() {
    let firstname = $('#firstname').val();
    let lastname = $('#lastname').val();
-   if (firstname == "") {
+   if (firstname === "") {
       $('#firstnameError').text("The First name field is required.")
    }
-   if (lastname == "") {
+   if (lastname === "") {
       $('#lastnameError').text("The Last name field is required.")
    }
-   if (firstname != "" && lastname != "") {
+   if (firstname !== "" && lastname !== "") {
       $('#aboutTab').removeClass('tabsDivActiv');
       $('#accountTab').addClass('tabsDivActiv');
       $('#aboutTabDiv').css('display', 'none');

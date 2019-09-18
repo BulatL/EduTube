@@ -108,6 +108,7 @@ namespace EduTube.BLL.Managers
          }
          return user;
       }
+
       public async Task<ApplicationUserModel> GetByEmail(string email)
       {
          return UserMapper.EntityToModel(await _userManager.Users
@@ -180,24 +181,36 @@ namespace EduTube.BLL.Managers
          IPasswordHasher<ApplicationUser> passwordHasher = _userManager.PasswordHasher;
          PasswordVerificationResult verificationResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
          if (verificationResult == PasswordVerificationResult.Success)
-         {
-            IList<string> roles = await _userManager.GetRolesAsync(user);
-            List<Claim> claims = new List<Claim>();
-            Claim id = new Claim("id", user.Id);
-            Claim profileImage = new Claim("profileImage", user.ProfileImage);
-            Claim channelName = new Claim("channelName", user.ChannelName.Replace(" ", "-"));
-            Claim role = new Claim("role", roles[0]);
-            claims.Add(id);
-            claims.Add(profileImage);
-            claims.Add(channelName);
-            claims.Add(role);
-            IdentityResult identity = await _userManager.AddClaimsAsync(user, claims);
-            if (identity.Succeeded)
-            {
-               await _signInManager.SignInAsync(user, true);
-               return true;
-            }
-            return false;
+			{
+				IList<Claim> claimsExist = await _userManager.GetClaimsAsync(user);
+				if(claimsExist == null || claimsExist?.Count() == 0)
+				{
+					IList<string> roles = await _userManager.GetRolesAsync(user);
+					List<Claim> claims = new List<Claim>();
+					Claim id = new Claim("id", user.Id);
+					Claim profileImage = new Claim("profileImage", user.ProfileImage);
+					Claim channelName = new Claim("channelName", user.ChannelName.Replace(" ", "-"));
+					Claim role = new Claim("role", roles[0]);
+					claims.Add(id);
+					claims.Add(profileImage);
+					claims.Add(channelName);
+					claims.Add(role);
+					IdentityResult identity = await _userManager.AddClaimsAsync(user, claims);
+					if (identity.Succeeded)
+					{
+						await _signInManager.SignInAsync(user, true);
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				else
+				{
+					await _signInManager.SignInAsync(user, true);
+					return true;
+				}
          }
          return false;
       }

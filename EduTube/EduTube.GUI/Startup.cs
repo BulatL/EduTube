@@ -18,6 +18,7 @@ using EduTube.GUI.Services.Interface;
 using EduTube.GUI.Services;
 using Microsoft.AspNetCore.Http.Features;
 using EduTube.GUI.Validators;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace EduTube.GUI
 {
@@ -75,12 +76,18 @@ namespace EduTube.GUI
          services.AddScoped<IUploadService, UploadService>();
 
          services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-         /*services.Configure<FormOptions>(x =>
+
+			services.PostConfigure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme,
+			 opt => {
+				 //configure your other properties
+				 opt.LoginPath = "/Login";
+			 });
+			/*services.Configure<FormOptions>(x =>
          {
              x.ValueLengthLimit = int.MaxValue;
              x.MultipartBodyLengthLimit = int.MaxValue; // In case of multipart
          });*/
-      }
+		}
 
       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
       public void Configure(IApplicationBuilder app, IHostingEnvironment env)

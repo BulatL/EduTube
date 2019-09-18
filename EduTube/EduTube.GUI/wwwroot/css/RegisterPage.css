@@ -1,14 +1,15 @@
-﻿body {
+﻿#accountTabDiv{
+	display: none;
 }
 #registerDiv {
-   background-color: #242424;
-   width: 70%;
-   color: #333333;
-   margin: 0 auto;
-   overflow: hidden;
-   padding: 2em 4em 2em 4em;
-   align-items: center;
-   float: none;
+	background-color: #242424;
+	width: 70%;
+	color: #333333;
+	margin: 0 auto;
+	overflow: hidden;
+	padding: 2em 4em 2em 4em;
+	align-items: center;
+	float: none;
 }
 #tabs {
    margin-top: 1em;
@@ -42,7 +43,6 @@
 #btnNext {
    margin-top: 1em;
    float: right;
-   margin-right: 0.5em;
 }
 #btnBack {
    margin-top: 1em;
@@ -100,4 +100,36 @@ textarea {
    margin-top: -25px;
    position: relative;
    z-index: 2;
+}
+#BirthDay {
+	width: 5rem;
+	margin-right: 0.5rem;
+}
+#BirthMonth {
+	width: 8rem;
+	margin-right: 0.5rem;
+}
+#BirthYear {
+	width: 6rem;
+}
+#BirthDay, #BirthMonth, #BirthYear {
+	background-color: #363636;
+	border: none;
+	color: white;
+}
+	/*#BirthDay option:hover, #BirthMonth option:hover, #BirthYear option:hover {
+		background-color: #e80a89;
+	}*/
+	#BirthDay.decorated option:hover {
+		background-color: #e80a89;
+	}
+#BirthDiv{
+	display: flex;
+	margin-top: 1.5rem;
+}
+#BirthLabel{
+	margin-right: 1rem;
+}
+::-webkit-scrollbar {
+	width: 10px;
 }

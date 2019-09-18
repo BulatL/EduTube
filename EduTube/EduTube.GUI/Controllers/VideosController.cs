@@ -72,15 +72,15 @@ namespace EduTube.GUI.Controllers
          List<int?> tagsId = await _tagManager.Get2MostPopularTagsIdByVideoId(seenVideosId);
          if (tagsId != null && tagsId?.Count() > 0)
          {
-            if (tagsId[0] != null)
+            if (tagsId.ElementAtOrDefault(0) != null)
             {
                firstTag = await _tagManager.GetById(int.Parse(tagsId[0].ToString()));
-               firstRecommendedVideos = await _videoManager.Get6VideosByTag(user?.Id, tagsId[0]);
+               firstRecommendedVideos = await _videoManager.Get6VideosByTag(user?.Id, tagsId.ElementAtOrDefault(0));
             }
-            if (tagsId[1] != null)
+            if (tagsId.ElementAtOrDefault(1) != null)
             {
                secondTag = await _tagManager.GetById(int.Parse(tagsId[1].ToString()));
-               secondRecommendedVideos = await _videoManager.Get6VideosByTag(user?.Id, tagsId[1]);
+               secondRecommendedVideos = await _videoManager.Get6VideosByTag(user?.Id, tagsId.ElementAtOrDefault(1));
             }
          }
 
@@ -108,13 +108,14 @@ namespace EduTube.GUI.Controllers
          if (video != null)
          {
             ApplicationUserModel user = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
-
+				bool allowAccess = true;
+				string subscribed = "";
             #region Video visibility
             if (video.VideoVisibility == VideoVisibilityModel.Invitation)
             {
                if (user == null)
                {
-                  ViewData["allowAccess"] = false;
+                  ViewBag.allowAccess = false;
                   //return RedirectToAction("InvitationCode", new { videoId = id });
                }
                else
@@ -122,11 +123,11 @@ namespace EduTube.GUI.Controllers
                   string userRole = await _userManager.GetCurrentUserRole(user.Id);
                   if (userRole.Equals("ADMIN") || user.Id.Equals(video.UserId))
                   {
-                     ViewData["allowAccess"] = true;
+							allowAccess = true;
                   }
                   else
                   {
-                     ViewData["allowAccess"] = false;
+							allowAccess = false;
                   }
 
                }
@@ -137,30 +138,30 @@ namespace EduTube.GUI.Controllers
             }
             else
             {
-               ViewData["allowAccess"] = true;
+					allowAccess = true;
             }
 #endregion
             #region current user subscribed
             if (user == null)
             {
-               ViewData["Subscribed"] = "UserNotLogged";
+					subscribed = "UserNotLogged";
             }
             else
             {
                if (video.UserId.Equals(user.Id))
                {
-                  ViewData["Subscribed"] = "SameUser";
+						subscribed = "SameUser";
                }
                else
                {
-                  bool subscribed = await _subscriptionManager.IsUserSubscribed(video.UserId, user.Id);
-                  if (subscribed)
+                  bool isSubscribed = await _subscriptionManager.IsUserSubscribed(video.UserId, user.Id);
+                  if (isSubscribed)
                   {
-                     ViewData["Subscribed"] = "Unsubscribe";
+							subscribed = "Unsubscribe";
                   }
                   else
                   {
-                     ViewData["Subscribed"] = "Subscribe";
+							subscribed = "Subscribe";
                   }
                }
             }
@@ -169,7 +170,7 @@ namespace EduTube.GUI.Controllers
             int? userReaction = await _emojiManager.GetEmojiId(id, user?.Id);
             List<ReactionModel> commentReactions = await _reactionManager.GetCommentsReactionsByUserAndVideo(video.Comments?.Select(x => x.Id).ToList(), user?.Id);
 
-            return View(new VideoViewModel(video, userReaction, commentReactions));
+            return View(new VideoViewModel(video, userReaction, commentReactions, allowAccess, subscribed));
          }
          return StatusCode(404);
       }

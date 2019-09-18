@@ -28,12 +28,14 @@ namespace EduTube.GUI.ViewModels
       public List<ReactionViewModel> UserReactionOnComments { get; set; }
       public List<ReactionViewModel> Reactions { get; set; }
       public List<CommentViewModel> Comments { get; set; }
+		public bool AllowAccess { get; set; }
+		public string Subscribed { get; set; }
 
-      public VideoViewModel()
+		public VideoViewModel()
       {
       }
 
-      public VideoViewModel(VideoModel model, int? userReactionOnVideo, List<ReactionModel> userReactionOnComments)
+      public VideoViewModel(VideoModel model, int? userReactionOnVideo, List<ReactionModel> userReactionOnComments, bool allowAccess, string subscribed)
       {
          Id = model.Id;
          Name = model.Name;
@@ -51,7 +53,10 @@ namespace EduTube.GUI.ViewModels
          Reactions = ReactionViewModel.CopyToViewModels(model.Reactions);
          Comments = CommentViewModel.CopyToViewModels(model.Comments);
          UserId = model.UserId;
-      }
+			AllowAccess = allowAccess;
+			Subscribed = subscribed;
+
+		}
 
       public static VideoModel CopyToModel(VideoViewModel viewModel)
       {

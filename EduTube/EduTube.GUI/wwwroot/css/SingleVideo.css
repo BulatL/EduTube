@@ -121,7 +121,9 @@ button:focus {
    text-decoration: none;
    width: 30%;
 }
-
+#hide{
+	display: none;
+}
 .showBtn, .hideBtn {
    position: absolute;
    bottom: -4em;
@@ -187,4 +189,10 @@ textarea {
    margin-top: 1rem;
    width: inherit;
    position: inherit !important;
+}
+.ytp-pause-overlay-controls-hidden .ytp-pause-overlay{
+	display: none;
+}
+.ytp-pause-overlay, .ytp-scroll-min{
+	display: none !important;
 }
