@@ -157,6 +157,7 @@ namespace EduTube.BLL.Managers
          await _subscriptionManager.DeleteActivateByUser(id, true);
          await _videoManager.DeleteActivateByUser(id, true);
          return await _userManager.UpdateAsync(user);
+			//transakcija 
       }
 
       public async Task Activate(string id)

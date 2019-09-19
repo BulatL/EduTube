@@ -115,7 +115,7 @@ namespace EduTube.GUI.Controllers
             {
                if (user == null)
                {
-                  ViewBag.allowAccess = false;
+                  allowAccess = false;
                   //return RedirectToAction("InvitationCode", new { videoId = id });
                }
                else
