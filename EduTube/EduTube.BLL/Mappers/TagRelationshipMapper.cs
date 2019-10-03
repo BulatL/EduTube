@@ -8,6 +8,32 @@ namespace EduTube.BLL.Mappers
    public class TagRelationshipMapper
    {
 
+      public static void CopyModelToEntity(TagRelationshipModel model, TagRelationship entity)
+      {
+         if (model == null)
+            return;
+
+         entity.ChatId = model.ChatId;
+         entity.VideoId = model.VideoId;
+         entity.TagId = model.TagId;
+
+
+         if (entity.Chat != null)
+         {
+            ChatMapper.CopyModelToEntity(model.Chat, entity.Chat);
+         }
+
+         if (entity.Video != null)
+         {
+            VideoMapper.CopyModelToEntity(model.Video, entity.Video);
+         }
+
+         if (entity.Tag != null)
+         {
+            TagMapper.CopyModelToEntity(model.Tag, entity.Tag);
+         }
+
+      }
       public static TagRelationshipModel EntityToModel(TagRelationship entity)
       {
          if (entity == null)
@@ -21,7 +47,7 @@ namespace EduTube.BLL.Mappers
 
          if (entity.Chat != null)
          {
-            entity.Chat.TagRelationspis.Select(x => x.Chat = null);
+            entity.Chat.TagRelationships.Select(x => x.Chat = null);
             model.Chat = ChatMapper.EntityToModel(entity.Chat);
          }
 
@@ -46,7 +72,7 @@ namespace EduTube.BLL.Mappers
 
          if (model.Chat != null)
          {
-            model.Chat.TagRelationspis.Select(x => x.Chat = null);
+            model.Chat.TagRelationships.Select(x => x.Chat = null);
             entity.Chat = ChatMapper.ModelToEntity(model.Chat);
          }
 

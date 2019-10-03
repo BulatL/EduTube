@@ -12,6 +12,7 @@ namespace EduTube.GUI.ViewModels
 {
    public class VideoCreateViewModel
    {
+      public int Id { get; set; }
       [Required]
       public string Name { get; set; }
       [Required]
@@ -27,8 +28,32 @@ namespace EduTube.GUI.ViewModels
       public int VideoVisibility { get; set; }
       public string VideoDuration { get; set; }
       public string Tags { get; set; }
+      public string OldVideo { get; set; }
+      public string OldThumbnail { get; set; }
+      public string YoutubeEmbeded { get; set; }
+      public string OldFileName { get; set; }
+      public TimeSpan OldDuration { get; set; }
 
-      public VideoCreateViewModel() { }
+      public VideoCreateViewModel()
+      {
+      }
+
+      public VideoCreateViewModel(VideoModel model)
+      {
+         Id = model.Id;
+         Name = model.Name;
+         Description = model.Description;
+         YoutubeUrl = model.YoutubeUrl;
+         AllowComments = model.AllowComments;
+         InvitationCode = model.InvitationCode;
+         VideoVisibility = (int) model.VideoVisibility;
+         VideoDuration = model.Duration.ToString();
+         Tags = string.Join(",", model.TagRelationships.Select(x => x.Tag).Select(x => x.Name));
+         OldVideo = model.FileName;
+         OldThumbnail = model.Thumbnail;
+         YoutubeUrl = model.YoutubeUrl;
+         OldFileName = model.FileName;
+      }
 
       public static VideoModel ConvertToModel(VideoCreateViewModel viewModel)
       {
@@ -40,8 +65,8 @@ namespace EduTube.GUI.ViewModels
          model.InvitationCode = viewModel.InvitationCode;
          model.VideoVisibility = (VideoVisibilityModel)viewModel.VideoVisibility;
          model.Deleted = false;
-         model.Blocked = false;
          model.DateCreatedOn = DateTime.Now;
+         model.Duration = viewModel.OldDuration;
 
          return model;
       }

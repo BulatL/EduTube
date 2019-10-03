@@ -1,17 +1,30 @@
 ﻿$(function () {
-   $('#InvitationCodeDiv').hide();
+   let visibility = $('#visibilitySelect').val(); 
+   if (visibility == 2) {
+      $('#InvitationCodeDiv').show();
+   }
+
+   let oldThumbnail = $('#oldThumbnail').val();
+   console.log(oldThumbnail);
+   if (oldThumbnail != undefined && oldThumbnail != '') {
+      $('#thumbnail').attr("src", oldThumbnail);
+   }
    //create invitation code
    $('#visibilitySelect').on('change', function () {
       if (this.value == 2) {
-         var result = '';
-         var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-         var charactersLength = characters.length;
-         for (var i = 0; i < 18; i++) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+         let code = $('#InvitationCode').val();
+         console.log(code);
+         if (code == undefined || code == '') {
+            var result = '';
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var charactersLength = characters.length;
+            for (var i = 0; i < 18; i++) {
+               result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            $('#InvitationCodeHidden').val(result);
+            $('#InvitationCode').val(result);
          }
-         $('#InvitationCodeHidden').val(result);
          $('#InvitationCodeDiv').show();
-         $('#InvitationCode').val(result);
       }
       else 
          $('#InvitationCodeDiv').hide();

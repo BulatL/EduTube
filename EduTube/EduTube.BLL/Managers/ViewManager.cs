@@ -19,17 +19,6 @@ namespace EduTube.BLL.Managers
          _context = context;
       }
 
-      public async Task<List<ViewModel>> GetAll()
-      {
-         return ViewMapper.EntitiesToModels(await _context.Views.ToListAsync());
-      }
-
-      public async Task<ViewModel> GetById(int id)
-      {
-         return ViewMapper.EntityToModel(await _context.Views
-             .FirstOrDefaultAsync(x => x.Id == id));
-      }
-
       public async Task<int> CountViewsByVideo(int videoId)
       {
          return await _context.Views.CountAsync(x => x.VideoId == videoId);
@@ -42,29 +31,15 @@ namespace EduTube.BLL.Managers
 
       public async Task<ViewModel> Create(int videoId, string userId, string ipAddress)
       {
-         View entity = new View()
-         {
-            VideoId = videoId,
-            UserId = userId,
-            IpAddress = ipAddress
-         };
+         View entity = new View();
+         entity.VideoId = videoId;
+         if (userId == null)
+            entity.IpAddress = ipAddress;
+         else
+            entity.UserId = userId;
          _context.Views.Add(entity);
          await _context.SaveChangesAsync();
          return ViewMapper.EntityToModel(entity);
-      }
-
-      public async Task<ViewModel> Update(ViewModel view)
-      {
-         _context.Update(ViewMapper.ModelToEntity(view));
-         await _context.SaveChangesAsync();
-         return view;
-      }
-
-      public async Task Delete(int id)
-      {
-         View entity = await _context.Views.FirstOrDefaultAsync(x => x.Id == id);
-         _context.Views.Remove(entity);
-         await _context.SaveChangesAsync();
       }
    }
 }

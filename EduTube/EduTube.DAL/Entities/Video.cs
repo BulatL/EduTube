@@ -15,7 +15,6 @@ namespace EduTube.DAL.Entities
       public string YoutubeUrl { get; set; }
       public string FileName { get; set; }
       public bool AllowComments { get; set; }
-      public bool Blocked { get; set; }
       public bool Deleted { get; set; }
       public string InvitationCode { get; set; }
       public TimeSpan Duration { get; set; }

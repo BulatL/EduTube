@@ -1,0 +1,12 @@
+﻿#dialogBody {
+   height: 5rem !important;
+}
+#confirmDelete {
+   float: right !important;
+   position: inherit !important;
+   width: 30% !important;
+}
+#cancelDelete {
+   position: inherit !important;
+   width: 30% !important;
+}

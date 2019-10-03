@@ -419,8 +419,6 @@ namespace EduTube.DAL.Migrations
 
                     b.Property<bool>("AllowComments");
 
-                    b.Property<bool>("Blocked");
-
                     b.Property<DateTime>("DateCreatedOn");
 
                     b.Property<bool>("Deleted");

@@ -20,11 +20,6 @@ namespace EduTube.BLL.Managers
          _context = context;
       }
 
-      public async Task<List<CommentModel>> GetAll()
-      {
-         return CommentMapper.EntitiesToModels(await _context.Comments.Where(x => !x.Deleted).ToListAsync());
-      }
-
       public async Task<CommentModel> GetById(int id, bool includeAll)
       {
          return includeAll ? CommentMapper.EntityToModel(await _context.Comments
@@ -34,6 +29,7 @@ namespace EduTube.BLL.Managers
              : CommentMapper.EntityToModel(await _context.Comments
              .FirstOrDefaultAsync(x => x.Id == id && !x.Deleted));
       }
+
       public async Task<List<CommentModel>> GetByVideo(int videoId, int lastCommentId)
       {
          return CommentMapper.EntitiesToModels(await _context.Comments
@@ -62,14 +58,24 @@ namespace EduTube.BLL.Managers
       public async Task<int> Delete(int id)
       {
          Comment entity = await _context.Comments.FirstOrDefaultAsync(x => x.Id == id);
+         if (entity == null)
+            return 0;
+         List<Reaction> reactions = await _context.Reactions.Where(x => x.CommentId == id && !x.Deleted).ToListAsync();
+
          entity.Deleted = true;
          _context.Update(entity);
+         _context.UpdateRange(reactions);
          return await _context.SaveChangesAsync();
       }
       public async Task Remove(int id)
       {
          Comment entity = await _context.Comments.FirstOrDefaultAsync(x => x.Id == id);
+         if (entity == null)
+            return;
+         List<Reaction> reactions = await _context.Reactions.Where(x => x.CommentId == id && !x.Deleted).ToListAsync();
+
          _context.Comments.Remove(entity);
+         _context.Reactions.RemoveRange(reactions);
          await _context.SaveChangesAsync();
       }
    }

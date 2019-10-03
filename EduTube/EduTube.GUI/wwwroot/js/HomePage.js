@@ -38,7 +38,7 @@ function populateReccomendedVideo(videos) {
          firstRecommendedVideosContent.push(
             `<div class="col-lg-2">
                <a href="/Videos/${videos.firstRecommended[i].id}">
-                  <img src="${thumbnail}" class="videoThumbnails"/>
+                  <img src="${videos.firstRecommended[i].thumbnail}" class="videoThumbnails"/>
                   <p class="text-white videoName">${videos.firstRecommended[i].name}</p>
                </a>
                <a href="/Users/${videos.firstRecommended[i].userChannelName.replace(/ /g, '-')}">
@@ -68,7 +68,7 @@ function populateReccomendedVideo(videos) {
          secondRecommendedVideosContent.push(
             `<div class="col-lg-2">
                <a href="/Videos/${videos.secondRecommended[i].id}">
-                  <img src="${thumbnail}" class="videoThumbnails"/>
+                  <img src="${videos.secondRecommended[i].thumbnail}" class="videoThumbnails"/>
                   <p class="text-white videoName">${videos.secondRecommended[i].name}</p>
                </a>
                <a href="/Users/${videos.secondRecommended[i].userChannelName.replace(/ /g, '-')}">

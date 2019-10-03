@@ -9,6 +9,9 @@ namespace EduTube.BLL.Mappers
    {
       public static void CopyModelToEntity(VideoModel model, Video entity)
       {
+         if (model == null)
+            return;
+
          entity.Name = model.Name;
          entity.UserId = model.UserId;
          entity.FileName = model.FileName;
@@ -17,6 +20,22 @@ namespace EduTube.BLL.Mappers
          entity.AllowComments = model.AllowComments;
          entity.VideoVisibility = VideoVisibilityMapper.ModelToEntity(model.VideoVisibility);
          entity.UserId = entity.User.Id;
+
+         if (model.TagRelationships != null)
+         {
+            if(entity.TagRelationships == null)
+            {
+               entity.TagRelationships = new List<TagRelationship>();
+            }
+            for (int i = 0; i < model.TagRelationships.Count; i++)
+            {
+               if (entity.TagRelationships?.ElementAtOrDefault(i) == null)
+               {
+                  entity.TagRelationships.Add(new TagRelationship());
+               }
+               TagRelationshipMapper.CopyModelToEntity(model.TagRelationships.ElementAtOrDefault(i), entity.TagRelationships.ElementAtOrDefault(i));
+            }
+         }
       }
       public static VideoModel EntityToModel(Video entity)
       {
@@ -27,7 +46,6 @@ namespace EduTube.BLL.Mappers
          model.Id = entity.Id;
          model.Name = entity.Name;
          model.UserId = entity.UserId;
-         model.Blocked = entity.Blocked;
          model.Deleted = entity.Deleted;
          model.FileName = entity.FileName;
          model.Duration = entity.Duration;
@@ -79,7 +97,6 @@ namespace EduTube.BLL.Mappers
          entity.Id = model.Id;
          entity.Name = model.Name;
          entity.UserId = model.UserId;
-         entity.Blocked = model.Blocked;
          entity.Deleted = model.Deleted;
          entity.FileName = model.FileName;
          entity.Duration = model.Duration;

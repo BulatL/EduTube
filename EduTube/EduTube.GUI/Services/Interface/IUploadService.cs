@@ -12,5 +12,6 @@ namespace EduTube.GUI.Services.Interface
       Task<string> UploadVideo(IFormFile file);
       TimeSpan VideoDuration(string fileName);
       string CreateThumbnail(string videoName);
+      void RemoveImage(string imageName, string folderName);
    }
 }

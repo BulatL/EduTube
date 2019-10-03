@@ -8,6 +8,7 @@
    <link href="~/selectivity-3.1.0/selectivity-jquery.min.css" rel="stylesheet" />
    <link href="~/css/SingleVideo.css" rel="stylesheet" />
    <link href="~/css/EditVideoModal.css" rel="stylesheet" />
+   <link href="~/css/DeleteDialog.css" rel="stylesheet" />
 }
 <div class="container">
    <input type="hidden" id="allowAccess" asp-for="AllowAccess" />
@@ -125,7 +126,7 @@
                {
                   @if (Model.OwnerChannelName.Equals(User.Claims.FirstOrDefault(x => x.Type.Equals("channelName"))?.Value))
                   {
-                     <button class="greenBtn position-initial fillAvailable" id="btnSubscribeOwner" onclick="OpenEditVideoModal()">Edit info</button>
+                     <button class="greenBtn position-initial fillAvailable" id="btnSubscribeOwner" onclick='RedirectTo("/Videos/Edit/@Model.Id")'>Edit info</button>
                      <button class="redBtn position-initial fillAvailable margin-top" id="btnSubscribeOwner" onclick="DeleteVideo(@Model.Id)">Delete video</button>
                   }
 
@@ -280,7 +281,7 @@
       <div>
          <!-- The Modal -->
          <div class="modal fade" id="editVideoModal">
-            <div class="modal-dialog">
+            <div class="modal-dialog" id="editModalDialog">
                <div class="modal-content">
 
                   <!-- Modal Header -->
@@ -294,7 +295,7 @@
                   </div>
                   <form method="post" asp-action="Edit" asp-controller="Videos">
                      <!-- Modal body -->
-                     <div class="modal-body">
+                     <div class="modal-body" id="editModalBody">
                         <div class="form-group">
                            <input type="hidden" asp-for="Id" />
                            <label asp-for="Name" class="col-form-label whiteColor"></label>
@@ -367,10 +368,10 @@
                <!-- Modal body -->
                <div class="modal-body" style="height: 12rem !important;">
                   <div class="col-12">
-                     <h5 class="text-center">You need invatation code to see this video</h5>
+                     <h5 class="text-center">You need invitation code to see this video</h5>
                   </div>
                   <div class="col-12">
-                     <input class="form-control" placeholder="Invatation code" id="invatationCode" />
+                     <input class="form-control" placeholder="Invitation code" id="invatationCode" />
                      <span style="color:red;" id="invitationCodeError"></span>
                   </div>
                   <div class="col-12">
@@ -381,6 +382,10 @@
          </div>
       </div>
    </div>
+   <!--Div for deleting video-->
+   <div class="modal hide" id="deleteVideoDialog" role="dialog" aria-hidden="true"></div>
+   <!--Div for deleting comment-->
+   <div class="modal hide" id="deleteCommentDialog" role="dialog" aria-hidden="true"></div>
 </div>
 @section Scripts{
    <script src="~/selectivity-3.1.0/selectivity.min.js"></script>

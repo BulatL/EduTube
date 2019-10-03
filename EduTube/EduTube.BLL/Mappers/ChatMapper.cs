@@ -9,38 +9,25 @@ namespace EduTube.BLL.Mappers
 {
    public class ChatMapper
    {
-      public static void CopyEntityToModel(Chat entity, ChatModel model)
-      {
-         model.Name = entity.Name;
-         model.Deleted = entity.Deleted;
-
-         if (entity.TagRelationspis != null)
-         {
-            entity.TagRelationspis.ForEach(x => x.Chat = null);
-            model.TagRelationspis = TagRelationshipMapper.EntitiesToModels(entity.TagRelationspis);
-         }
-
-         if (entity.Messages != null)
-         {
-            model.Messages = ChatMessageMapper.EntitiesToModels(entity.Messages);
-         }
-
-      }
       public static void CopyModelToEntity(ChatModel model, Chat entity)
       {
+         if (model == null)
+            return;
+
          entity.Name = model.Name;
          entity.Deleted = model.Deleted;
 
-         if (model.TagRelationspis != null)
+         if (model.TagRelationships != null)
          {
-             model.TagRelationspis.ForEach(x => x.Chat = null);
-             entity.TagRelationspis = TagRelationshipMapper.ModelsToEntities(model.TagRelationspis);
+            for (int i = 0; i < model.TagRelationships.Count; i++)
+            {
+               if(entity.TagRelationships.ElementAtOrDefault(i) == null)
+               {
+                  entity.TagRelationships.Add(new TagRelationship());
+               }
+               TagRelationshipMapper.CopyModelToEntity(model.TagRelationships.ElementAtOrDefault(i), entity.TagRelationships.ElementAtOrDefault(i));
+            }
          }
-         if (model.Messages != null)
-         {
-            entity.Messages = ChatMessageMapper.ModelsToEntities(model.Messages);
-         }
-
       }
       public static ChatModel EntityToModel(Chat entity)
       {
@@ -52,10 +39,10 @@ namespace EduTube.BLL.Mappers
          model.Name = entity.Name;
          model.Deleted = entity.Deleted;
 
-         if (entity.TagRelationspis != null)
+         if (entity.TagRelationships != null)
          {
-            entity.TagRelationspis.ForEach(x => x.Chat = null);
-            model.TagRelationspis = TagRelationshipMapper.EntitiesToModels(entity.TagRelationspis);
+            entity.TagRelationships.ForEach(x => x.Chat = null);
+            model.TagRelationships = TagRelationshipMapper.EntitiesToModels(entity.TagRelationships);
          }
 
          if (entity.Messages != null)
@@ -76,12 +63,12 @@ namespace EduTube.BLL.Mappers
          entity.Name = model.Name;
          entity.Deleted = model.Deleted;
 
-         /*if (model.Hashtags != null)
+         if (model.TagRelationships != null)
          {
-             model.Hashtags.ForEach(x => x.Chat = null);
-             entity.Hashtags = HashtagRelationshipMapper.ModelsToEntities(model.Hashtags);
+             model.TagRelationships.ForEach(x => x.Chat = null);
+             entity.TagRelationships = TagRelationshipMapper.ModelsToEntities(model.TagRelationships);
          }
-         */
+         
          if (model.Messages != null)
          {
              //model.Messages.ForEach(x => x.Chat = null);

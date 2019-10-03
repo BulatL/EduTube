@@ -6,7 +6,6 @@ namespace EduTube.BLL.Managers.Interfaces
 {
    public interface ICommentManager
    {
-      Task<List<CommentModel>> GetAll();
       Task<List<CommentModel>> GetByVideo(int videoId, int lastCommentId);
       Task<CommentModel> GetById(int id, bool includeAll);
       Task<CommentModel> Create(CommentModel comment);

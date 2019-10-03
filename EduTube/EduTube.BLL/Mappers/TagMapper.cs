@@ -6,6 +6,10 @@ namespace EduTube.BLL.Mappers
 {
    public class TagMapper
    {
+      public static void CopyModelToEntity(TagModel model, Tag entity)
+      {
+         model.Name = entity.Name;
+      }
 
       public static TagModel EntityToModel(Tag entity)
       {

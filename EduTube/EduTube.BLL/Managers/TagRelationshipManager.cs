@@ -19,12 +19,21 @@ namespace EduTube.BLL.Managers
       {
          _context = context;
       }
+      public async Task<List<TagRelationshipModel>> GetByChat(int chatId)
+      {
+         return TagRelationshipMapper.EntitiesToModels(await _context.TagRelationships.Where(x => x.ChatId == chatId).ToListAsync());
+      }
+
+      public async Task<TagRelationshipModel> GetByTagAndChat(int tagId, int chatId)
+      {
+         return TagRelationshipMapper.EntityToModel(await _context.TagRelationships.FirstOrDefaultAsync(x => x.TagId == tagId && x.ChatId == chatId));
+      }
 
       public async Task<List<TagRelationshipModel>> GetByVideoId(int id, bool includeTag)
       {
          return includeTag ? TagRelationshipMapper.EntitiesToModels(
-             await _context.TagRelationships.Where(x => x.VideoId == id).Include(x => x.Tag).ToListAsync())
-             : TagRelationshipMapper.EntitiesToModels(await _context.TagRelationships.ToListAsync());
+             await _context.TagRelationships.Include(x => x.Tag).Where(x => x.VideoId == id).ToListAsync())
+             : TagRelationshipMapper.EntitiesToModels(await _context.TagRelationships.Where(x => x.VideoId == id).ToListAsync());
       }
 
       public async Task<List<TagRelationshipModel>> GetAll()
@@ -69,6 +78,12 @@ namespace EduTube.BLL.Managers
       }
 
       public async Task Delete(int id)
+      {
+         TagRelationship entity = await _context.TagRelationships.FirstOrDefaultAsync(x => x.Id == id);
+         _context.TagRelationships.Remove(entity);
+         await _context.SaveChangesAsync();
+      }
+      public async Task Remove(int id)
       {
          TagRelationship entity = await _context.TagRelationships.FirstOrDefaultAsync(x => x.Id == id);
          _context.TagRelationships.Remove(entity);

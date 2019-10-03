@@ -414,46 +414,56 @@ function ResetTextarea() {
 }
 
 function DeleteComment(commentId) {
-   var r = confirm('Are u sure u want to delete this comment ' + commentId);
-   if (r === true) {
-      $.ajax({
-         url: `/Comments/Delete/${commentId}`,
-         type: 'DELETE',
-         dataType: 'json',
-         success: function (response) {
-            console.log(response);
+   $("#deleteCommentDialog").load(`/Comments/GetDeleteDialog?id=${commentId}`, function (responseTxt, statusTxt, xhr) {
+      if (statusTxt == "error")
+         console.log("error")
+      else {
+         $('#deleteCommentDialog').modal('show');
+      }
+   });
+}
 
-         },
-         error: function (data, xhr) {
-            if (data.status === 200)
-               $(`.comment_${commentId}`).remove();
-
-            else
-               alert('Delete operation failed');
-         }
-      });
-   }
+function DeleteCommentConfirm(id) {
+   $.ajax({
+      url: `/Comments/Delete/${id}`,
+      type: 'DELETE',
+      dataType: 'json',
+      success: function (response) {
+         console.log(response);
+      },
+      error: function (data, xhr) {
+         if (data.status !== 200)
+            alert('Delete operation failed');
+      }
+   });
 }
 
 function DeleteVideo(videoId) {
-   var r = confirm('Are u sure u want to delete this video ' + videoId);
-   if (r === true) {
-      $.ajax({
-         url: `/Videos/Delete/${videoId}`,
-         type: 'DELETE',
-         dataType: 'json',
-         success: function (response) {
-            console.log(response);
-         },
-         error: function (data, xhr) {
-            if (data.status === 200)
-               window.location.replace('/');
+   $("#deleteVideoDialog").load(`/Videos/GetDeleteDialog?id=${videoId}`, function (responseTxt, statusTxt, xhr) {
+      if (statusTxt == "error")
+         console.log("error")
+      else {
+         $('#deleteVideoDialog').modal('show');
+      }
+   });
+}
 
-            else
-               alert('Delete operation failed');
-         }
-      });
-   }
+function DeleteVideoConfirm(id) {
+   $.ajax({
+      url: `/Videos/Delete/${id}`,
+      type: 'DELETE',
+      dataType: 'json',
+      success: function (response) {
+         console.log(response);
+      },
+      error: function (data, xhr) {
+         if (data.status === 200)
+            window.location.replace('/');
+
+         else
+            alert('Delete operation failed');
+      }
+   });
 }
 
 function showCommentOptionDiv(commentId) {

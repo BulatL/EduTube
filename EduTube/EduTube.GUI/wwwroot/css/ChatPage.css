@@ -1,0 +1,265 @@
+﻿.chatMainDiv {
+   border: 0.2rem solid #c4c4c4;
+   clear: both;
+   overflow: hidden;
+   background-color: #232323;
+}
+
+img {
+   max-width: 100%;
+}
+
+.time_date {
+   color: #747474;
+   display: block;
+   font-size: 12px;
+   margin: 8px 0 0;
+}
+
+/*All chats div*/
+#allChatsDiv {
+   border-right: 1px solid #c4c4c4;
+   border-bottom: 1px solid #c4c4c4;
+   overflow: hidden;
+   padding: 0;
+}
+.heading_srch {
+   padding: 10px 29px 10px 20px;
+   overflow: hidden;
+   border-bottom: 1px solid #c4c4c4;
+   border-right: 1px solid #c4c4c4;
+}
+
+#createChatBtn {
+   position: inherit !important;
+   float: right;
+   padding: 0 0.5rem !important;
+   margin-top: 1rem;
+}
+
+#deleteChatModal {
+   float: right !important;
+   margin-top: 0.5rem;
+}
+
+#deleteChatModal, #closeBtn {
+   margin-top: 0.5rem;
+   padding: 0 0.5rem !important;
+   position: inherit !important;
+}
+
+.Heading {
+   float: left;
+   width: 40%;
+}
+   .Heading h4 {
+      color: #e80a89;
+      font-size: 21px;
+      margin: auto;
+   }
+
+.srch_bar {
+   display: inline-block;
+   text-align: right;
+   width: 60%;
+}
+
+   .srch_bar input {
+      border: 1px solid #cdcdcd;
+      border-width: 0 0 1px 0;
+      width: 80%;
+      padding: 2px 0 4px 6px;
+      background: none;
+   }
+
+   .srch_bar .input-group-addon button {
+      background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+      border: medium none;
+      padding: 0;
+      color: #707070;
+      font-size: 18px;
+   }
+
+   .srch_bar .input-group-addon {
+      margin: 0 0 0 -27px;
+   }
+
+.chatsDiv {
+   height: 37.5rem;
+   overflow-y: scroll;
+}
+
+.chat_list {
+   border-bottom: 1px solid #c4c4c4;
+   margin: 0;
+   padding: 18px 16px 10px;
+}
+
+.chat_info {
+   overflow: hidden;
+   clear: both;
+}
+
+.chat_ib {
+   float: left;
+   /*padding: 0 0 0 15px;*/
+   width: 100%;
+}
+
+   .chat_ib h5 {
+      font-size: 15px;
+      margin: 0 0 8px 0;
+   }
+
+      .chat_ib h5 span {
+         font-size: 13px;
+         float: right;
+      }
+
+   .chat_ib p {
+      font-size: 14px;
+      color: #989898;
+      margin: auto
+   }
+
+.chatButtons {
+   position: inherit !important;
+   padding: 0 0.5rem !important;
+   float: right;
+   margin-right: 0.5rem;
+   margin-top: 0.5rem;
+}
+/*All chats div 
+---------------------------------------------------*/
+/*Message div*/
+#messagesMainDiv{
+   padding: 0 !important;
+}
+
+#ChatNameDiv {
+   padding: 0.8rem 1rem 0.8rem 1rem;
+   overflow: hidden;
+   border-bottom: 1px solid #c4c4c4;
+   border-right: 1px solid #c4c4c4;
+   text-align: center;
+}
+
+#chatName {
+   color: #e80a89;
+   font-size: 21px;
+   margin: auto;
+}
+
+.mesgs {
+   padding: 30px 15px 0 25px;
+}
+
+#msg_history {
+   height: 32rem;
+   overflow-y: auto;
+}
+
+/*.incoming_msg_img {
+   display: inline-block;
+   width: 6%;
+}*/
+.incoming_msg{
+   display: flex;
+}
+.incoming_msg_img {
+   position: relative;
+   width: 3rem;
+   height: 3rem;
+   overflow: hidden;
+   border-radius: 50%;
+   margin: 1rem;
+   display: inline-block;
+}
+
+   .incoming_msg_img img {
+      width: 3rem;
+      height: 3rem;
+   }
+
+.received_msg {
+   display: inline-block;
+   padding: 0 0 0 10px;
+   vertical-align: top;
+   width: 92%;
+   margin-bottom: 1rem;
+}
+
+.received_withd_msg {
+   width: 57%;
+}
+   .received_withd_msg p {
+      background: #ebebeb none repeat scroll 0 0;
+      border-radius: 3px;
+      color: #646464;
+      font-size: 14px;
+      margin: 0;
+      padding: 5px 10px 5px 12px;
+      width: 100%;
+   }
+
+
+.outgoing_msg {
+   overflow: hidden;
+   margin: 26px 0 26px;
+}
+
+.sent_msg {
+   float: right;
+   width: 46%;
+   padding-right: 15px;
+}
+
+   .sent_msg p {
+      background: #05728f none repeat scroll 0 0;
+      border-radius: 3px;
+      font-size: 14px;
+      margin: 0;
+      color: #fff;
+      padding: 5px 10px 5px 12px;
+      width: 100%;
+   }
+   .sent_msg span{
+      float:right;
+   }
+
+.type_msg {
+   border-top: 1px solid #c4c4c4;
+   position: relative;
+   padding: 0.2rem 0.8rem 0.4rem 0.8rem;
+}
+
+.input_msg_write input {
+   background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+   border: medium none;
+   color: white;
+   font-size: 15px;
+   min-height: 48px;
+   width: 94%;
+}
+
+.msg_send_btn {
+   background: #05728f none repeat scroll 0 0;
+   border: medium none;
+   border-radius: 50%;
+   color: #fff;
+   cursor: pointer;
+   font-size: 1rem;
+   height: 2rem;
+   position: absolute;
+   right: 0.8rem;
+   top: 0.7rem;
+   width: 2rem;
+}
+
+.messageInfo {
+   text-align: center;
+   margin-bottom: 1rem;
+   color: #747474;
+}
+/*Message div
+--------------------------------------------------*/

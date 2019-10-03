@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using EduTube.BLL.Enums;
 using EduTube.BLL.Managers.Interfaces;
 using EduTube.BLL.Models;
 using EduTube.DAL.Entities;
@@ -22,11 +23,16 @@ namespace EduTube.GUI.Controllers
    {
       private IApplicationUserManager _userManager;
       private IUploadService _uploadSerice;
+      private IVideoManager _videoManager;
+      private ITagRelationshipManager _tagRelationshipManager;
 
-      public UsersController(IApplicationUserManager userManager, IUploadService uploadSerice)
+      public UsersController(IApplicationUserManager userManager, IUploadService uploadSerice,
+         IVideoManager videoManager, ITagRelationshipManager tagRelationshipManager)
       {
          _userManager = userManager;
          _uploadSerice = uploadSerice;
+         _videoManager = videoManager;
+         _tagRelationshipManager = tagRelationshipManager;
       }
 
       public IActionResult Index()
@@ -97,36 +103,27 @@ namespace EduTube.GUI.Controllers
       {
          if (ModelState.IsValid)
          {
-            var result = await _userManager.Login(viewModel.Email, viewModel.Password, viewModel.RememberMe);
-            if (result)
+            LoginResult result = await _userManager.Login(viewModel.Email, viewModel.Password, viewModel.RememberMe);
+            if (result == LoginResult.Success)
             {
                if (viewModel.RedirectUrl == "" || viewModel.RedirectUrl == null)
                   return RedirectToAction("Index", "Home");
                else
                   return LocalRedirect(viewModel.RedirectUrl);
             }
-            /*if (result.Succeeded)
+            else if(result == LoginResult.UserBlocked)
             {
-               //var x = await _userManager.GetByEmailAndPassword(viewModel.Email, viewModel.Password);
-               /*ApplicationUserModel user = await _userManager.GetByEmail(viewModel.Email);
-               ViewBag.profileImage = user.ProfileImage;*/
-            /*if (viewModel.ReturnUrl == "" || viewModel.ReturnUrl == null)
-               return RedirectToAction("Index", "Home");
-            else
-               return LocalRedirect(viewModel.ReturnUrl);
-         }*/
-            /*if (result.RequiresTwoFactor)
-            {
-               return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+               ModelState.AddModelError("email", "You'r Channel is bloccked");
+               return View(viewModel);
             }
-            if (result.IsLockedOut)
-            {
-               _logger.LogWarning("User account locked out.");
-               return RedirectToPage("./Lockout");
-            }*/
-            else
+            else if(result == LoginResult.WrongCredentials || result == LoginResult.UserNotFound)
             {
                ModelState.AddModelError("email", "Invalid login attempt.");
+               return View(viewModel);
+            }
+            else if(result == LoginResult.ClaimsFailed)
+            {
+               ModelState.AddModelError("email", "There was problem with you'r login, please try again later.");
                return View(viewModel);
             }
          }
@@ -158,6 +155,7 @@ namespace EduTube.GUI.Controllers
                user.ProfileImage = _uploadSerice.UploadImage(viewModel.ProfileImage, "profileImages");
 
             user = await _userManager.Update(user);
+            await new ElasticsearchController(_videoManager, _userManager, _tagRelationshipManager).UpdateUser(user);
             return LocalRedirect("/Users/" + user.ChannelName);
          }
          return View(viewModel);
@@ -218,6 +216,7 @@ namespace EduTube.GUI.Controllers
                return View(viewModel);
 
             }
+            await new ElasticsearchController(_videoManager, _userManager, _tagRelationshipManager).IndexUser(user);
             return RedirectToAction("Login");
          }
          return View(viewModel);
@@ -237,6 +236,18 @@ namespace EduTube.GUI.Controllers
          return RedirectToAction("Index", "Home");
       }
 
+      [Route("Users/GetDeleteDialog/{id}")]
+      public async Task<IActionResult> GetDeleteDialog(string id)
+      {
+         bool exist = await _userManager.Exist(id);
+         if (!exist)
+            return StatusCode(404);
+
+         ViewData["type"] = "user";
+         ViewData["id"] = id;
+         return PartialView("DeleteModalDialog");
+      }
+
       [Authorize]
       [HttpDelete]
       [Route("Users/Delete/{id}")]
@@ -246,6 +257,7 @@ namespace EduTube.GUI.Controllers
          if (result.Succeeded)
          {
             await _userManager.Logout();
+            new ElasticsearchController(_videoManager, _userManager, _tagRelationshipManager).DeleteDocument(id, "users", "applicationusermodel");
             return StatusCode(200);
          }
          else

@@ -14,14 +14,16 @@ a.navbar-brand {
 .blackBackground {
    background-color: #121212;
 }
+.display-flex{
+   display: flex !important;
+}
 /* Sticky footer styles
 -------------------------------------------------- */
 /*dropdown*/
-
 .dropdown-item:hover {
-	color: white !important;
-	text-decoration: none;
-	background-color: #e80a89;
+   color: white !important;
+   text-decoration: none;
+   background-color: #e80a89;
 }
 
 /*dropdown
@@ -47,6 +49,32 @@ a.navbar-brand {
 		background: #555;
 	}
 /*Custom scrollbar
+-------------------------------------------------*/
+/*Tabs div*/
+#tabs {
+   display: flex;
+   padding: 1rem;
+}
+
+.tabsDiv {
+   padding: 0.3rem;
+   cursor: pointer;
+}
+
+   .tabsDiv button {
+      background: transparent;
+      border: none;
+      outline: none;
+      width: inherit;
+      cursor: pointer;
+   }
+
+.tabsDivActiv {
+   box-shadow: 0 10px 30px rgba(0,0,0,.2);
+   background: linear-gradient(to right,#f05a28 0,#e80a89 100%);
+   color: #fff;
+}
+/*Tabs div
 -------------------------------------------------*/
 .breakLineWhite {
    height: 0.1em;
@@ -377,7 +405,7 @@ h2 {
    .orangeBtn:hover {
       box-shadow: 0 10px 30px rgba(0,0,0,.2);
       background: linear-gradient(to right,#db9d0b 0,#d14e02 100%);
-      color: #fff;
+      color: #fff !important;
    }
 
 .grayBtn {
@@ -393,7 +421,7 @@ h2 {
    .grayBtn:hover {
       box-shadow: 0 10px 30px rgba(0,0,0,.2);
       background: linear-gradient(to right,#8a8a8a 0,#363636 100%);
-      color: #fff;
+      color: #fff !important;
    }
 
 .dotMenu:after {

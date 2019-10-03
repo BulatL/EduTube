@@ -7,25 +7,33 @@ function OpenEditModal() {
       scrollTop: $('#editModal').offset().top
    }, 1000);
 }
-function DeleteProfile(userId) {
-   var r = confirm('Are u sure u want to your account');
-   if (r == true) {
-      $.ajax({
-         url: `/Users/Delete/${userId}`,
-         type: 'DELETE',
-         dataType: 'json',
-         success: function (response) {
-            console.log(response);
-         },
-         error: function (data, xhr) {
-            if (data.status == 200)
-               window.location.replace(`/Home`);
 
-            else
-               alert('Delete operation failed');
-         }
-      });
-   }
+function DeleteUser(userId) {
+   $("#deleteUserDialog").load(`/Users/GetDeleteDialog/${userId}`, function (responseTxt, statusTxt, xhr) {
+      if (statusTxt == "error")
+         console.log("error")
+      else {
+         $('#deleteUserDialog').modal('show');
+      }
+   });
+}
+
+function DeleteUserConfirm(id) {
+   $.ajax({
+      url: `/Users/Delete/${id}`,
+      type: 'DELETE',
+      dataType: 'json',
+      success: function (response) {
+         console.log(response);
+      },
+      error: function (data, xhr) {
+         if (data.status == 200)
+            window.location.replace(`/Home`);
+
+         else
+            alert('Delete operation failed');
+      }
+   });
 }
 
 function OpenTab(tabName) {

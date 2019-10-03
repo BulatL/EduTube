@@ -12,14 +12,7 @@
    {
       <div class="col-lg-2">
          <a href="/Videos/@video.Id">
-            @if (video.FileName != null)
-            {
-               <img src="~/thumbnails/@video.Thumbnail" class="videoThumbnails" />
-            }
-            @if (video.FileName == null)
-            {
-               <img src="@video.Thumbnail" class="videoThumbnails" />
-            }
+            <img src="@video.Thumbnail" class="videoThumbnails" />
             <p class="text-white videoName" title="@video.Name">@video.Name</p>
          </a>
          <a href="/Users/@video.UserChannelName.Replace(" ", "-")">

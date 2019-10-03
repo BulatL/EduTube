@@ -72,6 +72,13 @@ namespace EduTube.GUI.Controllers
          return StatusCode(200);
       }
 
+      public IActionResult GetDeleteDialog(int id)
+      {
+         ViewData["type"] = "comment";
+         ViewData["id"] = id;
+         return PartialView("DeleteModalDialog");
+      }
+
       [Authorize]
       [HttpDelete]
       [Route("Comments/Delete/{id}")]

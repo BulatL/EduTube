@@ -88,5 +88,15 @@ namespace EduTube.GUI.Services
          }
          return thumbnailName;
       }
+
+      public void RemoveImage(string imageName, string folderName)
+      {
+         string folderPath = Path.Combine(_hostingEnvironment.ContentRootPath, folderName);
+         string filePath = Path.Combine(folderPath, imageName);
+         if (File.Exists(filePath))
+         {
+            File.Delete(filePath);
+         }
+      }
    }
 }

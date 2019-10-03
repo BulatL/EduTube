@@ -56,7 +56,7 @@ namespace EduTube.DAL.Data
       private void ConfigureChat(EntityTypeBuilder<Chat> builder)
       {
          //builder.HasMany(x => x.Messages).WithOne(x => x.Chat);
-         builder.HasMany(x => x.TagRelationspis).WithOne(x => x.Chat);
+         builder.HasMany(x => x.TagRelationships).WithOne(x => x.Chat);
 
       }
       private void ConfigureChatMessage(EntityTypeBuilder<ChatMessage> builder)
@@ -99,7 +99,7 @@ namespace EduTube.DAL.Data
       }
       private void ConfigureTagRelationship(EntityTypeBuilder<TagRelationship> builder)
       {
-         builder.HasOne(x => x.Chat).WithMany(x => x.TagRelationspis).HasForeignKey(x => x.ChatId);
+         builder.HasOne(x => x.Chat).WithMany(x => x.TagRelationships).HasForeignKey(x => x.ChatId);
          builder.HasOne(x => x.Video).WithMany(x => x.TagRelationships).HasForeignKey(x => x.VideoId);
       }
       private void ConfigureSubscription(EntityTypeBuilder<Subscription> builder)

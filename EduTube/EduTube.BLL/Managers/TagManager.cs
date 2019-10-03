@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EduTube.DAL.Entities;
+using System.Diagnostics;
 
 namespace EduTube.BLL.Managers
 {
@@ -49,14 +50,21 @@ namespace EduTube.BLL.Managers
 
       public async Task<List<int?>> Get2MostPopularTagsIdByVideoId(List<int> videosId)
       {
-
-         return await _context.TagRelationships
-             .Where(x => videosId.Contains(int.Parse(x.VideoId.ToString())))
-             .GroupBy(x => x.TagId)
-             .OrderByDescending(g => g.Count())
-             .Take(2)
-             .Select(x => x.Key)
-             .ToListAsync();
+         try
+         {
+            return await _context.TagRelationships
+                .Where(x => videosId.Contains(x.VideoId.Value))
+                .GroupBy(x => x.TagId)
+                .OrderByDescending(g => g.Count())
+                .Take(2)
+                .Select(x => x.Key)
+                .ToListAsync();
+         }
+         catch(Exception e)
+         {
+            Debug.WriteLine(e.StackTrace);
+         }
+         return new List<int?>();
       }
 
 

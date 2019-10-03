@@ -225,28 +225,38 @@ namespace EduTube.BLL.Managers
       {
          Video entity = await _context.Videos.Include(x => x.User).FirstOrDefaultAsync(x => x.Id == model.Id && !x.Deleted);
          VideoMapper.CopyModelToEntity(model, entity);
-         _context.Update(entity);
          await _context.SaveChangesAsync();
          return VideoMapper.EntityToModel(entity);
       }
 
       public async Task<int> Delete(int id)
       {
-         Video video = await _context.Videos.FirstOrDefaultAsync(x => x.Id == id);
-         List<Comment> comments = await _context.Comments.Where(x => x.VideoId == id).ToListAsync();
+         Video video = await _context.Videos.FirstOrDefaultAsync(x => x.Id == id && !x.Deleted);
+         if (video == null)
+            return 0;
+         List<Comment> comments = await _context.Comments.Where(x => x.VideoId == id && !x.Deleted).ToListAsync();
+         List<Reaction> reactions = await _context.Reactions.Where(x => x.VideoId == id && !x.Deleted).ToListAsync();
+
          video.Deleted = true;
          comments.ForEach(x => x.Deleted = true);
+         reactions.ForEach(x => x.Deleted = true);
          _context.Update(video);
          _context.UpdateRange(comments);
+         _context.UpdateRange(reactions);
          return await _context.SaveChangesAsync();
       }
 
       public async Task<int> Remove(int id)
       {
-         Video entity = await _context.Videos.FirstOrDefaultAsync(x => x.Id == id);
-         List<Comment> comments = await _context.Comments.Where(x => x.VideoId == id).ToListAsync();
+         Video entity = await _context.Videos.FirstOrDefaultAsync(x => x.Id == id && !x.Deleted);
+         if (entity == null)
+            return 0;
+         List<Comment> comments = await _context.Comments.Where(x => x.VideoId == id && !x.Deleted).ToListAsync();
+         List<Reaction> reactions = await _context.Reactions.Where(x => x.VideoId == id && !x.Deleted).ToListAsync();
+
          _context.Videos.Remove(entity);
          _context.Comments.RemoveRange(comments);
+         _context.Reactions.RemoveRange(reactions);
          return await _context.SaveChangesAsync();
       }
 

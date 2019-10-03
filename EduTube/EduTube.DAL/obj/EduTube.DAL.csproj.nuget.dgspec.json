@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Dusan\\Desktop\\luka\\EduTube\\EduTube\\EduTube.DAL\\EduTube.DAL.csproj": {}
+    "D:\\Projects\\Diplomski\\EduTube\\EduTube.DAL\\EduTube.DAL.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Dusan\\Desktop\\luka\\EduTube\\EduTube\\EduTube.DAL\\EduTube.DAL.csproj": {
+    "D:\\Projects\\Diplomski\\EduTube\\EduTube.DAL\\EduTube.DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dusan\\Desktop\\luka\\EduTube\\EduTube\\EduTube.DAL\\EduTube.DAL.csproj",
+        "projectUniqueName": "D:\\Projects\\Diplomski\\EduTube\\EduTube.DAL\\EduTube.DAL.csproj",
         "projectName": "EduTube.DAL",
-        "projectPath": "C:\\Users\\Dusan\\Desktop\\luka\\EduTube\\EduTube\\EduTube.DAL\\EduTube.DAL.csproj",
-        "packagesPath": "C:\\Users\\Dusan\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dusan\\Desktop\\luka\\EduTube\\EduTube\\EduTube.DAL\\obj\\",
+        "projectPath": "D:\\Projects\\Diplomski\\EduTube\\EduTube.DAL\\EduTube.DAL.csproj",
+        "packagesPath": "C:\\Users\\Bulat\\.nuget\\packages\\",
+        "outputPath": "D:\\Projects\\Diplomski\\EduTube\\EduTube.DAL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\Dusan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Bulat\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

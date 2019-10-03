@@ -20,11 +20,6 @@ namespace EduTube.BLL.Managers
          _context = context;
       }
 
-      public async Task<List<NotificationModel>> GetAll()
-      {
-         return NotificationMapper.EntitiesToModels(await _context.Notifications.Where(x => !x.Deleted).ToListAsync());
-      }
-
       public async Task<List<NotificationModel>> Get5ByUser(string userId, int skip)
       {
          return NotificationMapper.EntitiesToModels(await _context.Notifications.Where(x => !x.Deleted && x.UserId.Equals(userId))
@@ -41,12 +36,6 @@ namespace EduTube.BLL.Managers
       {
          return NotificationMapper.EntitiesToModels(await _context.Notifications.Where(x => !x.Deleted && x.UserId.Equals(userId) && x.Id > lastId)
             .OrderByDescending(x => x.DateCreatedOn).ToListAsync());
-      }
-
-      public async Task<NotificationModel> GetById(int id)
-      {
-         return NotificationMapper.EntityToModel(await _context.Notifications
-             .FirstOrDefaultAsync(x => x.Id == id && !x.Deleted));
       }
 
       public async Task CreateByVideo(string userName, string userId, string userImg, string videoName, int videoId, DateTime date)
@@ -97,22 +86,6 @@ namespace EduTube.BLL.Managers
          _context.Notifications.Add(entity);
          await _context.SaveChangesAsync();
          return NotificationMapper.EntityToModel(entity);
-      }
-
-      public async Task<NotificationModel> Update(NotificationModel notification)
-      {
-         _context.Update(NotificationMapper.ModelToEntity(notification));
-         await _context.SaveChangesAsync();
-         return notification;
-      }
-
-      public async Task Delete(int id)
-      {
-         Notification entity = await _context.Notifications.FirstOrDefaultAsync(x => x.Id == id);
-         /*entity.Deleted = true;
-         _context.Update(entity);*/
-         _context.Notifications.Remove(entity);
-         await _context.SaveChangesAsync();
       }
    }
 }

@@ -20,17 +20,9 @@ namespace EduTube.BLL.Managers
          _context = context;
       }
 
-      public async Task<List<ChatMessageModel>> GetAll()
+      public async Task<List<ChatMessageModel>> GetByChat(int id)
       {
-         return ChatMessageMapper.EntitiesToModels(await _context.ChatMessages.Where(x => !x.Deleted).ToListAsync());
-      }
-
-      public async Task<ChatMessageModel> GetById(int id, bool includeAll)
-      {
-         return includeAll ? ChatMessageMapper.EntityToModel(await _context.ChatMessages
-             //.Include(x => x.Chat)
-             .Include(x => x.Message).FirstAsync(x => x.Id == id && !x.Deleted))
-             : ChatMessageMapper.EntityToModel(await _context.ChatMessages.FirstAsync(x => x.Id == id && !x.Deleted));
+         return ChatMessageMapper.EntitiesToModels(await _context.ChatMessages.Include(x => x.User).Where(x => x.ChatId == id && !x.Deleted).ToListAsync());
       }
 
       public async Task<ChatMessageModel> Create(ChatMessageModel chatMessage)
@@ -46,21 +38,6 @@ namespace EduTube.BLL.Managers
          _context.Update(ChatMessageMapper.ModelToEntity(chatMessage));
          await _context.SaveChangesAsync();
          return chatMessage;
-      }
-
-      public async Task Delete(int id)
-      {
-         ChatMessage entity = await _context.ChatMessages.FirstOrDefaultAsync(x => x.Id == id);
-         _context.ChatMessages.Remove(entity);
-         await _context.SaveChangesAsync();
-      }
-
-      public async Task DeleteActivateByUser(string id, bool option)
-      {
-         List<ChatMessage> chatMessages = await _context.ChatMessages.Where(x => x.UserId.Equals(id) && x.Deleted == !option).ToListAsync();
-         chatMessages.Select(x => x.Deleted = option);
-         _context.UpdateRange(chatMessages);
-         await _context.SaveChangesAsync();
       }
    }
 }

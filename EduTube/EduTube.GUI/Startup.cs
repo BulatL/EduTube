@@ -19,6 +19,7 @@ using EduTube.GUI.Services;
 using Microsoft.AspNetCore.Http.Features;
 using EduTube.GUI.Validators;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using EduTube.GUI.SignalRHubs;
 
 namespace EduTube.GUI
 {
@@ -74,7 +75,7 @@ namespace EduTube.GUI
 
          services.RegisterBLLServices();
          services.AddScoped<IUploadService, UploadService>();
-
+         services.AddSignalR();
          services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
 			services.PostConfigure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme,
@@ -106,9 +107,14 @@ namespace EduTube.GUI
          app.UseStaticFiles();
          app.UseCookiePolicy();
          app.UseAuthentication();
+         app.UseSignalR(route =>
+         {
+            route.MapHub<ChatHub>("/Chats/Index");
+         });
          app.UseMvc(routes =>
          {
-            routes.MapRoute(name: "areaRoute",
+            routes.MapRoute(
+                   name: "areas",
                    template: "{area:exists}/{controller=Admin}/{action=Index}/{id?}");
 
             routes.MapRoute(

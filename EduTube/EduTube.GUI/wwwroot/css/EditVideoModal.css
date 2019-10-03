@@ -8,7 +8,7 @@ body.modal-open div.modal-backdrop {
    z-index: 0;
 }
 
-.modal-dialog {
+#editModalDialog {
    min-height: calc(100vh - 60px);
    display: flex;
    flex-direction: column;
@@ -17,7 +17,7 @@ body.modal-open div.modal-backdrop {
 }
 
 @media(max-width: 768px) {
-   .modal-dialog {
+   #editModalDialog {
       min-height: calc(100vh - 20px);
    }
 }
@@ -33,7 +33,7 @@ body.modal-open div.modal-backdrop {
 .close {
    color: #dc3545;
 }
-.modal-body {
+#editModalBody {
    height: 25rem;
    overflow-y: auto;
 }

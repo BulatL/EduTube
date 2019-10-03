@@ -13,13 +13,15 @@ namespace EduTube.GUI.ViewModels
       public string UserChannelName { get; set; }
       public string UserId { get; set; }
       public string Tags { get; set; }
+      public string Thumbnail { get; set; }
+      public DateTime DateCreatedOn { get; set; }
 
       public SearchVideosViewModel()
       {
       }
 
       public SearchVideosViewModel(int id, string name, string description, string userChannelName,
-          string userId, string tags)
+          string userId, string tags, string thumbnail, DateTime dateCreatedOn)
       {
          Id = id;
          Name = name;
@@ -27,6 +29,8 @@ namespace EduTube.GUI.ViewModels
          UserChannelName = userChannelName;
          UserId = userId;
          Tags = tags;
+         Thumbnail = thumbnail;
+         DateCreatedOn = dateCreatedOn;
       }
    }
 }

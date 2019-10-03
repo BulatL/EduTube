@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using EduTube.DAL.Enums;
+using EduTube.BLL.Enums;
 
 namespace EduTube.BLL.Managers
 {
@@ -38,6 +39,12 @@ namespace EduTube.BLL.Managers
          _videoManager = videoManager;
          _context = contex;
       }
+
+      public async Task<bool> Exist(string id)
+      {
+         return await _userManager.Users.AnyAsync(x => x.Id.Equals(id) && !x.Deleted);
+      }
+
       public async Task<string> GetCurrentUserRole(string id)
       {
          ApplicationUser user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id.Equals(id));
@@ -51,16 +58,26 @@ namespace EduTube.BLL.Managers
       public async Task<List<ApplicationUserModel>> GetAll()
       {
          return UserMapper.EntitiesToModels(await _userManager.Users.Where(x => !x.Deleted).ToListAsync());
-         //return UserMapper.EntitiesToModels(await _context.Users.Where(x => !x.Deleted).ToListAsync());
       }
 
-      public async Task<ApplicationUserModel> GetByEmailAndPassword(string email, string password)
+      public async Task<List<ApplicationUser>> GetAll(int take, int skip)
       {
-         var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email.Equals(email) && !x.Deleted);
-         IPasswordHasher<ApplicationUser> passwordHasher = _userManager.PasswordHasher;
-         var b = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
-         return new ApplicationUserModel();
+         return await _userManager.Users.Skip(skip).Take(take).Where(x => !x.Deleted).ToListAsync();
       }
+
+      public async Task<string> GetRole(ApplicationUser user)
+      {
+         IList<string> roles = await _userManager.GetRolesAsync(user);
+         return roles.ElementAtOrDefault(0);
+      }
+
+      public async Task<string> GetRole(string userId)
+      {
+         ApplicationUser user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id.Equals(userId) && !x.Deleted && !x.Blocked);
+         IList<string> roles = await _userManager.GetRolesAsync(user);
+         return roles.ElementAtOrDefault(0);
+      }
+
 
       public async Task<ApplicationUserModel> GetById(string id, bool includeAll)
       {
@@ -109,11 +126,6 @@ namespace EduTube.BLL.Managers
          return user;
       }
 
-      public async Task<ApplicationUserModel> GetByEmail(string email)
-      {
-         return UserMapper.EntityToModel(await _userManager.Users
-               .FirstOrDefaultAsync(x => x.Email.Equals(email) && !x.Deleted));
-      }
 
       public async Task<ApplicationUserModel> Update(ApplicationUserModel model)
       {
@@ -151,38 +163,93 @@ namespace EduTube.BLL.Managers
       public async Task<IdentityResult> Delete(string id)
       {
          ApplicationUser user = _userManager.Users.FirstOrDefault(x => x.Id == id);
+         if (user == null)
+            return IdentityResult.Failed();
+
          user.Deleted = true;
-         await _chatMessageManager.DeleteActivateByUser(id, true);
+         List<ChatMessage> chatMessages = _context.ChatMessages.Where(x => x.UserId.Equals(id) && !x.Deleted).ToList();
+         List<Subscription> subscriptions = _context.Subscriptions.Where(x => (x.SubscribedOnId.Equals(id) || x.SubscriberId.Equals(id)) && !x.Deleted).ToList();
+         List<Video> videos = _context.Videos.Where(x => x.UserId.Equals(id) && !x.Deleted).ToList();
+         List<int> videosId = videos.Select(v => v.Id).ToList();
+         List<Comment> comments = _context.Comments.Where(x => (x.UserId.Equals(id) || videosId.Contains(x.VideoId)) && !x.Deleted).ToList();
+         List<int> commentsId = comments.Select(v => v.Id).ToList();
+         List<Reaction> reactions = _context.Reactions.Where(x => (x.UserId.Equals(id) || videosId.Contains(x.VideoId.GetValueOrDefault())) || commentsId.Contains(x.CommentId.GetValueOrDefault()) && !x.Deleted).ToList();
+
+         chatMessages.ForEach(x => x.Deleted = true);
+         subscriptions.ForEach(x => x.Deleted = true);
+         comments.ForEach(x => x.Deleted = true);
+         reactions.ForEach(x => x.Deleted = true);
+
+         await _context.ChatMessages.AddRangeAsync(chatMessages);
+         await _context.Subscriptions.AddRangeAsync(subscriptions);
+         await _context.Comments.AddRangeAsync(comments);
+         await _context.Reactions.AddRangeAsync(reactions);
+         _context.Update(user);
+
+         await _context.SaveChangesAsync();
+         return IdentityResult.Success;
+         /*await _chatMessageManager.DeleteActivateByUser(id, true);
          await _reactionManager.DeleteActivateByUser(id, true);
          await _subscriptionManager.DeleteActivateByUser(id, true);
          await _videoManager.DeleteActivateByUser(id, true);
-         return await _userManager.UpdateAsync(user);
-			//transakcija 
+         return await _userManager.UpdateAsync(user);*/
+         //transakcija 
       }
 
       public async Task Activate(string id)
       {
          ApplicationUser user = _userManager.Users.FirstOrDefault(x => x.Id == id);
+         if (user == null)
+            return;
+
+         user.Deleted = true;
+         List<ChatMessage> chatMessages = _context.ChatMessages.Where(x => x.UserId.Equals(id) && x.Deleted).ToList();
+         List<Subscription> subscriptions = _context.Subscriptions.Where(x => (x.SubscribedOnId.Equals(id) || x.SubscriberId.Equals(id)) && x.Deleted).ToList();
+         List<Video> videos = _context.Videos.Where(x => x.UserId.Equals(id) && x.Deleted).ToList();
+         List<int> videosId = videos.Select(v => v.Id).ToList();
+         List<Comment> comments = _context.Comments.Where(x => (x.UserId.Equals(id) || videosId.Contains(x.VideoId)) && x.Deleted).ToList();
+         List<int> commentsId = comments.Select(v => v.Id).ToList();
+         List<Reaction> reactions = _context.Reactions.Where(x => (x.UserId.Equals(id) || videosId.Contains(x.VideoId.GetValueOrDefault())) || commentsId.Contains(x.CommentId.GetValueOrDefault()) && x.Deleted).ToList();
+
+         chatMessages.ForEach(x => x.Deleted = false);
+         subscriptions.ForEach(x => x.Deleted = false);
+         comments.ForEach(x => x.Deleted = false);
+         reactions.ForEach(x => x.Deleted = false);
+
+         await _context.ChatMessages.AddRangeAsync(chatMessages);
+         await _context.Subscriptions.AddRangeAsync(subscriptions);
+         await _context.Comments.AddRangeAsync(comments);
+         await _context.Reactions.AddRangeAsync(reactions);
+         _context.Update(user);
+
+         await _context.SaveChangesAsync();
+         return;
+         /*ApplicationUser user = _userManager.Users.FirstOrDefault(x => x.Id == id);
          user.Deleted = false;
          await _userManager.UpdateAsync(user);
          await _chatMessageManager.DeleteActivateByUser(id, false);
          await _reactionManager.DeleteActivateByUser(id, false);
          await _subscriptionManager.DeleteActivateByUser(id, false);
-         await _videoManager.DeleteActivateByUser(id, false);
+         await _videoManager.DeleteActivateByUser(id, false);*/
       }
 
-      public async Task<bool> Login(string email, string password, bool rememberMe)
+      public async Task<LoginResult> Login(string email, string password, bool rememberMe)
       {
          //return await _signInManager.PasswordSignInAsync(email, password, rememberMe, lockoutOnFailure: false);
 
          ApplicationUser user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email.Equals(email) && !x.Deleted);
          if (user == null)
-            return false;
+            return LoginResult.UserNotFound;
 
          IPasswordHasher<ApplicationUser> passwordHasher = _userManager.PasswordHasher;
          PasswordVerificationResult verificationResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
          if (verificationResult == PasswordVerificationResult.Success)
 			{
+            if (user.Blocked)
+            {
+               return LoginResult.UserBlocked;
+            }
+
 				IList<Claim> claimsExist = await _userManager.GetClaimsAsync(user);
 				if(claimsExist == null || claimsExist?.Count() == 0)
 				{
@@ -200,20 +267,20 @@ namespace EduTube.BLL.Managers
 					if (identity.Succeeded)
 					{
 						await _signInManager.SignInAsync(user, true);
-						return true;
+						return LoginResult.Success;
 					}
 					else
 					{
-						return false;
+						return LoginResult.ClaimsFailed;
 					}
 				}
 				else
 				{
 					await _signInManager.SignInAsync(user, true);
-					return true;
+					return LoginResult.Success;
 				}
          }
-         return false;
+         return LoginResult.WrongCredentials;
       }
 
       public async Task Logout()
@@ -255,6 +322,28 @@ namespace EduTube.BLL.Managers
             return true;
          else
             return false;
+      }
+
+      public async Task BlockUnblock(string id, bool blocked)
+      {
+         ApplicationUser user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id.Equals(id));
+         user.Blocked = blocked;
+         await _userManager.UpdateAsync(user);
+      }
+
+      public async Task PromoteDemote(string id, bool promote)
+      {
+         ApplicationUser user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id.Equals(id));
+         if (promote)
+         {
+            await _userManager.RemoveFromRoleAsync(user, "User");
+            await _userManager.AddToRoleAsync(user, "Admin");
+         }
+         else
+         {
+            await _userManager.RemoveFromRoleAsync(user, "Admin");
+            await _userManager.AddToRoleAsync(user, "User");
+         }
       }
    }
 }

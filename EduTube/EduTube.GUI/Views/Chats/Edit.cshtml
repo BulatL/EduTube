@@ -1,40 +1,59 @@
-﻿@model EduTube.BLL.Models.ChatModel
+﻿@model EduTube.GUI.ViewModels.ChatViewModel
 
 @{
-    ViewData["Title"] = "Edit";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+   ViewData["Title"] = "Edit";
+   Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Edit</h1>
-
-<h4>Chat</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+   <div class="container">
+      <h4 class=" text-center">Edit chat</h4>
+      <hr />
+      <form asp-action="Edit">
+         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+         <input type="hidden" asp-for="Id" />
+         <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+               <div class="form-group">
+                  <label asp-for="Name" class="control-label"></label>
+                  <input asp-for="Name" class="form-control">
+                  <span asp-validation-for="Name" class="text-danger"></span>
+               </div>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Deleted" /> @Html.DisplayNameFor(model => model.Deleted)
-                </label>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+               <div class="form-group">
+                  <label class="control-label">Tags</label>
+                  <input id="tagsInput" asp-for="Tags" type="text" class="form-control">
+               </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
+         </div>
+         <div class="form-group">
+            <a asp-action="Index" class="float-left">Back chat rooms</a>
+            <button type="submit" class="purpleBtn float-right" style="position: inherit !important;">Save</button>
+         </div>
+      </form>
+   </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   <script>
+      $.ajax({
+         url: '/Tags/GetAll',
+         type: 'GET',
+         dataType: 'json',
+         async: false,
+         success: function (data) {
+            console.log(data);
+            $('#tagsInput').tagsInput({
+               'delimiter': [',', ';'],
+               'autocomplete': {
+                  source: data
+               }
+            });
+         },
+         error: function (response, jqXHR) {
+         }
+      });
+   </script>
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

@@ -23,26 +23,15 @@ namespace EduTube.BLL.Managers
 
       public async Task<List<ChatModel>> GetAll()
       {
-         IEnumerable<Chat> chats = await _context.Chats.Where(x => !x.Deleted).ToListAsync();
+         IEnumerable<Chat> chats = await _context.Chats.Include(x => x.TagRelationships).ThenInclude(x => x.Tag).Where(x => !x.Deleted).ToListAsync();
          return ChatMapper.EntitiesToModels(chats);
       }
 
-      public async Task<Chat> GetByIdEntity(int id, bool includeAll)
+      public async Task<ChatModel> GetById(int id)
       {
-         //Expression<Func<Chat,bool>> includeExpression
-         return includeAll ? await _context.Chats
-             .Include(x => x.Messages).Include(x => x.TagRelationspis).ThenInclude(x => x.Tag)
-             .FirstAsync(x => x.Id == id && !x.Deleted)
-             : await _context.Chats.FirstAsync(x => x.Id == id && !x.Deleted);
-      }
-
-      public async Task<ChatModel> GetById(int id, bool includeAll)
-      {
-         //Expression<Func<Chat,bool>> includeExpression
-         return includeAll ? ChatMapper.EntityToModel(await _context.Chats
-             .Include(x => x.Messages).Include(x => x.TagRelationspis).ThenInclude(x => x.Tag)
-             .FirstAsync(x => x.Id == id && !x.Deleted))
-             : ChatMapper.EntityToModel(await _context.Chats.FirstAsync(x => x.Id == id && !x.Deleted));
+         return ChatMapper.EntityToModel(await _context.Chats
+             .Include(x => x.TagRelationships).ThenInclude(x => x.Tag)
+             .FirstAsync(x => x.Id == id && !x.Deleted));
       }
 
       public async Task<ChatModel> Create(ChatModel chatModel)
@@ -56,21 +45,23 @@ namespace EduTube.BLL.Managers
 
       public async Task<ChatModel> Update(ChatModel model)
       {
-         /*_context.Attach(chatModel).State = EntityState.Modified;
-         _context.SaveChanges();*/
-         _context.Update(ChatMapper.ModelToEntity(model));
-         /*Chat oldEntity = await GetByIdEntity(model.Id, true);
-         ChatMapper.CopyModelToEntity(model, oldEntity);*/
+         Chat entity = await _context.Chats.FirstOrDefaultAsync(x => x.Id == model.Id && !x.Deleted);
+         ChatMapper.CopyModelToEntity(model, entity);
          await _context.SaveChangesAsync();
-         return model;
+         return ChatMapper.EntityToModel(entity);
       }
 
       public async Task Delete(int id)
       {
-         Chat chat = _context.Chats.FirstOrDefault(x => x.Id == id && !x.Deleted);
-         /*chat.Deleted = true;
-         _context.Update(chat);*/
-         _context.Chats.Remove(chat);
+         Chat chat = await _context.Chats.FirstOrDefaultAsync(x => x.Id == id && !x.Deleted);
+         if (chat == null)
+            return;
+         List<ChatMessage> messages = await _context.ChatMessages.Where(x => x.ChatId == chat.Id && !x.Deleted).ToListAsync();
+         chat.Deleted = true;
+         messages.ForEach(x => x.Deleted = true);
+         _context.UpdateRange(messages);
+         _context.Update(chat);
+
          await _context.SaveChangesAsync();
       }
    }

@@ -43,7 +43,7 @@ namespace EduTube.GUI.Controllers
          }
          if (exist != null)
          {
-            await _reactionManager.Delete(exist.Id);
+            await _reactionManager.Remove(exist.Id);
             if (exist.EmojiId == model.EmojiId)
                return StatusCode(201);
          }

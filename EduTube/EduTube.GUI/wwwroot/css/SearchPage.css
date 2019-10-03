@@ -1,0 +1,78 @@
+﻿#usersDiv, #subscribedOnDiv {
+   display: none;
+}
+.videoDiv{
+   padding: 1rem;
+}
+.videoThumbnailsDiv{
+   text-align: inherit !important;
+}
+@media (min-width: 768px) {
+   .videoDiv {
+      display: flex;
+   }
+}
+@media (max-width: 768px) {
+   .videoDiv {
+      display: inline;
+      text-align: center;
+   }
+   .searchVideoDescription {
+      text-align: center;
+   }
+}
+.searchVideoName {
+   margin-top: 0.2rem;
+   margin-bottom: 0;
+   font-weight: bold;
+   font-size: 1.3rem;
+}
+.searchTags {
+   font-weight: bold;
+   font-size: 0.9rem;
+}
+.searchVideoOwner{
+   font-size: 0.9rem;
+}
+.searchVideoOwner a{
+   margin-right: 1rem;
+}
+.searchVideoDescription {
+   position: relative;
+   margin: 0.2rem;
+   max-height: 6rem;
+   overflow: hidden;
+   transition: max-height .5s ease;
+}
+.showMoreDiv {
+   text-align: center;
+   padding: 0.5rem;
+}
+.showMore {
+   margin: 1rem;
+   width: 30%;
+   padding: 0.4rem;
+}
+
+.userDiv {
+   word-break: break-word;
+   width: 8rem;
+   margin-right: 1rem;
+   vertical-align: top;
+}
+.userProfileImageDiv {
+   position: relative;
+   width: 6rem;
+   height: 6rem;
+   overflow: hidden;
+   border-radius: 50%;
+   margin: 1rem;
+}
+
+   .userProfileImageDiv img {
+      width: 6rem;
+      height: 6rem;
+   }
+#usersDiv div {
+   display: flex;
+}

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using EduTube.BLL.Managers.Interfaces;
 using EduTube.BLL.Models;
 using EduTube.GUI.ViewModels;
 using Elasticsearch.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +15,7 @@ using Nest;
 
 namespace EduTube.GUI.Controllers
 {
+
    public class ElasticsearchController : Controller
    {
       private IVideoManager _videoManager;
@@ -110,84 +113,84 @@ namespace EduTube.GUI.Controllers
                         .Query(search_query)
                     )
                 )
-                .Highlight(h => h
-                    .PreTags("<strong>")
-                    .PostTags("</strong>")
-                    .Encoder(HighlighterEncoder.Html)
-                    .Fields(fs =>
-                        fs.Field(f => f.Name)
-                        .Type(HighlighterType.Plain)
-                        .PreTags("<strong class='blue'>")
-                        .PostTags("</strong>")
-                        .ForceSource()
-                        .Fragmenter(HighlighterFragmenter.Span)
-                        .HighlightQuery(q => q
-                            .Fuzzy(m =>
-                                m.Field(fi => fi.Name)
-                                 .Fuzziness(Fuzziness.EditDistance(2))
-                                 .PrefixLength(0)
-                                 .Transpositions(true)
-                                 .MaxExpansions(100)
-                                 .Value(search_query)
-                            )
-                        ),
+                /* .Highlight(h => h
+                     .PreTags("<strong>")
+                     .PostTags("</strong>")
+                     .Encoder(HighlighterEncoder.Html)
+                     .Fields(fs =>
+                         fs.Field(f => f.Name)
+                         .Type(HighlighterType.Plain)
+                         .PreTags("<strong class='blue'>")
+                         .PostTags("</strong>")
+                         .ForceSource()
+                         .Fragmenter(HighlighterFragmenter.Span)
+                         .HighlightQuery(q => q
+                             .Fuzzy(m =>
+                                 m.Field(fi => fi.Name)
+                                  .Fuzziness(Fuzziness.EditDistance(2))
+                                  .PrefixLength(0)
+                                  .Transpositions(true)
+                                  .MaxExpansions(100)
+                                  .Value(search_query)
+                             )
+                         ),
 
-                        fs => fs
-                        .Field(f => f.Description)
-                        .RequireFieldMatch(true)
-                        .Type(HighlighterType.Plain)
-                        .PreTags("<strong class='blue'>")
-                        .PostTags("</strong>")
-                        .ForceSource()
-                        .Fragmenter(HighlighterFragmenter.Span)
-                        .HighlightQuery(q => q
-                            .Fuzzy(m =>
-                                m.Field(fi => fi.Description)
-                                 .Fuzziness(Fuzziness.EditDistance(2))
-                                 .PrefixLength(0)
-                                 .Transpositions(true)
-                                 .MaxExpansions(100)
-                                 .Value(search_query)
-                            )
-                        ),
+                         fs => fs
+                         .Field(f => f.Description)
+                         .RequireFieldMatch(true)
+                         .Type(HighlighterType.Plain)
+                         .PreTags("<strong class='blue'>")
+                         .PostTags("</strong>")
+                         .ForceSource()
+                         .Fragmenter(HighlighterFragmenter.Span)
+                         .HighlightQuery(q => q
+                             .Fuzzy(m =>
+                                 m.Field(fi => fi.Description)
+                                  .Fuzziness(Fuzziness.EditDistance(2))
+                                  .PrefixLength(0)
+                                  .Transpositions(true)
+                                  .MaxExpansions(100)
+                                  .Value(search_query)
+                             )
+                         ),
 
-                        fs => fs
-                        .Field(f => f.UserChannelName)
-                        .Type(HighlighterType.Plain)
-                        .PreTags("<strong class='blue'>")
-                        .PostTags("</strong>")
-                        .ForceSource()
-                        .Fragmenter(HighlighterFragmenter.Span)
-                        .HighlightQuery(q => q
-                            .Fuzzy(m =>
-                                m.Field(fi => fi.UserChannelName)
-                                 .Fuzziness(Fuzziness.EditDistance(2))
-                                 .PrefixLength(0)
-                                 .Transpositions(true)
-                                 .MaxExpansions(100)
-                                 .Value(search_query)
-                            )
-                        ),
+                         fs => fs
+                         .Field(f => f.UserChannelName)
+                         .Type(HighlighterType.Plain)
+                         .PreTags("<strong class='blue'>")
+                         .PostTags("</strong>")
+                         .ForceSource()
+                         .Fragmenter(HighlighterFragmenter.Span)
+                         .HighlightQuery(q => q
+                             .Fuzzy(m =>
+                                 m.Field(fi => fi.UserChannelName)
+                                  .Fuzziness(Fuzziness.EditDistance(2))
+                                  .PrefixLength(0)
+                                  .Transpositions(true)
+                                  .MaxExpansions(100)
+                                  .Value(search_query)
+                             )
+                         ),
 
-                        fs => fs
-                        .Field(f => f.Tags)
-                        .Type(HighlighterType.Plain)
-                        .PreTags("<strong class='blue'>")
-                        .PostTags("</strong>")
-                        .ForceSource()
-                        .Fragmenter(HighlighterFragmenter.Span)
-                        .HighlightQuery(q => q
-                            .Fuzzy(m =>
-                                m.Field(fi => fi.Tags)
-                                 .Fuzziness(Fuzziness.EditDistance(2))
-                                 .PrefixLength(0)
-                                 .Transpositions(true)
-                                 .MaxExpansions(100)
-                                 .Value(search_query)
-                            )
-                        )
-                    )
-                )
+                         fs => fs
+                         .Field(f => f.Tags)
+                         .Type(HighlighterType.Plain)
+                         .PreTags("<strong class='blue'>")
+                         .PostTags("</strong>")
+                         .ForceSource()
+                         .Fragmenter(HighlighterFragmenter.Span)
+                         .HighlightQuery(q => q
+                             .Fuzzy(m =>
+                                 m.Field(fi => fi.Tags)
+                                  .Fuzziness(Fuzziness.EditDistance(2))
+                                  .PrefixLength(0)
+                                  .Transpositions(true)
+                                  .MaxExpansions(100)
+                                  .Value(search_query)
+                             )
+                         )
+                     )
+                 )*/
                 .Sort(so => so
                     .Ascending(a => a.Name)
                 )
@@ -260,7 +263,7 @@ namespace EduTube.GUI.Controllers
                     .Query(search_query)
                 )
             )
-            .Highlight(h => h
+            /*.Highlight(h => h
                 .PreTags("<strong>")
                 .PostTags("</strong>")
                 .Encoder(HighlighterEncoder.Html)
@@ -337,7 +340,7 @@ namespace EduTube.GUI.Controllers
                         )
                     )
                 )
-            )
+            )*/
             .Sort(so => so
                 .Ascending(a => a.ChannelName)
             )
@@ -356,9 +359,9 @@ namespace EduTube.GUI.Controllers
             {
                SearchVideosViewModel searchVideo = new SearchVideosViewModel(
                    video.Source.Id, video.Source.Name, video.Source.Description, video.Source.UserChannelName,
-                   video.Source.UserId, video.Source.Tags);
+                   video.Source.UserId, video.Source.Tags, video.Source.Thumbnail, video.Source.DateCreatedOn);
 
-               foreach (HighlightHit highLight in video.Highlights.Values)
+               /*foreach (HighlightHit highLight in video.Highlights.Values)
                {
 
                   foreach (String hl in highLight.Highlights)
@@ -379,7 +382,7 @@ namespace EduTube.GUI.Controllers
                            break;
                      }
                   }
-               }
+               }*/
                videoList.Add(searchVideo);
             }
             totalPagesVideos = Math.Ceiling((double)videosResponse.Total / 10);
@@ -393,7 +396,7 @@ namespace EduTube.GUI.Controllers
                    user.Source.Id, user.Source.Firstname, user.Source.Lastname, user.Source.ChannelName,
                    user.Source.ChannelDescription, user.Source.ProfileImage, user.Source.DateOfBirth);
 
-               foreach (HighlightHit highLight in user.Highlights.Values)
+               /*foreach (HighlightHit highLight in user.Highlights.Values)
                {
 
                   foreach (String hl in highLight.Highlights)
@@ -414,7 +417,7 @@ namespace EduTube.GUI.Controllers
                            break;
                      }
                   }
-               }
+               }*/
                userList.Add(searchUsers);
             }
             totalPagesUsers = Math.Ceiling((double)usersResponse.Total / 10);
@@ -454,6 +457,7 @@ namespace EduTube.GUI.Controllers
          return Json(datasend);
       }
 
+      [Authorize]
       public async Task<IActionResult> IndexVideo(VideoModel video)
       {
          ConnectionSettings settings = new ConnectionSettings(new Uri("http://localhost:9200"))
@@ -467,7 +471,6 @@ namespace EduTube.GUI.Controllers
          Object videoObj = new
          {
             id = video.Id,
-            duration = video.Duration,
             thumbnail = video.Thumbnail,
             name = video.Name,
             description = video.Description,
@@ -485,6 +488,104 @@ namespace EduTube.GUI.Controllers
 
          return Json(responseStream);
       }
+      [Authorize]
+
+      public async Task<IActionResult> IndexUser(ApplicationUserModel user)
+      {
+         ConnectionSettings settings = new ConnectionSettings(new Uri("http://localhost:9200"))
+         .DefaultIndex("videos");
+
+         ElasticLowLevelClient lowlevelClient = new ElasticLowLevelClient(settings);
+
+         List<Object> listObj = new List<object>();
+
+         Object indexObj = new { index = new { _index = "users", _type = "applicationusermodel", _id = user.Id.ToString() } };
+         Object userObj = new
+         {
+            id = user.Id,
+            dateOfBirth = user.DateOfBirth.ToString("yyyy-MM-dd"),
+            firstname = user.Firstname,
+            lastname = user.Lastname,
+            channelName = user.ChannelName,
+            channelDescription = user.ChannelDescription,
+            profileImage = user.ProfileImage
+         };
+
+         listObj.Add(indexObj);
+         listObj.Add(userObj);
+
+         StringResponse indexResponseList = await lowlevelClient.BulkAsync<StringResponse>(PostData.MultiJson(listObj));
+         string responseStream = indexResponseList.Body;
+
+         return Json(responseStream);
+      }
+      [Authorize]
+
+      public async Task<IActionResult> UpdateVideo(VideoModel video)
+      {
+         var settings = new ConnectionSettings(new Uri("http://localhost:9200"))
+         .DefaultIndex("videos");
+
+         var client = new ElasticClient(settings);
+
+         dynamic updateFields = new ExpandoObject();
+         updateFields.id = video.Id;
+         updateFields.thumbnail = video.Thumbnail;
+         updateFields.name = video.Name;
+         updateFields.description = video.Description;
+         updateFields.userChannelName = video.UserChannelName;
+         updateFields.userId = video.UserId;
+         updateFields.tags = video.Tags;
+         updateFields.dateCreatedOn = video.DateCreatedOn;
+
+
+         var response = await client.UpdateAsync<VideoModel, dynamic>(new DocumentPath<VideoModel>(video.Id), u => u
+         .Index("videos").Doc(updateFields));
+
+         return Json(response);
+      }
+      [Authorize]
+
+      public async Task<IActionResult> UpdateUser(ApplicationUserModel user)
+      {
+         var settings = new ConnectionSettings(new Uri("http://localhost:9200"))
+         .DefaultIndex("users");
+
+         var client = new ElasticClient(settings);
+
+         dynamic updateFields = new ExpandoObject();
+         updateFields.id = user.Id;
+         updateFields.dateOfBirth = user.DateOfBirth;
+         updateFields.firstname = user.Firstname;
+         updateFields.lastname = user.Lastname;
+         updateFields.channelName = user.ChannelName;
+         updateFields.channelDescription = user.ChannelDescription;
+         updateFields.profileImage = user.ProfileImage;
+
+
+         var response = await client.UpdateAsync<ApplicationUserModel, dynamic>(new DocumentPath<ApplicationUserModel>(user.Id), u => u
+         .Index("users").Doc(updateFields));
+
+         return Json(response);
+      }
+      [Authorize]
+
+      [HttpDelete]
+      public JsonResult DeleteDocument(string id, string index, string type)
+      {
+         var settings = new ConnectionSettings(new Uri("http://localhost:9200"))
+         .DefaultIndex(index);
+
+         var client = new ElasticClient(settings);
+         var response = client.Delete<VideoModel>(id, d => d
+                                             .Index(index)
+                                             .Type(type)
+                                          );
+
+         return Json(response);
+      }
+
+      [Authorize(Roles = "Admin")]
 
       public async Task<IActionResult> IndexFromDb()
       {
@@ -516,7 +617,6 @@ namespace EduTube.GUI.Controllers
                Object videoObj = new
                {
                   id = video.Id,
-                  duration = video.Duration,
                   thumbnail = video.Thumbnail,
                   name = video.Name,
                   description = video.Description,
@@ -570,6 +670,8 @@ namespace EduTube.GUI.Controllers
          return Json((videosResponseStream, usersResponseStream));
       }
 
+      [Authorize(Roles = "Admin")]
+
       public async Task<IActionResult> CreateIndex()
       {
          ConnectionSettings settings = new ConnectionSettings(new Uri("http://localhost:9200"))
@@ -597,9 +699,6 @@ namespace EduTube.GUI.Controllers
                                    .Name(n => n.DateCreatedOn)
                               ).Text(t => t
                                    .Name(n => n.Description)
-                                   .Analyzer("standard_english")
-                              ).Text(t => t
-                                   .Name(n => n.Duration)
                                    .Analyzer("standard_english")
                               ).Text(t => t
                                    .Name(n => n.Thumbnail)

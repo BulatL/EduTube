@@ -74,11 +74,20 @@
                   </div>
                </div>
                <ul class="navbar-nav flex-grow-1">
-                  <li class="nav-item">
-                     <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                  </li>
+                  @if (Context.User.Identity.IsAuthenticated)
+                  {
+                     @if (User.Claims.FirstOrDefault(x => x.Type.Equals("role")).Value.Equals("Admin"))
+                     {
+                        <li class="nav-item">
+                           <a class="nav-link" asp-area="" asp-controller="AdminUsers" asp-action="Index">Admin users</a>
+                        </li>
+                     }
+                     <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Chats" asp-action="Index">Chat rooms</a>
+                     </li>
+                  }
                </ul>
-            </div>
+               </div>
          </div>
       </nav>
    </header>

@@ -64,9 +64,7 @@ namespace EduTube.GUI.Controllers
          TagModel firstTag = null;
          TagModel secondTag = null;
 
-         Debug.WriteLine("usao u kontroler" + DateTime.Now);
          ApplicationUserModel user = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
-         Debug.WriteLine("nasao usera " + DateTime.Now);
 
          List<int> seenVideosId = await _videoManager.GetVideosIdByView(user?.Id, ipAddress);
          List<int?> tagsId = await _tagManager.Get2MostPopularTagsIdByVideoId(seenVideosId);
@@ -86,7 +84,7 @@ namespace EduTube.GUI.Controllers
 
          Debug.WriteLine("nazad u kontroleru " + DateTime.Now);
          HomeRecommendedVideos viewModel = new HomeRecommendedVideos(firstRecommendedVideos,
-             secondRecommendedVideos, firstTag.Name, secondTag.Name);
+             secondRecommendedVideos, firstTag?.Name, secondTag?.Name);
          return Json(viewModel);
       }
 
@@ -110,6 +108,7 @@ namespace EduTube.GUI.Controllers
             ApplicationUserModel user = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
 				bool allowAccess = true;
 				string subscribed = "";
+
             #region Video visibility
             if (video.VideoVisibility == VideoVisibilityModel.Invitation)
             {
@@ -195,7 +194,7 @@ namespace EduTube.GUI.Controllers
       // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
       [Authorize]
       [HttpPost]
-      //[ValidateAntiForgeryToken]
+      [ValidateAntiForgeryToken]
       [RequestFormLimits(ValueLengthLimit = int.MaxValue, MultipartBodyLengthLimit = int.MaxValue)]
       public async Task<IActionResult> Create(VideoCreateViewModel viewModel)
       {
@@ -219,7 +218,8 @@ namespace EduTube.GUI.Controllers
             else
             {
                if (viewModel.Video != null)
-                  video.Thumbnail = _uploadService.CreateThumbnail(video.FileName);
+                  video.Thumbnail = "thumbnails/" +  _uploadService.CreateThumbnail(video.FileName);
+               
                else
                   video.Thumbnail = String.Format(@"https://img.youtube.com/vi/" + viewModel.YoutubeId + "/0.jpg");
             }
@@ -239,21 +239,89 @@ namespace EduTube.GUI.Controllers
             }
             video.TagRelationships = trs;
             video = await _videoManager.Create(video);
+
+            await new ElasticsearchController(_videoManager, _userManager, _tagRelationshipManager).IndexVideo(video);
             return LocalRedirect("/Videos/" + video.Id);
          }
          return View(viewModel);
       }
 
       [Authorize]
-      [HttpPost]
-      public async Task<IActionResult> Edit(VideoViewModel viewModel, string InviteCode)
+      public async Task<IActionResult> Edit(int id)
       {
-         VideoModel video = VideoViewModel.CopyToModel(viewModel);
-         video.InvitationCode = InviteCode;
-         await _videoManager.Update(video);
-         return LocalRedirect("/Videos/"+viewModel.Id);
+         VideoModel video = await _videoManager.GetById(id, true);
+
+         if (video == null)
+            return StatusCode(401);
+
+         string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+         string currentUserRole = await _userManager.GetRole(currentUserId);
+         if (!video.UserId.Equals(currentUserId) || !currentUserRole.Equals("Admin"))
+            return StatusCode(403);
+         
+
+         return View(new VideoEditViewModel(video));
       }
-      
+      [Authorize]
+      [HttpPost]
+      public async Task<IActionResult> Edit(VideoEditViewModel viewModel)
+      {
+         if (ModelState.IsValid)
+         {
+            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string currentUserRole = await _userManager.GetRole(currentUserId);
+            if (!viewModel.UserId.Equals(currentUserId) || !currentUserRole.Equals("Admin"))
+            {
+               return StatusCode(403);
+            }
+
+            VideoModel video = VideoEditViewModel.ConvertToModel(viewModel);
+            
+            if (video.VideoVisibility != VideoVisibilityModel.Invitation)
+               video.InvitationCode = null;
+
+            if(viewModel.NewThumbnail != null)
+            {
+               _uploadService.RemoveImage(viewModel.OldThumbnail, "thumbnails");
+               video.Thumbnail = _uploadService.UploadImage(viewModel.NewThumbnail, "thumbnails");
+            }
+            
+
+            List<TagModel> tags = await _tagManager.GetByNames(viewModel.Tags);
+            List<TagRelationshipModel> oldRelationships = await _tagRelationshipManager.GetByVideoId(video.Id, false);
+            foreach (var tag in tags)
+            {
+               TagRelationshipModel oldRelationship = oldRelationships.FirstOrDefault(x => x.TagId == tag.Id);
+               if (oldRelationship == null)
+               {
+                  TagRelationshipModel relationshipModel = new TagRelationshipModel() { Id = 0, Tag = tag, TagId = tag.Id, Video = video, VideoId = video.Id };
+                  video.TagRelationships.Add(relationshipModel);
+               }
+               else
+               {
+                  oldRelationships.Remove(oldRelationship);
+                  video.TagRelationships.Add(oldRelationship);
+               }
+            }
+            foreach (var item in oldRelationships)
+            {
+               await _tagRelationshipManager.Remove(item.Id);
+            }
+            video = await _videoManager.Update(video);
+
+            await new ElasticsearchController(_videoManager, _userManager, _tagRelationshipManager).UpdateVideo(video);
+            return LocalRedirect("/Videos/" + video.Id);
+         }
+         return View(viewModel);
+      }
+
+      public IActionResult GetDeleteDialog(int id)
+      {
+         ViewData["type"] = "video";
+         ViewData["id"] = id;
+         return PartialView("DeleteModalDialog");
+      }
+
       // GET: Videos/Delete/5
       [Authorize]
       [HttpDelete]
@@ -262,10 +330,14 @@ namespace EduTube.GUI.Controllers
       {
          int result = await _videoManager.Delete(id);
          if (result > 0)
+         {
+            new ElasticsearchController(_videoManager, _userManager, _tagRelationshipManager).DeleteDocument(id.ToString(), "videos", "videomodel");
             return StatusCode(200);
+         }
          else
             return StatusCode(404);
       }
+
 
    }
 }

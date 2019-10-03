@@ -1,0 +1,136 @@
+﻿@model EduTube.GUI.ViewModels.VideoEditViewModel
+
+@{
+   ViewData["Title"] = "Edit";
+   Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles{
+   <link href="~/css/CreateVideo.css" rel="stylesheet" />
+}
+<div id="createVideoDiv">
+   <div class="row">
+      <div class="col-12">
+         <form method="post" enctype="multipart/form-data" action="Edit" id="form">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="OldThumbnail" id="oldThumbnail" />
+            <input type="hidden" asp-for="OldFileName" />
+            <input type="hidden" asp-for="OldDuration" />
+            <input type="hidden" asp-for="YoutubeUrl" />
+            <input type="hidden" asp-for="UserId" />
+            <h4 class="text-center">Edit @Model.Name</h4>
+            <div class="row">
+               <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="form-group">
+                     <label asp-for="Name" class="control-label"></label>
+                     <input asp-for="Name" class="form-control">
+                     <span asp-validation-for="Name" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="form-group">
+                     <label class="control-label">Tags</label>
+                     <input id="tagsInput" asp-for="Tags" type="text" class="form-control">
+                  </div>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-12">
+                  <div class="form-group" style="margin-top:2rem;">
+                     <label asp-for="Description" class="control-label"></label>
+                     <textarea asp-for="Description" class="form-control" style="height:12rem;"></textarea>
+                     <span asp-validation-for="Description" class="text-danger"></span>
+                  </div>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="form-group">
+                     <label asp-for="VideoVisibility" class="control-label"></label>
+                     <select asp-for="VideoVisibility" class="form-control" id="visibilitySelect">
+                        <option value="0" title="Everyone can see this video">Public</option>
+                        <option value="1" title="Only logged users can see this video">Private</option>
+                        <option value="2" title="Only users whit invitation code can see this video">Invite</option>
+                     </select>
+                     <span asp-validation-for="VideoVisibility" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="form-group" id="InvitationCodeDiv">
+                     <label asp-for="InvitationCode" class="control-label"></label>
+                     <input asp-for="InvitationCode" class="form-control" id="InvitationCode" disabled />
+                     <input type="hidden" asp-for="InvitationCode" class="form-control" id="InvitationCodeHidden" />
+                     <span asp-validation-for="InvitationCode" class="text-danger"></span>
+                  </div>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div class="form-group">
+                     <label class="control-label">Upload custom thumbnail or we will create thumbnail from video</label>
+                     <div class="input-group">
+                        <div class="input-group-prepend">
+                           <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                        </div>
+                        <div class="custom-file">
+                           <input type="file" class="custom-file-input" id="customThumbnail" asp-for="NewThumbnail"
+                                  aria-describedby="inputGroupFileAddon01">
+                           <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <div id="thumnailDiv">
+                     <img id="thumbnail" />
+                  </div>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-12">
+                  <label for="default" class="btn" id="allowCommentsLabel">Allow comments <input type="checkbox" id="default" class="badgebox" asp-for="AllowComments"><span class="badge">&check;</span></label>
+               </div>
+            </div>
+            <div class="buttonsDiv">
+               <button class="purpleBtn" type="submit" id="createBtn">Save</button>
+
+               @if (User.Identity.IsAuthenticated)
+               {
+                  <button onclick="Redirect('/Users/@User.Claims.FirstOrDefault(x=> x.Type.Equals("channelName")).Value.Replace(" ", "-")')" type="button" class="redBtn position-initial" id="backToProfileBtn">Back to Profile</button>
+               }
+            </div>
+         </form>
+      </div>
+      <div class="modal hide" id="modalDialog" data-backdrop="static" data-keyboard="false">
+         <div class="modal-dialog">
+            <div class="modal-content greyBackground">
+               <!-- Modal Header -->
+               <div class="modal-header">
+                  <h4 class='col-12 modal-title text-center'>
+                     <span id="modalHeader"></span>
+                     <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
+                     </button>
+                  </h4>
+               </div>
+               <!-- Modal body -->
+               <div class="modal-body">
+                  <h5 class="text-center">We are uploading video, please don't leave this page</h5>
+                  <div class="d-flex justify-content-center">
+                     <div class="loader">Loading...</div>
+                  </div>
+               </div>
+               <!-- Modal footer -->
+            </div>
+         </div>
+      </div>
+   </div>
+
+</div>
+
+
+@section Scripts {
+   <script src="~/js/CreateVideo.js"></script>
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

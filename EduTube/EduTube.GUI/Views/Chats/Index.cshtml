@@ -1,42 +1,137 @@
 ﻿@model IEnumerable<EduTube.BLL.Models.ChatModel>
-
 @{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+   ViewData["Title"] = "Chats";
+   Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Deleted)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Deleted)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@section Styles{
+   <link href="~/css/ChatPage.css" rel="stylesheet" />
 }
-    </tbody>
-</table>
+<div class="container">
+   @if (Context.User.Identity.IsAuthenticated)
+   {
+      <input type="hidden" id="current_user_id" value="@User.Claims.FirstOrDefault(x => x.Type.Equals("id")).Value" />
+   }
+   <input type="hidden" id="current_chat" />
+   <div class="greyBackground">
+      <div class="row chatMainDiv">
+         <!--All chats listed-->
+         <div class="col-lg-5 col-md-4 col-sm-12" id="allChatsDiv">
+            <div class="heading_srch">
+               <div class="Heading">
+                  <h4>All Chats</h4>
+               </div>
+               <div class="srch_bar">
+                  <div class="stylish-input-group">
+                     <input type="text" class="search-bar colorWhite" id="searchInput" placeholder="Search">
+                     <span class="input-group-addon">
+                        <button type="button" id="searchBtn"> <i class="fa fa-search" aria-hidden="true"></i> </button>
+                     </span>
+                  </div>
+               </div>
+               @if (User.Identity.IsAuthenticated)
+               {
+                  @if (User.Claims.FirstOrDefault(x => x.Type.Equals("role")).Value.Equals("Admin"))
+                  {
+                     <div>
+                        <button class="purpleBtn" id="createChatBtn" onclick='OpenModal("create")'>Create Chat</button>
+                     </div>
+                  }
+               }
+            </div>
+            <div class="chatsDiv">
+               @foreach (var chat in Model)
+               {
+                  <div class="chat_list" id="chat_@chat.Id">
+                     <div class="chat_info">
+                        <div class="chat_ib">
+                           <div class="chatName">
+                              <h5 class="colorWhite" id="chat_name_@chat.Id">@chat.Name</h5>
+                           </div>
+                           <div class="display-flex">
+                              Tags: <span>&nbsp;</span>
+                              <span  class="colorWhite">
+                                 @for (int i = 0; i < chat.TagRelationships.Count(); i++)
+                                 {  
+
+                                    @if ((chat.TagRelationships.Count() - 1) != i)
+                                    {
+                                       @chat.TagRelationships[i].Tag.Name<span>, </span>
+                                    }
+                                    @if ((chat.TagRelationships.Count() - 1) == i)
+                                    {
+                                       @chat.TagRelationships[i].Tag.Name
+                                    }
+                                 }
+                              </span>
+                           </div>
+                           <div>
+                              <button class="purpleBtn chatButtons" onclick='JoinChat("@chat.Id")'>Join Chat</button>
+                              @if (User.Identity.IsAuthenticated)
+                              {
+                                 @if (User.Claims.FirstOrDefault(x => x.Type.Equals("role")).Value.Equals("Admin"))
+                                 {
+                                    <button class="redBtn chatButtons" onclick='OpenModal("@chat.Id", "@chat.Name")'>Delete</button>
+                                    <button class="greenBtn chatButtons" onclick='RedirectTo("/Chats/Edit/@chat.Id")'>Edit</button>
+                                 }
+                              }
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               }
+            </div>
+         </div>
+         <!--Chat messages-->
+         <div class="col-lg-7 col-md-8 col-sm-12" id="messagesMainDiv">
+            <div id="ChatNameDiv">
+               <h4 id="chatName">Chat name</h4>
+            </div>
+            <div class="mesgs">
+               <div id="msg_history">
+                  <h5 class="messageInfo">Join chat and start chating</h5>
+               </div>
+            </div>
+            <div class="type_msg">
+               <div class="input_msg_write">
+                  <input type="text" class="write_msg" id="message_input" placeholder="Type a message" />
+                  <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" id="sendButton" aria-hidden="true"></i></button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div>
+      <!-- The Modal -->
+      <div class="modal hide" data-backdrop="static" data-keyboard="false" id="modalDialog">
+         <div class="modal-dialog">
+            <div class="modal-content greyBackground" style="height: 12rem !important;">
+               <!-- Modal Header -->
+               <div class="modal-header">
+                  <h4 class='col-12 modal-title text-center' id="modalDialogHeader">
+                     Delete Chat
+                  </h4>
+               </div>
+               <!-- Modal body -->
+               <div class="modal-body">
+                  <input type="hidden" id="modalDialogChat" />
+                  <h4 id="modalDialogChatName"></h4>
+                  <div class="display-flex">
+                     <div class="col-6 float-right">
+                        <button class="grayBtn" id="closeBtn" data-dismiss="modal">Cancel</button>
+                     </div>
+                     <div class="col-6 float-right">
+                        <button class="redBtn" id="deleteChatModal" onclick="DeleteChat()">Delete</button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+@section Scripts{
+   <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+   <script src="~/js/Chat.js"></script>
+}

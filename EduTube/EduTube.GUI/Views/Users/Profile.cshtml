@@ -5,6 +5,7 @@
 
 @section Styles{
    <link href="~/css/ProfilePage.css" rel="stylesheet" />
+   <link href="~/css/DeleteDialog.css" rel="stylesheet" />
 }
 <div class="row">
    <input type="hidden" value="@Model.Id" id="userIdHidden" />
@@ -28,7 +29,7 @@
             }
             @if (ViewBag.Subscribed == "SameUser")
             {
-               <button class="redBtn position-initial" id="deleteProfileBtn" onclick='DeleteProfile("@Model.Id")'>Delete profile</button>
+               <button class="redBtn position-initial" id="deleteProfileBtn" onclick='DeleteUser("@Model.Id")'>Delete profile</button>
                <button class="greenBtn position-initial" id="btnSubscribeOwner" onclick="RedirectTo('/Users/Edit/@Model.Id')">Edit info</button>
             }
          </div>
@@ -55,46 +56,39 @@
             <div class="row">
                <div class="col-12" id="addVideoDiv">
                   <button onclick="RedirectTo('/videos/Create')" class="greenBtn float-right" id="addVideoBtn">Add video</button>
-							
+
                </div>
             </div>
-				<div id="userVideosDiv">
-					@if (Model.Videos != null)
-					{
-						@foreach (var video in Model.Videos)
-						{
-							<div class="display-inline-block videoDiv">
-								<a href="/Videos/@video.Id">
-									<div class="videoThumbnailsDiv">
-										@if (video.FileName != null)
-										{
-											<img class="videoThumbnails" src="~/thumbnails/@video.Thumbnail" />
-										}
-										@if (video.FileName == null)
-										{
-											<img class="videoThumbnails" src="@video.Thumbnail" />
-										}
-										<p class="bottom-right greyBackground" id="videoDuration">@video.Duration</p>
-									</div>
-									<p class="videoName" title="@video.Name">
-										@video.Name
-									</p>
-									<p class="fontSize08">
-										@video.DateCreatedOn
-									</p>
-								</a>
-							</div>
-						}
-						@if (Model.Videos.Count == 0)
-						{
-							<h4 class="text-center">@Model.ChannelName does not have videos</h4>
-						}
-					}
-					@if (Model.Videos == null)
-					{
-						<h4 class="text-center">He does not have videos</h4>
-					}
-				</div>
+            <div id="userVideosDiv">
+               @if (Model.Videos != null)
+               {
+                  @foreach (var video in Model.Videos)
+                  {
+                     <div class="display-inline-block videoDiv">
+                        <a href="/Videos/@video.Id">
+                           <div class="videoThumbnailsDiv">
+                              <img class="videoThumbnails" src="@video.Thumbnail" />
+                              <p class="bottom-right greyBackground" id="videoDuration">@video.Duration</p>
+                           </div>
+                           <p class="videoName" title="@video.Name">
+                              @video.Name
+                           </p>
+                           <p class="fontSize08">
+                              @video.DateCreatedOn
+                           </p>
+                        </a>
+                     </div>
+                  }
+                  @if (Model.Videos.Count == 0)
+                  {
+                     <h4 class="text-center">@Model.ChannelName does not have videos</h4>
+                  }
+               }
+               @if (Model.Videos == null)
+               {
+                  <h4 class="text-center">He does not have videos</h4>
+               }
+            </div>
          </div>
          <div id="subscribersDiv">
             <div class="container">
@@ -253,6 +247,9 @@
       </div>
    </div>
 </div>
+<!--Div for deleting comment-->
+<div class="modal hide" id="deleteUserDialog" role="dialog" aria-hidden="true"></div>
+
 @section Scripts{
    <script src="~/js/Subscribe.js"></script>
    <script src="~/js/ProfilePage.js"></script>

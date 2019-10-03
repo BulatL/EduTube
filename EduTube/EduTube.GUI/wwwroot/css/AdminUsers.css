@@ -1,0 +1,48 @@
+﻿
+.userDiv {
+   word-break: break-word;
+   width: 8rem;
+   margin-right: 1rem;
+   vertical-align: top;
+}
+
+.userProfileImageDiv {
+   position: relative;
+   width: 6rem;
+   height: 6rem;
+   overflow: hidden;
+   border-radius: 50%;
+   margin: 1rem;
+}
+
+   .userProfileImageDiv img {
+      width: 6rem;
+      height: 6rem;
+   }
+
+#usersDiv {
+   display: flex;
+   padding: 1rem;
+}
+
+.buttonsDiv{
+   display: grid;
+}
+.editBtn, .deleteBtn, .blockBtn, .promoteBtn {
+   position: inherit !important;
+   margin-top: 0.2rem;
+}
+.channelName{
+   height:5rem
+}
+
+#showMoreDiv {
+   text-align: center;
+   padding: 0.5rem;
+}
+
+.showMore {
+   margin: 1rem;
+   width: 30%;
+   padding: 0.4rem;
+}
