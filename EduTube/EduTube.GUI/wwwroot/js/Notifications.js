@@ -7,22 +7,17 @@
          dataType: 'json',
          async: false,
          success: function (data) {
-            console.log(data);
             if (data.length > 0) {
                let notifDiv = $('#notifDiv');
                for (var i = 0; i < data.length; i++) {
-                  let backgroundColor = '';
-                  if (data[i].seen == false)
-                     backgroundColor = 'unSeenNotification';
-
                   notifDiv.append(
                     `<div class="row breakLineWhite"></div>
-                     <div class="row ${backgroundColor} padding1">
+                     <div class="row padding1">
                         <div class="col-lg-10 col-md-10 col-sm-12">
                            <div class="row">
                               <div class="col-lg-1 col-md-2 col-sm-2 marginAuto">
                                  <div class="notificationUserImageDiv">
-                                    <img src="/profileImages/default-avatar.png">
+                                    <img src="/profileImages/${data[i].userProfileImage}">
                                  </div>
                               </div>
                               <div class="col-lg-11 col-md-10 col-sm-10 breakWord marginAuto">
@@ -32,7 +27,7 @@
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-12 marginAuto">
                            <span class="float-right" id="dateSpan">
-                              ${data[i].dateCreatedOn}
+                              ${FormatDateString(data[i].dateCreatedOn)}
                            </span>
                         </div>
                      </div>`

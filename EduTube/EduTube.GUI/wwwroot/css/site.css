@@ -70,7 +70,7 @@ a.navbar-brand {
    }
 
 .tabsDivActiv {
-   box-shadow: 0 10px 30px rgba(0,0,0,.2);
+   box-shadow: 0 10px 30px rgba(0,0,0,.5);
    background: linear-gradient(to right,#f05a28 0,#e80a89 100%);
    color: #fff;
 }
@@ -309,7 +309,7 @@ h2 {
 }
 
 .purpleColorTxt {
-   color: #e80a89;
+   color: #e80a89 !important;
 }
 
 .greyBackground {
@@ -340,11 +340,11 @@ h2 {
    position: absolute;
    cursor: pointer;
    display: inline-block;
-   padding: 0.5rem;
+   padding: 0.25rem;
 }
 
    .purpleBtn:hover {
-      box-shadow: 0 10px 30px rgba(0,0,0,.2);
+      box-shadow: 0 10px 30px rgba(0,0,0,.5);
       background: linear-gradient(to right,#f05a28 0,#e80a89 100%);
       color: #fff;
    }
@@ -399,11 +399,11 @@ h2 {
    color: #fff;
    cursor: pointer;
    display: inline-block;
-   padding: 0.5rem;
+   padding: 0.25rem;
 }
 
    .orangeBtn:hover {
-      box-shadow: 0 10px 30px rgba(0,0,0,.2);
+      box-shadow: 0 10px 30px rgba(0,0,0,.5);
       background: linear-gradient(to right,#db9d0b 0,#d14e02 100%);
       color: #fff !important;
    }
@@ -415,11 +415,11 @@ h2 {
    color: #fff;
    cursor: pointer;
    display: inline-block;
-   padding: 0.5rem;
+   padding: 0.25rem;
 }
 
    .grayBtn:hover {
-      box-shadow: 0 10px 30px rgba(0,0,0,.2);
+      box-shadow: 0 10px 30px rgba(0,0,0,.5);
       background: linear-gradient(to right,#8a8a8a 0,#363636 100%);
       color: #fff !important;
    }
@@ -466,11 +466,11 @@ h2 {
    position: absolute;
    cursor: pointer;
    display: inline-block;
-   padding: 0.5rem;
+   padding: 0.25rem;
 }
 
    .redBtn:hover {
-      box-shadow: 0 10px 30px rgba(0,0,0,.2);
+      box-shadow: 0 10px 30px rgba(0,0,0,.5);
       background: linear-gradient(to right,#e52d27 0,#b31217 100%);
       color: #fff;
    }
@@ -483,11 +483,11 @@ h2 {
    position: absolute;
    cursor: pointer;
    display: inline-block;
-   padding: 0.5rem;
+   padding: 0.25rem;
 }
 
    .greenBtn:hover {
-      box-shadow: 0 10px 30px rgba(0,0,0,.2);
+      box-shadow: 0 10px 30px rgba(0,0,0,.5);
       background: linear-gradient(to right,#00d498 0,#04b533 100%);
       color: #fff !important;
    }
@@ -657,3 +657,28 @@ h2 {
 .fontSize08 {
 	font-size: 0.8rem;
 }
+
+.navbar .dropdown-menu a {
+   padding: 0 !important;
+}
+a.waves-effect, a.waves-light {
+   display: inherit !important;
+}
+
+.boldTxt {
+   font-weight: bold !important;
+}
+
+#userMenuDropdown {
+   margin-left: -5rem;
+   padding: 0.5rem 0;
+}
+   #userMenuDropdown a {
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+   }
+   #userMenuDropdown a i {
+      margin-left: 0.5rem;
+      margin-right: 0.5rem;
+      font-size: 18px;
+   }  

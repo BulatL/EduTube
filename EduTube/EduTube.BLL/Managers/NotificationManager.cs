@@ -40,28 +40,7 @@ namespace EduTube.BLL.Managers
 
       public async Task CreateByVideo(string userName, string userId, string userImg, string videoName, int videoId, DateTime date)
       {
-         /*string message = "<div class='row unSeenNotification padding1'>" +
-                              "<div class='col-lg-10 col-md-10 col-sm-12'>" +
-                                 "<div class='row'>" +
-                                    "<div class='col-lg-1 col-md-2 col-sm-2 marginAuto'>" +
-                                       "<a href ='/Users/" + userId + "'> " +
-                                          "<div class='notificationUserImageDiv'>" +
-                                             "<img src='~/profileImages/" + userImg + "'/> " +
-                                          "</div>" +
-                                       "</a>" +
-                                    "</div>" +
-                                    "<div class='col-lg-11 col-md-10 col-sm-10 breakWord marginAuto notificationsContent'>" +
-                                       "<a href ='/Users/" + userId + "'>" + userName + "</a> Uploaded new video: <a href='/Videos/" + videoId + "'>" + videoName + ".</a> Don't forget to check it." +
-                                    "</div>" +
-                                 "</div>" +
-                              "</div>" +
-                              "<div class='col-lg-2 col-md-2 col-sm-12 marginAuto'>" +
-                                 "<span class='float-right' id='dateSpan'>" +
-                                    date +
-                                 "</span>" +
-                              "</div>" +
-                           "</div>";*/
-         var message = String.Format(@"<h5><a href='/Users/{0}'>{1}</a></h5> just uploaded new video <h5><a href='/Videos/{2}'>{3}</a></h5> <br/> Don't forget to check it.", userName.Replace(" ", "-"), userName, videoId, videoName);
+         var message = String.Format(@"<span><a href='/Users/{0}' class='boldTxt'>{1}</a> just uploaded new video <a href='/Videos/{2}' class='boldTxt'>{3}</a> <br/> Don't forget to check it.</span>", userName.Replace(" ", "-"), userName, videoId, videoName);
          List<Subscription> subscriptions = await _context.Subscriptions.Where(x => x.SubscribedOnId.Equals(userId) && !x.Deleted).ToListAsync();
          List<Notification> notifications = new List<Notification>();
          foreach (var subscription in subscriptions)
@@ -71,7 +50,7 @@ namespace EduTube.BLL.Managers
                Content = message,
                Deleted = false,
                DateCreatedOn = date,
-               Seen = false,
+               UserProfileImage = userImg,
                UserId = subscription.SubscriberId
             };
             notifications.Add(notification);

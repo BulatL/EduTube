@@ -24,10 +24,14 @@
 </head>
 <body>
    <header>
-      <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow mb-3">
+      <!--What does this do exactly? Well it loads font awesome via javascript which is placed at the head of the page. 
+         Basically we are rendering font awesome before rendering the page which means it should load quicker.-->
+      <script type="text/javascript">(function () { var css = document.createElement('link'); css.href = 'https://use.fontawesome.com/releases/v5.1.0/css/all.css'; css.rel = 'stylesheet'; css.type = 'text/css'; document.getElementsByTagName('head')[0].appendChild(css); })();</script>
+
+      <nav class="navbar navbar-expand-lg navbar-toggleable-sm box-shadow mb-3">
          <div class="container-fluid">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EduTube</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+            <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                <span class="navbar-toggler-icon"></span>
             </button>
@@ -55,9 +59,10 @@
                            </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-lg-right greyBackground"
-                             aria-labelledby="navbarDropdownMenuLink-55">
-                           <a class="dropdown-item" href="/Users/@User.Claims.FirstOrDefault(x => x.Type.Equals("channelName"))?.Value.Replace(" ", "-")">My profile</a>
-                           <a class="dropdown-item" href="/Logout">Log out</a>
+                             aria-labelledby="navbarDropdownMenuLink-55" id="userMenuDropdown">
+                           <a class="dropdown-item" href="/Users/@User.Claims.FirstOrDefault(x => x.Type.Equals("channelName"))?.Value.Replace(" ", "-")"><i class='far fa-user'></i> My profile</a>
+                           <div class="breakLineWhite"></div>
+                           <a class="dropdown-item" href="/Logout"><i class="fa fa-sign-out"></i> Log out</a>
                         </div>
                      </li>
                   </ul>
@@ -66,7 +71,7 @@
                {
                   <input type="hidden" id="userLoggedIn" value="false" />
                   <a class="nav-link" href="/Register">Register</a>
-                  <a class="nav-link" href="/Login?redirectUrl=@Context.Request.Path">Login</a>
+                  <a class="nav-link" href="/Login?redirectUrl=@Context.Request.Path"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a>
                }
                <div class="nav navbar-nav navbar-right">
                   <div class="input-group">
@@ -87,7 +92,7 @@
                      </li>
                   }
                </ul>
-               </div>
+            </div>
          </div>
       </nav>
    </header>

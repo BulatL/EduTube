@@ -184,8 +184,15 @@ namespace EduTube.GUI.Controllers
 
       // GET: Videos/Create
       [Authorize]
-      public IActionResult Create()
+      public async Task<IActionResult> Create()
       {
+         bool isUserBlocked = await _userManager.IsUserBlocked(User.FindFirstValue(ClaimTypes.NameIdentifier));
+         if (isUserBlocked)
+         {
+            await _userManager.Logout();
+            return StatusCode(403);
+         }
+
          return View();
       }
 

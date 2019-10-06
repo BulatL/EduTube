@@ -41,6 +41,13 @@ namespace EduTube.GUI.Controllers
          if (ModelState.IsValid)
          {
             ApplicationUserModel user = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
+
+            if (user.Blocked)
+            {
+               await _userManager.Logout();
+               return StatusCode(403);
+            }
+
             CommentModel comment = new CommentModel()
             {
                Content = viewModel.CommentContent,

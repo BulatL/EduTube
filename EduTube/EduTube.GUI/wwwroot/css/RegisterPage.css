@@ -35,10 +35,10 @@
 #mainTabDiv{
    padding:2em 1em;
 }
-.purpleBtn {
+.purpleBtn, #btnBack {
    position: inherit;
-   font-size: 21px;
-   width: 5em;
+   /*font-size: 21px;*/
+   width: 7rem; 
 }
 #btnNext {
    margin-top: 1em;
@@ -47,7 +47,18 @@
 #btnBack {
    margin-top: 1em;
    float: left;
+   cursor: pointer;
+   color: white;
+   border: none;
+   box-shadow: 0 10px 30px rgba(0,0,0,.2);
+   background-color: transparent !important;
+   padding: 0.25rem;
 }
+
+   #btnBack:hover {
+      box-shadow: 0 10px 30px rgba(0,0,0,.5);
+      background-color: transparent !important;
+   }
 #btnRegister {
    margin-top: 1em;
    float: right;

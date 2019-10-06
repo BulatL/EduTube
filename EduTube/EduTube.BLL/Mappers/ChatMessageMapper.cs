@@ -24,24 +24,8 @@ namespace EduTube.BLL.Mappers
 
          if (entity.User != null)
          {
-            /*model.User = new ApplicationUserModel()
-            {
-               Id = entity.User.Id,
-               ChannelName = entity.User.ChannelName
-            };*/
             model.User = UserMapper.EntityToModel(entity.User);
          }
-
-         /*if (entity.Chat != null)
-         {
-            model.Chat = new ChatModel()
-            {
-               Id = entity.ChatId,
-               Name = entity.Chat.Name
-            };
-            //entity.Chat.Messages = null;
-            //model.Chat = ChatMapper.EntityToModel(entity.Chat);
-         }*/
 
          return model;
       }
@@ -59,12 +43,6 @@ namespace EduTube.BLL.Mappers
          {
             entity.User = UserMapper.ModelToEntity(model.User);
          }
-
-         /*if (model.Chat != null)
-         {
-            model.Chat.Messages = null;
-            entity.Chat = ChatMapper.ModelToEntity(model.Chat);
-         }*/
 
          return entity;
       }

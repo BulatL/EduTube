@@ -1,7 +1,6 @@
 ﻿@model IEnumerable<EduTube.BLL.Models.NotificationModel>
 @{
    ViewData["Title"] = "Notifications";
-   string unSeenNotification = " ";
 }
 @section Styles{
    <link href="~/css/NotificationsPage.css" rel="stylesheet" />
@@ -11,20 +10,12 @@
    <div class="container greyBackground" id="notifDiv">
       @for (int i = 0; i < Model.Count(); i++)
       {
-         @if (Model.ElementAtOrDefault(i).Seen == false)
-         {
-            unSeenNotification = "unSeenNotification";
-         }
-         @if (Model.ElementAtOrDefault(i).Seen == true)
-         {
-            unSeenNotification = " ";
-         }
-         <div class="row @unSeenNotification padding1">
+         <div class="row padding1">
             <div class="col-lg-10 col-md-10 col-sm-12">
             <div class="row">
                <div class="col-lg-1 col-md-2 col-sm-2 marginAuto">
                   <div class="notificationUserImageDiv">
-                     <img src="/profileImages/default-avatar.png">
+                     <img src="/profileImages/@Model.ElementAtOrDefault(i).UserProfileImage">
                   </div>
                </div>
                <div class="col-lg-11 col-md-10 col-sm-10 breakWord marginAuto">
@@ -34,7 +25,7 @@
             </div>
             <div class="col-lg-2 col-md-2 col-sm-12 marginAuto">
                <span class="float-right" id="dateSpan">
-                  @Html.Raw(Model.ElementAtOrDefault(i).DateCreatedOn)
+                  @Html.Raw(Model.ElementAtOrDefault(i).DateCreatedOn.ToString("yyyy-MM-dd hh:mm"))
                </span>
             </div>
          </div>

@@ -17,7 +17,7 @@ namespace EduTube.BLL.Mappers
          model.Id = entity.Id;
          model.UserId = entity.UserId;
          model.Content = entity.Content;
-         model.Seen = entity.Seen;
+         model.UserProfileImage = entity.UserProfileImage;
          model.Deleted = entity.Deleted;
          model.DateCreatedOn = entity.DateCreatedOn;
 
@@ -30,7 +30,7 @@ namespace EduTube.BLL.Mappers
          entity.Id = model.Id;
          entity.UserId = model.UserId;
          entity.Content = model.Content;
-         entity.Seen = model.Seen;
+         entity.UserProfileImage = model.UserProfileImage;
          entity.Deleted = model.Deleted;
          entity.DateCreatedOn = model.DateCreatedOn;
 

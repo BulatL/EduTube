@@ -233,6 +233,12 @@ namespace EduTube.BLL.Managers
          await _videoManager.DeleteActivateByUser(id, false);*/
       }
 
+      public async Task<bool> IsUserBlocked(string id)
+      {
+         ApplicationUser user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id.Equals(id));
+         return user.Blocked;
+      }
+
       public async Task<LoginResult> Login(string email, string password, bool rememberMe)
       {
          //return await _signInManager.PasswordSignInAsync(email, password, rememberMe, lockoutOnFailure: false);

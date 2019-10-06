@@ -22,21 +22,15 @@ $(function () {
             dataType: 'json',
             async: false,
             success: function (data) {
-               console.log(data);
                if (data.length > 0) {
                   for (var i = 0; i < data.length; i++) {
-                     let backgroundColor = '';
-                     if (data[i].seen === false)
-                        backgroundColor = 'unSeenNotification';
-
-
                      notificationsDiv.append(
-                        `<div class="row colorWhite ${backgroundColor} padding1">
+                        `<div class="row colorWhite padding1">
                            <div class="navbarNotificationContent">
                               ${data[i].content}
                            </div>
                            <br/>
-                           ${data[i].dateCreatedOn}
+                           ${FormatDateString(data[i].dateCreatedOn)}
                         </div>
                         <div class="row breakLineWhite"></div>`
                      );
@@ -70,26 +64,20 @@ $(function () {
 function GetNewNotifications() {
    let notificationsDiv = $('#notificationsDiv');
    let lastId = $('#lastNotificationId').val();
-   console.log("salje se zahtev " + new Date());
    $.ajax({
       url: `/Notifications/GetNewNotifications?lastId=${lastId}`,
       type: 'GET',
       success: function (data) {
-         console.log("stigao odgovor " + new Date());
-         console.log("----------------------------------------------");
          if (data.length > 0) {
             data.reverse();
             for (var i = 0; i < data.length; i++) {
-               let backgroundColor = '';
-               if (data[i].seen === false)
-                  backgroundColor = 'unSeenNotification';
                notificationsDiv.prepend(
-                  `<div class="row colorWhite ${backgroundColor} padding1">
+                  `<div class="row colorWhite padding1">
                      <div class="navbarNotificationContent">
                         ${data[i].content}
                      </div>
                      <br/>
-                     ${data[i].dateCreatedOn}
+                     ${FormatDateString(data[i].dateCreatedOn)}
                   </div>
                   <div class="row breakLineWhite"></div>`
                );
@@ -117,4 +105,17 @@ function openNotificationDropdown() {
 
 function RedirectTo(redirectUrl) {
 	window.location.replace(redirectUrl);
+}
+
+
+function FormatDateString(date) {
+   let spliteDate = date.split("T")[0];
+   let splitedTime = date.split("T")[1].split(".")[0];
+   let time = splitedTime.split(":");
+   let formatedDate = spliteDate + " " + time[0] + ":" + time[1];
+   return formatedDate;
+}
+
+function FormatDate(myDate) {
+   return myDate.getFullYear() + '-' + ('0' + (myDate.getMonth() + 1)).slice(-2) + '-' + ('0' + myDate.getDate()).slice(-2) + ' ' + myDate.getHours() + ':' + ('0' + (myDate.getMinutes())).slice(-2);
 }

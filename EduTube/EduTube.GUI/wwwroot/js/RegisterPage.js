@@ -17,59 +17,63 @@
       }
    });
    $('#form').submit(function () {
-      let userId = $('#userId').val();
       let channelName = $('#channelName').val();
       let password = $('#password').val();
       let email = $('#email').val();
       let channelDescription = $('#channelDescription').val();
+      let validationError = false;
+      let upperCase = new RegExp('[A-Z]');
+      let lowerCase = new RegExp('[a-z]');
+
+      let channelNameEror = "";
+      let emailError = "";
+      let channelDescriptionError = "";
+      let passwordError = "";
 
 
-		let birthDay = $('#BirthDay').val();
-		let birthMonth = $('#BirthMonth').val();
-		let birthYear = $('#BirthYear').val();
-		$('#dateOfBirth').val(birthYear + "." + birthMonth + "." + birthDay);
-		/*birthday.setFullYear(birthYear);
-		birthday.setMonth(birthMonth);
-		birthday.setday(birthDay);*/
+      let birthDay = $('#BirthDay').val();
+      let birthMonth = $('#BirthMonth').val();
+      let birthYear = $('#BirthYear').val();
+      $('#dateOfBirth').val(birthDay + "-" + (parseInt(birthMonth) + 1) + "." + birthYear);
 
-      /*if (channelName == "")
-         $('#channelNameError').text('The Channel name field is required.')
-      if (password == "")
-         $('#passwordError').text('The Password field is required.')
-      if (email == "")
-         $('#emailError').text('The Email field is required.')
-      if (channelDescription == "")
-         $('#channelDescriptionError').text('The Channel description field is required.')
-
-      if (channelName != "" && password != "" && email != "" && channelDescription != "") {
-         $.ajax({
-            url: `/Users/ChannelNameEmailExist?channelName=${channelName}&email=${email}&userId=${userId}`,
-            type: 'GET',
-            dataType: 'json',
-            contentType: "application/json",
-            success: function (response) {
-               console.log(response);
-               if (response.channelNameExist == true) {
-                  $('#channelNameError').text("Channel name already taken");
-                  console.log()
-               }
-               if (response.emailExist == true) {
-                  $('#emailError').text("Email already taken");
-               }
-               if (response.emailExist == true || response.channelNameExist == true) {
-                  return false
-               }
-               else if (response.emailExist != true && response.channelNameExist != true)
-                  return true;
-            },
-            error: function (response) {
-               return false;
-            }
-         });
+      if (channelName == "") {
+         channelNameEror = 'The Channel name field is required.';
+         validationError = true;
       }
-      else {
+      if (email == "") {
+         emailError = 'The Email field is required.';
+         validationError = true;
+      }
+      if (channelDescription == "") {
+         channelDescriptionError = 'The Channel description field is required.';
+         validationError = true;
+      }
+
+      if (password == "") {
+         passwordError = 'The Password field is required. ';
+         validationError = true;
+      }
+      if (password.length < 6) {
+         passwordError += 'Passwords must be at least six characters. ';
+         validationError = true;
+      }
+      if (!password.match(upperCase)) {
+         passwordError += 'Passwords must contain at least 1 uppercase character. ';
+         validationError = true;
+      }
+      if (!password.match(lowerCase)) {
+         passwordError += 'Passwords must contain at least 1 non uppercase character. ';
+         validationError = true;
+      }
+
+      console.log(passwordError);
+      if (validationError == true) {
+         $('#channelNameError').text(channelNameEror);
+         $('#emailError').text(emailError);
+         $('#channelDescriptionError').text(channelDescriptionError);
+         $('#passwordError').text(passwordError);
          return false;
-      }*/
+      }
 
       $.ajax({
          url: `/Users/ChannelNameEmailExist?channelName=${channelName}&email=${email}&userId=${0}`,

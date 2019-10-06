@@ -27,12 +27,29 @@
                <input type="hidden" value="@ViewBag.Subscribed" id="subscribedHidden" />
                <button class="purpleBtn" onclick="Subscribe()" id="subscribeBtn">Subscribe</button>
             }
-            @if (ViewBag.Subscribed == "SameUser")
+            @if (User.Identity.IsAuthenticated)
             {
-               <button class="redBtn position-initial" id="deleteProfileBtn" onclick='DeleteUser("@Model.Id")'>Delete profile</button>
-               <button class="greenBtn position-initial" id="btnSubscribeOwner" onclick="RedirectTo('/Users/Edit/@Model.Id')">Edit info</button>
+
+               @if (ViewBag.Subscribed == "SameUser" || User.Claims.FirstOrDefault(x => x.Type.Equals("role")).Value.Equals("Admin"))
+               {
+                  <button class="redBtn position-initial" id="deleteProfileBtn" onclick='DeleteUser("@Model.Id")'>Delete profile</button>
+                  <button class="greenBtn position-initial" id="btnSubscribeOwner" onclick="RedirectTo('/Users/Edit/@Model.Id')">Edit info</button>
+               }
             }
          </div>
+         @if (User.Identity.IsAuthenticated)
+         {
+
+            @if (ViewBag.Subscribed == "SameUser" || User.Claims.FirstOrDefault(x => x.Type.Equals("role")).Value.Equals("Admin"))
+            {
+               @if (Model.Blocked)
+               {
+                  <div class="col-12">
+                     <h4>This account is blocked</h4>
+                  </div>
+               }
+            }
+         }
          <div class="col-12">
             <p id="margin-top">@Model.ChannelDescription</p>
          </div>
@@ -74,7 +91,7 @@
                               @video.Name
                            </p>
                            <p class="fontSize08">
-                              @video.DateCreatedOn
+                              @video.DateCreatedOn.ToString("yyyy-MM-dd hh:mm")
                            </p>
                         </a>
                      </div>

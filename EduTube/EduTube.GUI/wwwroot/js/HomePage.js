@@ -44,7 +44,7 @@ function populateReccomendedVideo(videos) {
                <a href="/Users/${videos.firstRecommended[i].userChannelName.replace(/ /g, '-')}">
                   <p class="text-white fontSize08">${videos.firstRecommended[i].userChannelName}</p>
                </a>
-               <p class="fontSize08">${videos.firstRecommended[i].dateCreatedOn}</p>
+               <p class="fontSize08">${FormatDateString(videos.firstRecommended[i].dateCreatedOn)}</p>
             </div>`
          );
       }
@@ -74,7 +74,7 @@ function populateReccomendedVideo(videos) {
                <a href="/Users/${videos.secondRecommended[i].userChannelName.replace(/ /g, '-')}">
                   <p class="text-white fontSize08">${videos.secondRecommended[i].userChannelName}</p>
                </a>
-               <p class="fontSize08">${videos.secondRecommended[i].dateCreatedOn}</p>
+               <p class="fontSize08">${FormatDateString(videos.secondRecommended[i].dateCreatedOn)}</p>
             </div>`
          );
       }

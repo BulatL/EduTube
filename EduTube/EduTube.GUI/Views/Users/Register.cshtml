@@ -41,8 +41,8 @@
                         <span asp-validation-for="Lastname" style="color:red;" id="lastnameError"></span>
                      </div>
                   </div>
-						<div class="displayInline">
-							<div class="col-lg-8 col-md-9 col-sm-12" id="BirthDiv">
+						<div class="">
+							<div class="col-lg-12 col-md-12 col-sm-12" id="BirthDiv">
 								<label asp-for="DateOfBirth" class="col-form-label whiteColor" id="BirthLabel"></label>
 								<select class="form-control" id="BirthDay">
 									<option value="1">1</option>
@@ -164,9 +164,12 @@
 									<option value='2019'>2019</option>
 								</select>
 								<input type="hidden" name="DateOfBirth" class="form-control" id="dateOfBirth" />
-								<span asp-validation-for="DateOfBirth" style="color:red;"></span>
 							</div>
-							<div class="col-lg-4 col-md-3 col-sm-12">
+                     <div class="col-12">
+
+                        <span asp-validation-for="DateOfBirth" style="color:red;"></span>
+                     </div>
+							<div class="col-12">
 								<button class="purpleBtn" type="button" onclick="OpenAccountTab()" id="btnNext">Next</button>
 							</div>
 						</div>
@@ -216,7 +219,7 @@
                <span asp-validation-for="ChannelDescription" style="color:red;" id="channelDescriptionError"></span>
             </div>
             <div class="col-12">
-               <button class="purpleBtn" type="button" onclick="OpenAboutTab()" id="btnBack">Back</button>
+               <button class="" type="button" onclick="OpenAboutTab()" id="btnBack">Back</button>
                <button class="purpleBtn" type="submit" id="btnRegister">Save</button>
             </div>
          </div>

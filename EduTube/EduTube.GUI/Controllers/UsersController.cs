@@ -189,7 +189,7 @@ namespace EduTube.GUI.Controllers
             if (viewModel.ProfileImage != null)
                user.ProfileImage = _uploadSerice.UploadImage(viewModel.ProfileImage, "profileImages");
 
-            if (user.ProfileImage == null || user.ProfileImage == "")
+            else
                user.ProfileImage = "default-avatar.png";
 
             var result = await _userManager.Register(user, viewModel.Password);

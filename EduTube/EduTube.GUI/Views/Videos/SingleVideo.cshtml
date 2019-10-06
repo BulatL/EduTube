@@ -109,7 +109,7 @@
                <a href="/Users/@Model.OwnerChannelName.Replace(" ", "-")">
                   <h4>@Model.OwnerChannelName</h4>
                </a>
-               <span>@Model.DateCreatedOn</span>
+               <span>@Model.DateCreatedOn.ToString("yyyy-MM-dd hh:mm")</span>
             </div>
             <div class="panel-wrapper">
                <a class="showBtn orangeBtn btn" id="show" onclick="ShowMore()">Show More</a>
@@ -184,11 +184,11 @@
                      <button class="grayBtn" id="cancelComment" onclick="ResetTextarea()">Cancel</button>
                      @if (Context.User.Identity.IsAuthenticated)
                      {
-                        <button class="orangeBtn" id="saveComment" onclick="CreateComment(@Model.Id)">Save</button>
+                        <button class="orangeBtn" id="saveComment" onclick="CreateComment(@Model.Id)">Post</button>
                      }
                      @if (!Context.User.Identity.IsAuthenticated)
                      {
-                        <button class="orangeBtn" id="saveComment" onclick="RedirectToLogin(@Model.Id)">Save</button>
+                  <button class="orangeBtn" id="saveComment" onclick="RedirectToLogin(@Model.Id)">Post</button>
                      }
                   </div>
                </div>
@@ -212,7 +212,7 @@
                         <div class="col-11">
                            <div class="row">
                               <div class="col-8">
-                                 <span><a href="/Users/@comment.OwnerChannelName.Replace(" ", "-")"><strong>   @comment.OwnerChannelName</strong></a> @comment.DateCreatedOn</span>
+                                 <span><a href="/Users/@comment.OwnerChannelName.Replace(" ", "-")"><strong>   @comment.OwnerChannelName</strong></a> @comment.DateCreatedOn.ToString("yyyy-MM-dd hh:mm")</span>
                               </div>
                               @if (Context.User.Identity.IsAuthenticated)
                               {

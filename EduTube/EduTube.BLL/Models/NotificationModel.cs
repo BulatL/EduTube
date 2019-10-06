@@ -9,8 +9,7 @@ namespace EduTube.BLL.Models
       public string Content { get; set; }
       public DateTime DateCreatedOn { get; set; }
       public string UserId { get; set; }
-      //public ApplicationUserModel User { get; set; }
-      public bool Seen { get; set; }
+      public string UserProfileImage { get; set; }
       public bool Deleted { get; set; }
    }
 }

@@ -97,7 +97,7 @@
 
                @if (User.Identity.IsAuthenticated)
                {
-                  <button onclick="Redirect('/Users/@User.Claims.FirstOrDefault(x=> x.Type.Equals("channelName")).Value.Replace(" ", "-")')" type="button" class="redBtn position-initial" id="backToProfileBtn">Back to Profile</button>
+                  <button onclick="Redirect('/Users/@User.Claims.FirstOrDefault(x=> x.Type.Equals("channelName")).Value.Replace(" ", "-")')" type="button" class="position-initial" id="backToProfileBtn">Back to Profile</button>
                }
             </div>
          </form>

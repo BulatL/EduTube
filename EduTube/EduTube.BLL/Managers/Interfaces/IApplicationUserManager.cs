@@ -19,6 +19,7 @@ namespace EduTube.BLL.Managers.Interfaces
       Task<ApplicationUserModel> GetByChannelName(string channelName, string userId, string userRole);
       Task<bool> ChannelNameExist(string channelName, string userId);
       Task<bool> EmailExist(string email, string userId);
+      Task<bool> IsUserBlocked(string id);
       Task<LoginResult> Login(string email, string password, bool rememberMe);
       Task Logout();
       Task<ApplicationUserModel> Update(ApplicationUserModel userModel);

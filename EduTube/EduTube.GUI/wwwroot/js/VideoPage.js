@@ -93,7 +93,7 @@ function PopulateComments(comments) {
                <div class="col-11">
                   <div class="row">
                      <div class="col-8">
-                        <span><a href="/Users/${comments[i].user.channelName.replace(' ', '-')}"><strong>   ${comments[i].user.channelName}</strong></a> ${comments[i].dateCreatedOn}</span>
+                        <span><a href="/Users/${comments[i].user.channelName.replace(' ', '-')}"><strong>   ${comments[i].user.channelName}</strong></a> ${FormatDateString(comments[i].dateCreatedOn)}</span>
                      </div>`);
 
       if (comments[i].userId === currentUserId) {
@@ -363,7 +363,7 @@ function populateNewCommentDiv(comment) {
             <div class="col-11">
                <div class="row">
                   <div class="col-8">
-                     <span><a href="/Users/${comment.ownerChannelName.replace(' ', '-')}"><strong>   ${comment.ownerChannelName}</strong></a> ${comment.dateCreatedOn}</span>
+                     <span><a href="/Users/${comment.ownerChannelName.replace(' ', '-')}"><strong>   ${comment.ownerChannelName}</strong></a> ${FormatDateString(comment.dateCreatedOn)}</span>
                   </div>
                      <div class="col-4" id="mainCommentOptionsDiv_${comment.commentId}">
                         <button class="dotBtn" onclick="showCommentOptionDiv(${comment.commentId})">
@@ -596,7 +596,7 @@ function EditVideo() {
 })();
 
 function RedirectToLogin(videoId) {
-   window.location.replace(`/Login?redirectUrl=/Videos/${pageVideoId}`);
+   window.location.replace(`/Login?redirectUrl=/Videos/${videoId}`);
 }
 
 function ShowMore() {

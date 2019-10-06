@@ -25,7 +25,7 @@ connection.on("ReceiveMessage", function (userId, channelName, profileImage, mes
                   <p>
                     ${message}
                   </p>
-                  <span class="time_date">${new Date}</span>
+                  <span class="time_date">${FormatDate(new Date)}</span>
                </div>
             </div>`
       );
@@ -42,7 +42,7 @@ connection.on("ReceiveMessage", function (userId, channelName, profileImage, mes
                   <p>
                      ${message}
                   </p>
-                  <span class="time_date">${new Date}</span>
+                  <span class="time_date">${FormatDate(new Date)}</span>
                </div>
             </div>
          </div>`
@@ -131,7 +131,7 @@ function PopulateOutgoingMessage(message) {
                   <p>
                     ${message.message}
                   </p>
-                  <span class="time_date">${message.dateCreatedOn}</span>
+                  <span class="time_date">${FormatDateString(message.dateCreatedOn) }</span>
                </div>
             </div>`
    );
@@ -150,7 +150,7 @@ function PopulateIncomingMessage(message) {
                <p>
                   ${message.message}
                </p>
-               <span class="time_date">${message.dateCreatedOn}</span>
+               <span class="time_date">${FormatDateString(message.dateCreatedOn)}</span>
             </div>
          </div>
       </div>`
@@ -181,7 +181,6 @@ function DeleteChat() {
          $('#modalDialog').modal('hide');
       },
       error: function (data, xhr) {
-         console.log(data);
       }
    });
 }

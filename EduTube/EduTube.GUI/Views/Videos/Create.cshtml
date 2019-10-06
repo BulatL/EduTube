@@ -11,7 +11,7 @@
 <div id="createVideoDiv">
    <div class="row">
       <div class="col-12">
-         <form method="post" enctype="multipart/form-data" action="Create" id="form">
+         <form method="post" enctype="multipart/form-data" id="form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <h4 class="text-center">Upload new video for free</h4>
             <!--<div class="form-group">
@@ -123,21 +123,21 @@
                </div>
                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                   <div id="thumnailDiv">
-                     <img id="thumbnail"/>
+                     <img id="thumbnail" />
                   </div>
                </div>
             </div>
-            <div class="form-group form-check">
-               <label class="form-check-label">
-                  <input class="form-check-input" asp-for="AllowComments" /> @Html.DisplayNameFor(model => model.AllowComments)
-               </label>
+            <div class="row">
+               <div class="col-12">
+                  <label for="default" class="btn" id="allowCommentsLabel">Allow comments <input type="checkbox" id="default" class="badgebox" asp-for="AllowComments"><span class="badge">&check;</span></label>
+               </div>
             </div>
             <div class="buttonsDiv">
                <button class="purpleBtn" type="submit" id="createBtn">Create</button>
 
                @if (User.Identity.IsAuthenticated)
                {
-                  <button onclick="Redirect('/Users/@User.Claims.FirstOrDefault(x=> x.Type.Equals("channelName")).Value.Replace(" ", "-")')" type="button" class="redBtn position-initial" id="backToProfileBtn">Back to Profile</button>
+                  <button onclick="Redirect('/Users/@User.Claims.FirstOrDefault(x=> x.Type.Equals("channelName")).Value.Replace(" ", "-")')" type="button" class="position-initial" id="backToProfileBtn">Back to Profile</button>
                }
             </div>
          </form>
