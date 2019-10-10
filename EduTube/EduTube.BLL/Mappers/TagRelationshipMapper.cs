@@ -18,18 +18,27 @@ namespace EduTube.BLL.Mappers
          entity.TagId = model.TagId;
 
 
-         if (entity.Chat != null)
+         /*if (model.Chat != null)
          {
+            entity.ChatId = model.Chat.Id;
+            if (entity.Chat == null)
+               entity.Chat = new Chat();
             ChatMapper.CopyModelToEntity(model.Chat, entity.Chat);
          }
 
-         if (entity.Video != null)
+         if (model.Video != null)
          {
+            entity.VideoId = model.Video.Id;
+            if (entity.Video == null)
+               entity.Video = new Video();
             VideoMapper.CopyModelToEntity(model.Video, entity.Video);
-         }
+         }*/
 
-         if (entity.Tag != null)
+         if (model.Tag != null)
          {
+            entity.TagId = model.Tag.Id;
+            if (entity.Tag == null)
+               entity.Tag = new Tag();
             TagMapper.CopyModelToEntity(model.Tag, entity.Tag);
          }
 

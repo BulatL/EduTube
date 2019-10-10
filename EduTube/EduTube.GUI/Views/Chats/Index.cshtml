@@ -21,20 +21,12 @@
                <div class="Heading">
                   <h4>All Chats</h4>
                </div>
-               <div class="srch_bar">
-                  <div class="stylish-input-group">
-                     <input type="text" class="search-bar colorWhite" id="searchInput" placeholder="Search">
-                     <span class="input-group-addon">
-                        <button type="button" id="searchBtn"> <i class="fa fa-search" aria-hidden="true"></i> </button>
-                     </span>
-                  </div>
-               </div>
                @if (User.Identity.IsAuthenticated)
                {
                   @if (User.Claims.FirstOrDefault(x => x.Type.Equals("role")).Value.Equals("Admin"))
                   {
                      <div>
-                        <button class="purpleBtn" id="createChatBtn" onclick='OpenModal("create")'>Create Chat</button>
+                        <button class="purpleBtn" id="createChatBtn" onclick='RedirectTo("/Chats/Create")'>Create Chat</button>
                      </div>
                   }
                }
@@ -50,9 +42,9 @@
                            </div>
                            <div class="display-flex">
                               Tags: <span>&nbsp;</span>
-                              <span  class="colorWhite">
+                              <span class="colorWhite">
                                  @for (int i = 0; i < chat.TagRelationships.Count(); i++)
-                                 {  
+                                 {
 
                                     @if ((chat.TagRelationships.Count() - 1) != i)
                                     {
@@ -66,15 +58,15 @@
                               </span>
                            </div>
                            <div>
-                              <button class="purpleBtn chatButtons" onclick='JoinChat("@chat.Id")'>Join Chat</button>
                               @if (User.Identity.IsAuthenticated)
                               {
                                  @if (User.Claims.FirstOrDefault(x => x.Type.Equals("role")).Value.Equals("Admin"))
                                  {
-                                    <button class="redBtn chatButtons" onclick='OpenModal("@chat.Id", "@chat.Name")'>Delete</button>
+                                    <button class="blackBtn chatButtons" onclick='OpenModal("@chat.Id", "@chat.Name")'>Delete</button>
                                     <button class="greenBtn chatButtons" onclick='RedirectTo("/Chats/Edit/@chat.Id")'>Edit</button>
                                  }
                               }
+                              <button class="purpleBtn chatButtons" onclick='JoinChat("@chat.Id")'>Join Chat</button>
                            </div>
                         </div>
                      </div>

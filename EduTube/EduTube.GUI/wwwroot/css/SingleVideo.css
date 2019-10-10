@@ -212,3 +212,8 @@ textarea {
 		box-shadow: 0 10px 30px rgba(0,0,0,.5);
 		background-color: transparent !important;
 	}
+
+#subscribeBtn {
+   margin-left: 1rem;
+   height: 2rem;
+}

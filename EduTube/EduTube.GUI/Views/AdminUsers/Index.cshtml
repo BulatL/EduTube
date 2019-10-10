@@ -21,18 +21,6 @@
                   <h5 class="overflow text-center userRole" id="userRole_@user.Id">@user.Role</h5>
                </a>
                <div class="buttonsDiv">
-                  <button class="greenBtn editBtn" onclick='RedirectTo("/Users/Edit/@user.Id")'>Edit</button>
-                  <button class="redBtn deleteBtn">Delete</button>
-                  @if (user.Blocked)
-                  {
-                     <button class="redBtn promoteBtn" onclick='Unblock("@user.Id")' id="unblock_@user.Id">Unblock</button>
-                     <button hidden class="redBtn promoteBtn" onclick='Block("@user.Id")' id="block_@user.Id">Block</button>
-                  }
-                  @if (!user.Blocked)
-                  {
-                     <button class="redBtn promoteBtn" onclick='Block("@user.Id")' id="block_@user.Id">Block</button>
-                     <button hidden class="redBtn promoteBtn" onclick='Unblock("@user.Id")' id="unblock_@user.Id">Unblock</button>
-                  }
                   @if (user.Role.Equals("Admin"))
                   {
                      <button class="redBtn promoteBtn" onclick='Demote("@user.Id")' id="demote_@user.Id">Demote</button>
@@ -43,6 +31,18 @@
                      <button class="purpleBtn promoteBtn" onclick='Promote("@user.Id")' id="promote_@user.Id">Promote</button>
                      <button hidden class="redBtn promoteBtn" onclick='Demote("@user.Id")' id="demote_@user.Id">Demote</button>
                   }
+                  <button class="greenBtn editBtn" onclick='RedirectTo("/Users/Edit/@user.Id")'>Edit</button>
+                  @if (user.Blocked)
+                  {
+                     <button class="blackBtn promoteBtn" onclick='Unblock("@user.Id")' id="unblock_@user.Id">Unblock</button>
+                     <button hidden class="blackBtn promoteBtn" onclick='Block("@user.Id")' id="block_@user.Id">Block</button>
+                  }
+                  @if (!user.Blocked)
+                  {
+                     <button class="blackBtn promoteBtn" onclick='Block("@user.Id")' id="block_@user.Id">Block</button>
+                     <button hidden class="blackBtn promoteBtn" onclick='Unblock("@user.Id")' id="unblock_@user.Id">Unblock</button>
+                  }
+                  <button class="blackBtn deleteBtn" onclick='DeleteUser("@user.Id")'>Delete</button>
                </div>
             </div>
          }
@@ -64,6 +64,8 @@
       </div>
    }
 </div>
+<!--Div for deleting user-->
+<div class="modal hide" id="deleteUserDialog" role="dialog" aria-hidden="true"></div>
 
 @section Scripts{
    <script src="~/js/AdminUsers.js"></script>

@@ -24,7 +24,7 @@
 </head>
 <body>
    <header>
-      <!--What does this do exactly? Well it loads font awesome via javascript which is placed at the head of the page. 
+      <!--What does this do exactly? Well it loads font awesome via javascript which is placed at the head of the page.
          Basically we are rendering font awesome before rendering the page which means it should load quicker.-->
       <script type="text/javascript">(function () { var css = document.createElement('link'); css.href = 'https://use.fontawesome.com/releases/v5.1.0/css/all.css'; css.rel = 'stylesheet'; css.type = 'text/css'; document.getElementsByTagName('head')[0].appendChild(css); })();</script>
 
@@ -61,7 +61,15 @@
                         <div class="dropdown-menu dropdown-menu-lg-right greyBackground"
                              aria-labelledby="navbarDropdownMenuLink-55" id="userMenuDropdown">
                            <a class="dropdown-item" href="/Users/@User.Claims.FirstOrDefault(x => x.Type.Equals("channelName"))?.Value.Replace(" ", "-")"><i class='far fa-user'></i> My profile</a>
+                           <a class="dropdown-item" href="/Chats"><i class="fa fa-envelope"></i> Chat rooms</a>
                            <div class="breakLineWhite"></div>
+                           <a class="dropdown-item" href="/Notifications"><i class="fas fa-bell"></i> Notifications</a>
+                           <div class="breakLineWhite"></div>
+                           @if (User.Claims.FirstOrDefault(x => x.Type.Equals("role")).Value.Equals("Admin"))
+                           {
+                              <a class="nav-link" asp-area="" asp-controller="AdminUsers" asp-action="Index"><i class='fas fa-users'></i> Admin page</a>
+                              <div class="breakLineWhite"></div>
+                           }
                            <a class="dropdown-item" href="/Logout"><i class="fa fa-sign-out"></i> Log out</a>
                         </div>
                      </li>
@@ -79,18 +87,7 @@
                   </div>
                </div>
                <ul class="navbar-nav flex-grow-1">
-                  @if (Context.User.Identity.IsAuthenticated)
-                  {
-                     @if (User.Claims.FirstOrDefault(x => x.Type.Equals("role")).Value.Equals("Admin"))
-                     {
-                        <li class="nav-item">
-                           <a class="nav-link" asp-area="" asp-controller="AdminUsers" asp-action="Index">Admin users</a>
-                        </li>
-                     }
-                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Chats" asp-action="Index">Chat rooms</a>
-                     </li>
-                  }
+                  
                </ul>
             </div>
          </div>

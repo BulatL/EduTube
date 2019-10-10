@@ -21,10 +21,14 @@ a.navbar-brand {
 -------------------------------------------------- */
 /*dropdown*/
 .dropdown-item:hover {
-   color: white !important;
+   color: #e80a89;
    text-decoration: none;
-   background-color: #e80a89;
+   background-color: transparent !important;
 }
+.dropdown-item:hover i {
+   color: #e80a89;
+}
+
 
 /*dropdown
 -------------------------------------------------*/
@@ -333,7 +337,7 @@ h2 {
 }
 
 .purpleBtn {
-   background-color: #e80a89;
+   background-color: #9c0059;
    border: none;
    border-radius: 5px;
    color: #fff;
@@ -345,7 +349,7 @@ h2 {
 
    .purpleBtn:hover {
       box-shadow: 0 10px 30px rgba(0,0,0,.5);
-      background: linear-gradient(to right,#f05a28 0,#e80a89 100%);
+      background: linear-gradient(to right,#e80a89 0,#9c0059 100%);
       color: #fff;
    }
 
@@ -393,7 +397,7 @@ h2 {
 }
 
 .orangeBtn {
-   background-color: #d14e02;
+   background-color: #9c3b03;
    border: none;
    border-radius: 5px;
    color: #fff;
@@ -404,7 +408,7 @@ h2 {
 
    .orangeBtn:hover {
       box-shadow: 0 10px 30px rgba(0,0,0,.5);
-      background: linear-gradient(to right,#db9d0b 0,#d14e02 100%);
+      background: linear-gradient(to right,#d14e02 0,#9c3b03 100%);
       color: #fff !important;
    }
 
@@ -435,6 +439,7 @@ h2 {
    border: none;
    color: #363636;
    float: right;
+   outline: none;
 }
 
 .hoverGray:hover {
@@ -476,7 +481,7 @@ h2 {
    }
 
 .greenBtn {
-   background-color: #04b533;
+   background-color: #005216;
    border: none;
    border-radius: 5px;
    color: #fff;
@@ -488,10 +493,23 @@ h2 {
 
    .greenBtn:hover {
       box-shadow: 0 10px 30px rgba(0,0,0,.5);
-      background: linear-gradient(to right,#00d498 0,#04b533 100%);
+      background: linear-gradient(to right,#04b533 0,#005216 100%);
       color: #fff !important;
    }
 
+.blackBtn {
+   border-radius: 5px;
+   padding: 0.3rem;
+   cursor: pointer;
+   color: white;
+   border: none;
+   box-shadow: 0 10px 30px rgba(0,0,0,.9);
+   background-color: transparent !important;
+}
+   .blackBtn:hover {
+      box-shadow: 0 10px 30px rgba(0,0,0,.5);
+      background-color: rgba(43,43,43,.5) !important;
+   }
 .displayNone {
    display: none;
 }

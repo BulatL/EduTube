@@ -104,11 +104,25 @@
             </a>
          </div>
          <!--Div with video description-->
-         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 noPadding ">
+         <div class="col-lg-8 col-md-8 col-sm-10 col-xs-10 noPadding ">
             <div style="display:inline-block;">
-               <a href="/Users/@Model.OwnerChannelName.Replace(" ", "-")">
-                  <h4>@Model.OwnerChannelName</h4>
-               </a>
+               <div class="display-flex">
+                  <a href="/Users/@Model.OwnerChannelName.Replace(" ", "-")">
+                     <h4>@Model.OwnerChannelName</h4>
+                  </a>
+                  @if (User.Identity.IsAuthenticated)
+                  {
+                     @if (!Model.Subscribed.Equals("SameUser"))
+                     {
+                        <input type="hidden" asp-for="Subscribed" id="subscribedHidden" />
+                        <button class="purpleBtn position-initial" onclick="Subscribe()" id="subscribeBtn">Subscribe</button>
+                     }
+                  }
+                  @if (!User.Identity.IsAuthenticated)
+                  {
+                     <a href="/Login?redirectUrl=/Videos/@Model.Id" class="purpleBtn position-initial" id="btnSubscribeOwner">Subscribe</a>
+                  }
+               </div>
                <span>@Model.DateCreatedOn.ToString("yyyy-MM-dd hh:mm")</span>
             </div>
             <div class="panel-wrapper">
@@ -120,25 +134,15 @@
             </div><!-- end panel-wrapper -->
          </div>
          <!--Div with buttons for edit, delete i subscribe-->
-         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 noPadding">
+         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 noPadding">
             <div class="noPadding">
                @if (User.Identity.IsAuthenticated)
                {
-                  @if (Model.OwnerChannelName.Equals(User.Claims.FirstOrDefault(x => x.Type.Equals("channelName"))?.Value))
+                  @if (Model.OwnerChannelName.Equals(User.Claims.FirstOrDefault(x => x.Type.Equals("channelName"))?.Value) ||User.Claims.FirstOrDefault(x => x.Type.Equals("role")).Value.Equals("Admin"))
                   {
-                     <button class="greenBtn position-initial fillAvailable" id="btnSubscribeOwner" onclick='RedirectTo("/Videos/Edit/@Model.Id")'>Edit info</button>
-                     <button class="redBtn position-initial fillAvailable margin-top" id="btnSubscribeOwner" onclick="DeleteVideo(@Model.Id)">Delete video</button>
+                     <button class="greenBtn position-initial fillAvailable" id="btnEditVideo" onclick='RedirectTo("/Videos/Edit/@Model.Id")'>Edit video</button>
+                     <button class="blackBtn position-initial fillAvailable margin-top" id="btnDeleteVideo" onclick="DeleteVideo(@Model.Id)">Delete video</button>
                   }
-
-                  @if (!Model.Subscribed.Equals("SameUser"))
-                  {
-                     <input type="hidden" asp-for="Subscribed" id="subscribedHidden" />
-                     <button class="purpleBtn position-initial" onclick="Subscribe()" id="subscribeBtn">Subscribe</button>
-                  }
-               }
-               @if (!User.Identity.IsAuthenticated)
-               {
-                  <a href="/Login?redirectUrl=/Videos/@Model.Id" class="purpleBtn position-initial" id="btnSubscribeOwner">Subscribe</a>
                }
             </div>
          </div>
@@ -181,7 +185,7 @@
                <div class="container noPadding">
                   <textarea class="autofit" placeholder="Enter comment here..." id="newComment"></textarea>
                   <div class="inline-flex float-right">
-                     <button class="grayBtn" id="cancelComment" onclick="ResetTextarea()">Cancel</button>
+                     <button class="blackBtn" id="cancelComment" onclick="ResetTextarea()">Cancel</button>
                      @if (Context.User.Identity.IsAuthenticated)
                      {
                         <button class="orangeBtn" id="saveComment" onclick="CreateComment(@Model.Id)">Post</button>
@@ -366,7 +370,7 @@
                   </h4>
                </div>
                <!-- Modal body -->
-					<div class="modal-body" style="height: 12rem !important;">
+					<div class="modal-body" style="height: 15rem !important;">
 						<div class="col-12">
 							<h5 class="text-center">You need invitation code to see this video</h5>
 						</div>

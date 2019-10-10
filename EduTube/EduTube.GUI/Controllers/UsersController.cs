@@ -56,8 +56,6 @@ namespace EduTube.GUI.Controllers
          if (user.Videos != null)
             user.Videos = user.Videos.OrderBy(x => x.Id).ToList();
 
-         //currentUser = await _identityManager.GetUserAsync(User);
-
          if (currentUser != null)
          {
             if (currentUser.Id == user.Id)
@@ -88,7 +86,9 @@ namespace EduTube.GUI.Controllers
             ViewData["Subscribed"] = "UserNotLogged";
          }
 
-         return View("Profile", user);
+         UserProfileViewModel viewModel = new UserProfileViewModel(user);
+         viewModel.Role = await _userManager.GetRole(user.Id);
+         return View("Profile", viewModel);
       }
 
       [Route("Login")]
@@ -256,12 +256,62 @@ namespace EduTube.GUI.Controllers
          IdentityResult result = await _userManager.Delete(id);
          if (result.Succeeded)
          {
-            await _userManager.Logout();
+            if(id.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)))
+               await _userManager.Logout();
             new ElasticsearchController(_videoManager, _userManager, _tagRelationshipManager).DeleteDocument(id, "users", "applicationusermodel");
             return StatusCode(200);
          }
          else
             return StatusCode(404);
+      }
+
+      [Authorize]
+      [Route("Users/ChangePassword/{id}")]
+      public async Task<IActionResult> ChangePassword(string id)
+      {
+         string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+         string currentUserRole = await _userManager.GetRole(currentUserId);
+
+         if (id.Equals(currentUserId) || (!id.Equals(currentUserId) && currentUserRole.Equals("Admin")))
+         {
+            ChangePasswordViewModel viewModel = new ChangePasswordViewModel(id);
+            return View(viewModel);
+         }
+
+         else
+         {
+            return StatusCode(403);
+         }
+      }
+      [Authorize]
+      [HttpPost]
+      [Route("Users/ChangePassword/{id}")]
+      public async Task<IActionResult> ChangePassword(ChangePasswordViewModel viewModel)
+      {
+         if (ModelState.IsValid)
+         {
+            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string currentUserRole = await _userManager.GetRole(currentUserId);
+
+            if (viewModel.UserId.Equals(currentUserId) || (!viewModel.UserId.Equals(currentUserId) && currentUserRole.Equals("Admin")))
+            {
+               IdentityResult changePassword = await _userManager.ChangePassword(viewModel.UserId, viewModel.OldPassword, viewModel.NewPassword);
+               if (!changePassword.Succeeded)
+               {
+                  ModelState.AddModelError("OldPassword", "Password doesn't match old password");
+                  return View(viewModel);
+               }
+               return LocalRedirect("/Users/" + User.Claims.FirstOrDefault(x => x.Type.Equals("channelName")).Value);
+            }
+            else
+            {
+               return StatusCode(403);
+            }
+         }
+         else
+         {
+            return View(viewModel);
+         }
       }
    }
 }

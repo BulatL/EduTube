@@ -8,7 +8,8 @@ namespace EduTube.BLL.Mappers
    {
       public static void CopyModelToEntity(TagModel model, Tag entity)
       {
-         model.Name = entity.Name;
+         entity.Id = model.Id;
+         entity.Name = model.Name;
       }
 
       public static TagModel EntityToModel(Tag entity)

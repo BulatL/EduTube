@@ -8,34 +8,6 @@ function OpenEditModal() {
    }, 1000);
 }
 
-function DeleteUser(userId) {
-   $("#deleteUserDialog").load(`/Users/GetDeleteDialog/${userId}`, function (responseTxt, statusTxt, xhr) {
-      if (statusTxt == "error")
-         console.log("error")
-      else {
-         $('#deleteUserDialog').modal('show');
-      }
-   });
-}
-
-function DeleteUserConfirm(id) {
-   $.ajax({
-      url: `/Users/Delete/${id}`,
-      type: 'DELETE',
-      dataType: 'json',
-      success: function (response) {
-         console.log(response);
-      },
-      error: function (data, xhr) {
-         if (data.status == 200)
-            window.location.replace(`/Home`);
-
-         else
-            alert('Delete operation failed');
-      }
-   });
-}
-
 function OpenTab(tabName) {
    $('.tabsDivActiv').removeClass('tabsDivActiv');
 
@@ -59,4 +31,12 @@ function OpenTab(tabName) {
       $('#subscribersDiv').hide();
 
    }
+}
+
+function OpenMenu() {
+   let displayed = $('#profileOptios').is(":visible");
+   if (displayed)
+      $('#profileOptios').css('display', 'none');
+   else
+      $('#profileOptios').css('display', 'block');
 }

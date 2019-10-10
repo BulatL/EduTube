@@ -14,8 +14,8 @@ namespace EduTube.BLL.Managers.Interfaces
       Task<List<VideoModel>> GetRecommendedVideos(string userId, string ipAddress);
       Task<bool> CheckInvitationCode(int videoId, string invitationCode);
       Task<VideoModel> GetById(int id, bool includeAll);
-      Task<VideoModel> Create(VideoModel video);
-      Task<VideoModel> Update(VideoModel video);
+      Task<VideoModel> Create(VideoModel video, string tagNames);
+      Task<VideoModel> Update(VideoModel video, string tagNames);
       Task<int> Delete(int id);
       Task<int> Remove(int id);
       Task DeleteActivateByUser(string id, bool option);

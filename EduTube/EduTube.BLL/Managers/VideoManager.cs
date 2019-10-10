@@ -17,11 +17,16 @@ namespace EduTube.BLL.Managers
    {
       private readonly ApplicationDbContext _context;
       private readonly INotificationManager _notificationManager;
+      private readonly ITagManager _tagManager;
+      private readonly ITagRelationshipManager _tagRelationshipManager;
 
-      public VideoManager(ApplicationDbContext context, INotificationManager notificationManager)
+      public VideoManager(ApplicationDbContext context, INotificationManager notificationManager,
+         ITagManager tagManager, ITagRelationshipManager tagRelationshipManager)
       {
          _context = context;
          _notificationManager = notificationManager;
+         _tagManager = tagManager;
+         _tagRelationshipManager = tagRelationshipManager;
       }
 
       public async Task<List<VideoModel>> GetAll()
@@ -211,8 +216,14 @@ namespace EduTube.BLL.Managers
          return await _context.Videos.AnyAsync(x => x.Id == videoId && x.InvitationCode.Equals(invitationCode));
       }
 
-      public async Task<VideoModel> Create(VideoModel model)
+      public async Task<VideoModel> Create(VideoModel model, string tagNames)
       {
+         List<TagModel> tags = await _tagManager.GetByNames(tagNames);
+         foreach (var item in tags)
+         {
+            TagRelationshipModel tr = new TagRelationshipModel() { Id = 0, TagId = item.Id, Tag = item, Video = model };
+            model.TagRelationships.Add(tr);
+         }
          Video entity = VideoMapper.ModelToEntity(model);
          _context.Videos.Add(entity);
          await _context.SaveChangesAsync();
@@ -221,8 +232,28 @@ namespace EduTube.BLL.Managers
 
       }
 
-      public async Task<VideoModel> Update(VideoModel model)
+      public async Task<VideoModel> Update(VideoModel model, string tagNames)
       {
+         List<TagModel> tags = await _tagManager.GetByNames(tagNames);
+         List<TagRelationshipModel> oldRelationships = await _tagRelationshipManager.GetByVideoId(model.Id, false);
+         foreach (var tag in tags)
+         {
+            TagRelationshipModel oldRelationship = oldRelationships.FirstOrDefault(x => x.TagId == tag.Id);
+            if (oldRelationship == null)
+            {
+               TagRelationshipModel relationshipModel = new TagRelationshipModel() { Id = 0, Tag = tag, TagId = tag.Id, Video = model, VideoId = model.Id };
+               model.TagRelationships.Add(relationshipModel);
+            }
+            else
+            {
+               oldRelationships.Remove(oldRelationship);
+               model.TagRelationships.Add(oldRelationship);
+            }
+         }
+         foreach (var item in oldRelationships)
+         {
+            await _tagRelationshipManager.Remove(item.Id);
+         }
          Video entity = await _context.Videos.Include(x => x.User).FirstOrDefaultAsync(x => x.Id == model.Id && !x.Deleted);
          VideoMapper.CopyModelToEntity(model, entity);
          await _context.SaveChangesAsync();

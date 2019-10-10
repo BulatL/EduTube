@@ -1,6 +1,5 @@
 ﻿$(function () {
     let subscribedHidden = $("#subscribedHidden");
-    console.log(subscribedHidden.val());
     if (subscribedHidden != undefined) {
         let subscribeBtn = $("#subscribeBtn");
 
@@ -55,10 +54,10 @@ function Subscribe() {
                         subscribersDiv.append(
                             `<div class="display-inline-block" id="subscriber_${channelName.replace(/ /g, '-')}">
                                 <a href="/Users/${channelName.replace(/ /g, '-')}">
-                                    <div id="subProfileImageDiv">
+                                    <div class="subProfileImageDiv">
                                         <img id="subProfileImage" src="/profileImages/${profileImage}" />
                                     </div>
-                                    <p>${channelName}</p>
+                                    <h4 class="overflow text-center">${channelName}</h4>
                                 </a>
                             </div>`
                         );

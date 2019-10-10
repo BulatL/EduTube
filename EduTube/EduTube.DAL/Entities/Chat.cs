@@ -10,5 +10,10 @@ namespace EduTube.DAL.Entities
       public bool Deleted { get; set; }
       public List<ChatMessage> Messages { get; set; }
       public List<TagRelationship> TagRelationships { get; set; }
+
+      public Chat()
+      {
+         TagRelationships = new List<TagRelationship>();
+      }
    }
 }

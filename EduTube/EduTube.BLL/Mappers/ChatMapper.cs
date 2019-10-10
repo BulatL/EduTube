@@ -21,11 +21,11 @@ namespace EduTube.BLL.Mappers
          {
             for (int i = 0; i < model.TagRelationships.Count; i++)
             {
-               if(entity.TagRelationships.ElementAtOrDefault(i) == null)
+               if(entity.TagRelationships?.ElementAtOrDefault(i) == null)
                {
                   entity.TagRelationships.Add(new TagRelationship());
                }
-               TagRelationshipMapper.CopyModelToEntity(model.TagRelationships.ElementAtOrDefault(i), entity.TagRelationships.ElementAtOrDefault(i));
+               TagRelationshipMapper.CopyModelToEntity(model.TagRelationships.ElementAtOrDefault(i), entity.TagRelationships?.ElementAtOrDefault(i));
             }
          }
       }
@@ -47,12 +47,8 @@ namespace EduTube.BLL.Mappers
 
          if (entity.Messages != null)
          {
-            //entity.Messages.ForEach(x => x.Chat = null);
             model.Messages = ChatMessageMapper.EntitiesToModels(entity.Messages);
          }
-
-         /*if (entity.Messages != null)
-             model.Messages = ChatMessageMapper.EntitiesToModels(entity.Messages);*/
 
          return model;
       }
@@ -71,7 +67,6 @@ namespace EduTube.BLL.Mappers
          
          if (model.Messages != null)
          {
-             //model.Messages.ForEach(x => x.Chat = null);
              entity.Messages = ChatMessageMapper.ModelsToEntities(model.Messages);
          }
 

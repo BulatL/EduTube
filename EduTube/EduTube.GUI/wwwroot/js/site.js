@@ -104,9 +104,153 @@ function openNotificationDropdown() {
 }
 
 function RedirectTo(redirectUrl) {
-	window.location.replace(redirectUrl);
+   window.location.href = redirectUrl;
 }
 
+function Unblock(id) {
+   $.ajax({
+      url: `/AdminUsers/BlockUnblock?block=False&id=${id}`,
+      type: 'GET',
+      dataType: 'json',
+      async: false,
+      success: function (response) {
+         console.log(response);
+         $(`#unblock_${id}`).attr('hidden', true);
+         $(`#block_${id}`).removeAttr('hidden');
+         $('#informationHeading').html("User successfully unblocked");
+         $('#informationModal').show();
+      },
+      error: function (response, jqXHR) {
+         console.log(response);
+         if (response.status == 200) {
+            $(`#unblock_${id}`).attr('hidden', true);
+            $(`#block_${id}`).removeAttr('hidden');
+            $('#informationHeading').html("User successfully unblocked");
+            $('#informationModal').modal('show');
+         }
+         else {
+            $('#informationHeading').html("Error ocured while trying to unblock this user, try again later");
+            $('#informationModal').modal('show');
+         }
+      }
+   });
+}
+
+function Block(id) {
+   $.ajax({
+      url: `/AdminUsers/BlockUnblock?block=True&id=${id}`,
+      type: 'GET',
+      dataType: 'json',
+      async: false,
+      success: function (response) {
+         console.log(response);
+         $(`#block_${id}`).attr('hidden', true);
+         $(`#unblock_${id}`).removeAttr('hidden');
+         $('#informationHeading').html("User successfully blocked");
+         $('#informationModal').modal('show');
+         console.log(response);
+      },
+      error: function (response, jqXHR) {
+         console.log(response);
+         if (response.status == 200) {
+            $(`#block_${id}`).attr('hidden', true);
+            $(`#unblock_${id}`).removeAttr('hidden');
+            $('#informationHeading').html("User successfully blocked");
+            $('#informationModal').modal('show');
+         }
+         else {
+            $('#informationHeading').html("Error ocured while trying to block this user, try again later");
+            $('#informationModal').modal('show');
+         }
+      }
+   });
+}
+
+function Demote(id) {
+   $.ajax({
+      url: `/AdminUsers/PromoteDemote?promote=False&id=${id}`,
+      type: 'GET',
+      dataType: 'json',
+      async: false,
+      success: function (response) {
+         console.log(response);
+         $(`#demote_${id}`).attr('hidden', true);
+         $(`#promote_${id}`).removeAttr('hidden');
+         $('#informationHeading').html("User successfully demoted");
+         $('#informationModal').modal('show');
+      },
+      error: function (response, jqXHR) {
+         console.log(response);
+         if (response.status == 200) {
+            $(`#demote_${id}`).attr('hidden', true);
+            $(`#promote_${id}`).removeAttr('hidden');
+            $('#informationHeading').html("User successfully demoted");
+            $('#informationModal').modal('show');
+         }
+         else {
+            $('#informationHeading').html("Error ocured while trying to demote this user, try again later");
+            $('#informationModal').modal('show');
+         }
+      }
+   });
+}
+
+function Promote(id) {
+   $.ajax({
+      url: `/AdminUsers/PromoteDemote?promote=True&id=${id}`,
+      type: 'GET',
+      dataType: 'json',
+      async: false,
+      success: function (response) {
+         console.log(response);
+         $(`#promote_${id}`).attr('hidden', true);
+         $(`#demote_${id}`).removeAttr('hidden');
+         $('#informationHeading').html("User successfully promoted");
+         $('#informationModal').modal('show');
+      },
+      error: function (response, jqXHR) {
+         console.log(response);
+         if (response.status == 200) {
+            $(`#promote_${id}`).attr('hidden', true);
+            $(`#demote_${id}`).removeAttr('hidden');
+            $('#informationHeading').html("User successfully promoted");
+            $('#informationModal').modal('show');
+         }
+         else {
+            $('#informationHeading').html("Error ocured while trying to promote this user, try again later");
+            $('#informationModal').modal('show');
+         }
+      }
+   });
+}
+
+function DeleteUser(userId) {
+   $("#deleteUserDialog").load(`/Users/GetDeleteDialog/${userId}`, function (responseTxt, statusTxt, xhr) {
+      if (statusTxt == "error")
+         console.log("error")
+      else {
+         $('#deleteUserDialog').modal('show');
+      }
+   });
+}
+
+function DeleteUserConfirm(id) {
+   $.ajax({
+      url: `/Users/Delete/${id}`,
+      type: 'DELETE',
+      dataType: 'json',
+      success: function (response) {
+         console.log(response);
+      },
+      error: function (data, xhr) {
+         if (data.status == 200)
+            window.location.replace(`/Home`);
+
+         else
+            alert('Delete operation failed');
+      }
+   });
+}
 
 function FormatDateString(date) {
    let spliteDate = date.split("T")[0];

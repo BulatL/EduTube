@@ -5,6 +5,7 @@
    float: right !important;
    position: inherit !important;
    width: 30% !important;
+   float: right;
 }
 #cancelDelete {
    position: inherit !important;

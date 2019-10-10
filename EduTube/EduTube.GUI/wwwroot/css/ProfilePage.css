@@ -129,3 +129,16 @@
    /*max-width: 12rem;*/
 	width: 10rem;
 }
+#profileOptios {
+   display: none;
+   padding: 0.5rem;
+   position: absolute;
+   margin-top: 4rem;
+   z-index: 100;
+   border: 1px solid rgb(232, 10, 137);
+   margin-right: 1rem;
+   margin-left: 1rem;
+}
+.menuBtn:hover, .menuBtn:hover i {
+   color: #e80a89;
+}

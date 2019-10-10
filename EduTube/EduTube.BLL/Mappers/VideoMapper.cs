@@ -33,7 +33,7 @@ namespace EduTube.BLL.Mappers
                {
                   entity.TagRelationships.Add(new TagRelationship());
                }
-               TagRelationshipMapper.CopyModelToEntity(model.TagRelationships.ElementAtOrDefault(i), entity.TagRelationships.ElementAtOrDefault(i));
+               TagRelationshipMapper.CopyModelToEntity(model.TagRelationships?.ElementAtOrDefault(i), entity.TagRelationships.ElementAtOrDefault(i));
             }
          }
       }

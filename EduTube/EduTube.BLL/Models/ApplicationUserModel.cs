@@ -15,7 +15,6 @@ namespace EduTube.BLL.Models
       public DateTime DateOfBirth { get; set; }
       public bool Blocked { get; set; }
       public bool Deleted { get; set; }
-      //public List<ReactionModel> Reactions { get; set; }
       public List<VideoModel> Videos { get; set; }
       public List<NotificationModel> Notifications { get; set; }
       public List<SubscriptionModel> Subscribers { get; set; }

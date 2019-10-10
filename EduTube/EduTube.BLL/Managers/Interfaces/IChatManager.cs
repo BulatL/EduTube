@@ -9,8 +9,8 @@ namespace EduTube.BLL.Managers.Interfaces
    {
       Task<List<ChatModel>> GetAll();
       Task<ChatModel> GetById(int id);
-      Task<ChatModel> Create(ChatModel chatModel);
-      Task<ChatModel> Update(ChatModel chatModel);
+      Task<ChatModel> Create(ChatModel chatModel, string tagNames);
+      Task<ChatModel> Update(ChatModel chatModel, string tagNames);
       Task Delete(int id);
    }
 }

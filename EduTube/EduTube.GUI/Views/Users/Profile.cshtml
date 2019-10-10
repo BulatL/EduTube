@@ -1,4 +1,4 @@
-﻿@model EduTube.BLL.Models.ApplicationUserModel
+﻿@model EduTube.GUI.ViewModels.UserProfileViewModel
 @{
    ViewData["Title"] = "Profile";
 }
@@ -27,13 +27,46 @@
                <input type="hidden" value="@ViewBag.Subscribed" id="subscribedHidden" />
                <button class="purpleBtn" onclick="Subscribe()" id="subscribeBtn">Subscribe</button>
             }
+         </div>
+         <div class="col-12 float-right">
             @if (User.Identity.IsAuthenticated)
             {
-
                @if (ViewBag.Subscribed == "SameUser" || User.Claims.FirstOrDefault(x => x.Type.Equals("role")).Value.Equals("Admin"))
                {
-                  <button class="redBtn position-initial" id="deleteProfileBtn" onclick='DeleteUser("@Model.Id")'>Delete profile</button>
-                  <button class="greenBtn position-initial" id="btnSubscribeOwner" onclick="RedirectTo('/Users/Edit/@Model.Id')">Edit info</button>
+                  <button class="dotBtn" onclick="OpenMenu()">
+                     <div class="dotMenu float-right">
+                     </div>
+                  </button>
+                  <div class="greyBackground float-right" id="profileOptios">
+                     <button class="transparentBtn menuBtn" id="" onclick="RedirectTo('/Users/Edit/@Model.Id')"><i class='fa fa-edit'></i> Edit profile</button>
+                     <button class="transparentBtn menuBtn" id="" onclick="RedirectTo('/Users/ChangePassword/@Model.Id')"><i class='fa fa-lock'></i> Change password</button>
+
+                     @if (User.Claims.FirstOrDefault(x => x.Type.Equals("role")).Value.Equals("Admin"))
+                     {
+                        @if (Model.Role.Equals("User"))
+                        {
+                           <button class="transparentBtn menuBtn" id="promote_@Model.Id" onclick='Promote("@Model.Id")'><i class='fa fa-level-up'></i> Promote profile</button>
+                           <button hidden class="transparentBtn menuBtn" id="demote_@Model.Id" onclick='Demote("@Model.Id")'><i class='fa fa-level-down'></i> Demote profile</button>
+                        }
+                        @if (Model.Role.Equals("Admin"))
+                        {
+                           <button hidden class="transparentBtn menuBtn" id="promote_@Model.Id" onclick='Promote("@Model.Id")'><i class='fa fa-level-up'></i> Promote profile</button>
+                           <button class="transparentBtn menuBtn" id="demote_@Model.Id" onclick='Demote("@Model.Id")'><i class='fa fa-level-down'></i> Demote profile</button>
+                        }
+
+                        @if (Model.Blocked)
+                        {
+                           <button class="transparentBtn menuBtn" onclick='Unblock("@Model.Id")' id="unblock_@Model.Id"><i class='fa fa-ban'></i> Unblock profile</button>
+                           <button hidden class="transparentBtn menuBtn" onclick='Block("@Model.Id")' id="block_@Model.Id"><i class='fa fa-ban'></i> Block profile</button>
+                        }
+                        @if (!Model.Blocked)
+                        {
+                           <button class="transparentBtn menuBtn" onclick='Block("@Model.Id")' id="block_@Model.Id"><i class='fa fa-ban'></i> Block profile</button>
+                           <button hidden class="transparentBtn menuBtn" onclick='Unblock("@Model.Id")' id="unblock_@Model.Id"><i class='fa fa-ban'></i> Unblock profile</button>
+                        }
+                     }
+                     <button class="transparentBtn menuBtn" id="" onclick='DeleteUser("@Model.Id")'><i class='fa fa-trash-alt'></i> Delete profile</button>
+                  </div>
                }
             }
          </div>
@@ -71,10 +104,13 @@
       <div id="mainTabDiv">
          <div id="videosDiv">
             <div class="row">
-               <div class="col-12" id="addVideoDiv">
-                  <button onclick="RedirectTo('/videos/Create')" class="greenBtn float-right" id="addVideoBtn">Add video</button>
+               @if (ViewBag.Subscribed == "SameUser")
+               {
+                  <div class="col-12" id="addVideoDiv">
+                     <button onclick="RedirectTo('/videos/Create')" class="greenBtn float-right" id="addVideoBtn">Add video</button>
 
-               </div>
+                  </div>
+               }
             </div>
             <div id="userVideosDiv">
                @if (Model.Videos != null)
@@ -165,106 +201,26 @@
    </div>
 </div>
 
-
-<!--Div with modal dialog for editing profile-->
+<!--information modal-->
 <div>
    <!-- The Modal -->
-   <div class="modal fade" id="editModal">
+   <div class="modal fade" id="informationModal">
       <div class="modal-dialog">
-         <div class="modal-content">
+         <div class="modal-content greyBackground">
 
             <!-- Modal Header -->
-            <div class="modal-header">
-               <h4 class='col-12 modal-title text-center'>
-                  Edit informations: @Model.ChannelName
+            <div class="modal-header" style="border: none;">
+               <h4 class='col-12 modal-title text-center' id="informationHeading">
                   <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
                      <span aria-hidden='true'>&times;</span>
                   </button>
                </h4>
             </div>
-            <form method="post" asp-action="Edit" asp-controller="Videos">
-               <!-- Modal body -->
-               <div class="modal-body">
-                  <div class="" id="registerDiv">
-                     <h5 class="whiteColor text-center">CREATE YOUR PROFILE FOR <strong>FREE</strong> </h5>
-                     <div id="tabs">
-                        <div class="col-6 text-center blackBackground tabsDiv tabsDivActiv leftBorderRadius" id="aboutTab">
-                           <span class="whiteColor">About</span>
-                        </div>
-                        <div class="col-6 text-center blackBackground tabsDiv rightBorderRadius" id="accountTab">
-                           <span class="whiteColor">Account</span>
-                        </div>
-                     </div>
-                     <div id="mainTabDiv">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div id="aboutTabDiv">
-                           <div class="displayInline">
-                              <div id="profileImageDiv" class="text-center">
-                                 <div id="profile-container">
-                                    <img id="profileImage" src="~/profileImages/default-avatar.png" />
-                                 </div>
-                                 <input id="imageUpload" type="file"
-                                        asp-for="ProfileImage" placeholder="Photo">
-                                 <span class="whiteColor">Profile picture</span>
-                              </div>
-                              <div id="basicInfoDiv">
-                                 <div class="displayInline">
-                                    <div class="col-6">
-                                       <label asp-for="Firstname" class="col-form-label whiteColor"></label>
-                                       <input asp-for="Firstname" class="form-control" placeholder="First name" id="firstname" />
-                                       <span asp-validation-for="Firstname" style="color:red;" id="firstnameError"></span>
-                                    </div>
-                                    <div class="col-6">
-                                       <label asp-for="Lastname" class="col-form-label whiteColor"></label>
-                                       <input asp-for="Lastname" class="form-control" placeholder="Last name" id="lastname" />
-                                       <span asp-validation-for="Lastname" style="color:red;" id="lastnameError"></span>
-                                    </div>
-                                 </div>
-                                 <div class="col-12">
-                                    <label asp-for="DateOfBirth" class="col-form-label whiteColor"></label>
-                                    <input asp-for="DateOfBirth" class="form-control" id="datepicker" />
-                                    <span asp-validation-for="DateOfBirth" style="color:red;"></span>
-                                 </div>
-                              </div>
-                           </div>
-                           <div class="col-12">
-                              <button class="purpleBtn" type="button" onclick="OpenAccountTab()" id="btnNext">Next</button>
-                           </div>
-                        </div>
-                        <div class="" id="accountTabDiv">
-                           <div class="displayInline">
-                              <div class="col-6">
-                                 <label asp-for="ChannelName" class="col-form-label whiteColor"></label>
-                                 <input asp-for="ChannelName" class="form-control" placeholder="Channel name" id="channelName" />
-                                 <span asp-validation-for="ChannelName" style="color:red;" id="channelNameError"></span>
-                              </div>
-                              <div class="col-6">
-                              </div>
-                           </div>
-                           <div class="col-12">
-                              <label asp-for="Email" class="col-form-label whiteColor"></label>
-                              <input asp-for="Email" class="form-control" placeholder="Email" id="email" />
-                              <span asp-validation-for="Email" style="color:red;" id="emailError"></span>
-                           </div>
-                           <div class="col-12">
-                              <label asp-for="ChannelDescription" class="col-form-label whiteColor"></label>
-                              <textarea asp-for="ChannelDescription" class="form-control" placeholder="Channel description" id="channelDescription"></textarea>
-                              <span asp-validation-for="ChannelDescription" style="color:red;" id="channelDescriptionError"></span>
-                           </div>
-                           <div class="col-12">
-                              <button class="purpleBtn" type="button" onclick="OpenAboutTab()" id="btnBack">Back</button>
-                              <button class="purpleBtn" type="submit" id="btnRegister">Register</button>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </form>
          </div>
       </div>
    </div>
 </div>
-<!--Div for deleting comment-->
+<!--Div for deleting user-->
 <div class="modal hide" id="deleteUserDialog" role="dialog" aria-hidden="true"></div>
 
 @section Scripts{

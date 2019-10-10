@@ -78,7 +78,6 @@ namespace EduTube.BLL.Managers
          return roles.ElementAtOrDefault(0);
       }
 
-
       public async Task<ApplicationUserModel> GetById(string id, bool includeAll)
       {
          return includeAll ? UserMapper.EntityToModel(await _userManager.Users
@@ -125,7 +124,6 @@ namespace EduTube.BLL.Managers
          }
          return user;
       }
-
 
       public async Task<ApplicationUserModel> Update(ApplicationUserModel model)
       {
@@ -180,10 +178,10 @@ namespace EduTube.BLL.Managers
          comments.ForEach(x => x.Deleted = true);
          reactions.ForEach(x => x.Deleted = true);
 
-         await _context.ChatMessages.AddRangeAsync(chatMessages);
-         await _context.Subscriptions.AddRangeAsync(subscriptions);
-         await _context.Comments.AddRangeAsync(comments);
-         await _context.Reactions.AddRangeAsync(reactions);
+         _context.ChatMessages.UpdateRange(chatMessages);
+         _context.Subscriptions.UpdateRange(subscriptions);
+         _context.Comments.UpdateRange(comments);
+         _context.Reactions.UpdateRange(reactions);
          _context.Update(user);
 
          await _context.SaveChangesAsync();
@@ -193,7 +191,6 @@ namespace EduTube.BLL.Managers
          await _subscriptionManager.DeleteActivateByUser(id, true);
          await _videoManager.DeleteActivateByUser(id, true);
          return await _userManager.UpdateAsync(user);*/
-         //transakcija 
       }
 
       public async Task Activate(string id)
@@ -350,6 +347,48 @@ namespace EduTube.BLL.Managers
             await _userManager.RemoveFromRoleAsync(user, "Admin");
             await _userManager.AddToRoleAsync(user, "User");
          }
+
+         IList<Claim> claimsExist = await _userManager.GetClaimsAsync(user);
+         if (claimsExist != null && claimsExist?.Count() > 0)
+         {
+            IList<Claim> oldClaims = await _userManager.GetClaimsAsync(user);
+            Claim oldRoleClaim = oldClaims.FirstOrDefault(x => x.Type.Equals("role"));
+            IdentityResult removeClaims = await _userManager.RemoveClaimAsync(user, oldRoleClaim);
+
+            if (promote)
+            {
+               Claim roleClaim = new Claim("role", "Admin");
+               IdentityResult identity = await _userManager.AddClaimAsync(user, roleClaim);
+            }
+            else
+            {
+               Claim roleClaim = new Claim("role", "User");
+               IdentityResult identity = await _userManager.AddClaimAsync(user, roleClaim);
+            }
+         }
+      }
+
+      public async Task<bool> PasswordMatch(string userId, string password)
+      {
+         ApplicationUser user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id.Equals(userId) && !x.Deleted);
+         if (user == null)
+            return false;
+
+         IPasswordHasher<ApplicationUser> passwordHasher = _userManager.PasswordHasher;
+         PasswordVerificationResult verificationResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
+         if (verificationResult == PasswordVerificationResult.Success)
+            return true;
+         else
+            return false;
+      }
+      public async Task<IdentityResult> ChangePassword(string userId, string oldPassowrd, string newPassword)
+      {
+         ApplicationUser user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id.Equals(userId) && !x.Deleted);
+         if (user == null)
+            return IdentityResult.Failed();
+
+         return await _userManager.ChangePasswordAsync(user, oldPassowrd, newPassword);
+         
       }
    }
 }

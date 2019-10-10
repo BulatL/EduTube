@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using EduTube.DAL.Data;
-using EduTube.DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
-using EduTube.BLL.Mappers;
 using EduTube.BLL.Managers.Interfaces;
 using EduTube.BLL.Models;
 using EduTube.GUI.ViewModels;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EduTube.GUI.Controllers
 {
@@ -51,9 +45,6 @@ namespace EduTube.GUI.Controllers
          return View();
       }
 
-      // POST: Chats/Create
-      // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-      // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
       [Authorize(Roles = "Admin")]
       [AutoValidateAntiforgeryToken]
       [HttpPost]
@@ -61,19 +52,8 @@ namespace EduTube.GUI.Controllers
       {
          if (ModelState.IsValid)
          {
-            ChatModel chat = new ChatModel()
-            {
-               Name = viewModel.Name,
-               Deleted = false,
-               TagRelationships = new List<TagRelationshipModel>()
-            };
-            List<TagModel> tags = await _tagManager.GetByNames(viewModel.Tags);
-            foreach (var tag in tags)
-            {
-               TagRelationshipModel relationshipModel = new TagRelationshipModel(){ Id = 0, Tag = tag, TagId = tag.Id, Chat = chat};
-               chat.TagRelationships.Add(relationshipModel);
-            }
-            await _chatManager.Create(chat);
+            ChatModel chat = ChatViewModel.CopyToModel(viewModel);
+            await _chatManager.Create(chat, viewModel.Tags);
             return RedirectToAction("Index");
          }
          return StatusCode(401);
@@ -96,34 +76,13 @@ namespace EduTube.GUI.Controllers
          if (ModelState.IsValid)
          {
             ChatModel chat = ChatViewModel.CopyToModel(viewModel);
-
-            List<TagModel> tags = await _tagManager.GetByNames(viewModel.Tags);
-            List<TagRelationshipModel> oldRelationships = await _tagRelationshipManager.GetByChat(chat.Id);
-            foreach (var tag in tags)
-            {
-               TagRelationshipModel oldRelationship = oldRelationships.FirstOrDefault(x => x.TagId == tag.Id);
-               if (oldRelationship == null)
-               {
-                  TagRelationshipModel relationshipModel = new TagRelationshipModel() { Id = 0, Tag = tag, TagId = tag.Id, Chat = chat };
-                  chat.TagRelationships.Add(relationshipModel);
-               }
-               else
-               {
-                  oldRelationships.Remove(oldRelationship);
-                  chat.TagRelationships.Add(oldRelationship);
-               }
-            }
-            foreach (var item in oldRelationships)
-            {
-               await _tagRelationshipManager.Remove(item.Id);
-            }
-            await _chatManager.Update(chat);
+         
+            await _chatManager.Update(chat, viewModel.Tags);
             return RedirectToAction("Index");
          }
          return View(viewModel);
       }
 
-      // GET: Chats/Delete/5
       [Authorize(Roles = "Admin")]
       [HttpDelete]
       public async Task<IActionResult> Delete(int? id)
