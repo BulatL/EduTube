@@ -185,6 +185,7 @@ namespace EduTube.BLL.Managers
          _context.Update(user);
 
          await _context.SaveChangesAsync();
+         await _userManager.UpdateSecurityStampAsync(user);
          return IdentityResult.Success;
          /*await _chatMessageManager.DeleteActivateByUser(id, true);
          await _reactionManager.DeleteActivateByUser(id, true);
@@ -332,6 +333,7 @@ namespace EduTube.BLL.Managers
          ApplicationUser user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id.Equals(id));
          user.Blocked = blocked;
          await _userManager.UpdateAsync(user);
+         await _userManager.UpdateSecurityStampAsync(user);
       }
 
       public async Task PromoteDemote(string id, bool promote)
@@ -365,22 +367,10 @@ namespace EduTube.BLL.Managers
                Claim roleClaim = new Claim("role", "User");
                IdentityResult identity = await _userManager.AddClaimAsync(user, roleClaim);
             }
+            await _userManager.UpdateSecurityStampAsync(user);
          }
       }
 
-      public async Task<bool> PasswordMatch(string userId, string password)
-      {
-         ApplicationUser user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id.Equals(userId) && !x.Deleted);
-         if (user == null)
-            return false;
-
-         IPasswordHasher<ApplicationUser> passwordHasher = _userManager.PasswordHasher;
-         PasswordVerificationResult verificationResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
-         if (verificationResult == PasswordVerificationResult.Success)
-            return true;
-         else
-            return false;
-      }
       public async Task<IdentityResult> ChangePassword(string userId, string oldPassowrd, string newPassword)
       {
          ApplicationUser user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id.Equals(userId) && !x.Deleted);

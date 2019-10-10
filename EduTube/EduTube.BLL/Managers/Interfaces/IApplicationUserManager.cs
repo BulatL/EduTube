@@ -28,8 +28,6 @@ namespace EduTube.BLL.Managers.Interfaces
       Task Activate(string id);
       Task BlockUnblock(string id, bool block);
       Task PromoteDemote(string id, bool promote);
-      Task<bool> PasswordMatch(string userId, string password);
       Task<IdentityResult> ChangePassword(string userId, string oldPassword, string newPassword);
-      //Task SetNewClaims(ApplicationUserModel user);
    }
 }

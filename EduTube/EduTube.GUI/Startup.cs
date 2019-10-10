@@ -72,7 +72,11 @@ namespace EduTube.GUI
             //options.User.RequireUniqueEmail = true;
             //options.SignIn.RequireConfirmedEmail = true;
          });
-
+         services.Configure<SecurityStampValidatorOptions>(options =>
+         {
+            // enables immediate logout, after updating the user's stat.
+            options.ValidationInterval = TimeSpan.Zero;
+         });
          services.RegisterBLLServices();
          services.AddScoped<IUploadService, UploadService>();
          services.AddSignalR();
