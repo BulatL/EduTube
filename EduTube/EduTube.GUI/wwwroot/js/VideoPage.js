@@ -605,12 +605,12 @@ function ShowMore() {
    $('.panel').css('max-height', 'max-content');
    let newHeight = $('.panel').css('height');
    console.log(newHeight);
-   $('#show').hide();
+	$('#show').attr('style', 'display:none !important');
    if (previouseHeight === newHeight) {
-      $('#hide').hide();
+		$('#hide').attr('style', 'display:none !important');
       return;
    }
-   $('#hide').show();
+	$('#hide').attr('style', 'display:block !important');
 }
 
 function ShowLess() {

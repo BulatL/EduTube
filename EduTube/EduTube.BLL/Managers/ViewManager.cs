@@ -26,7 +26,14 @@ namespace EduTube.BLL.Managers
 
       public async Task<bool> ViewExist(int videoId, string userId, string ipAddress)
       {
-         return await _context.Views.AnyAsync(x => x.VideoId == videoId && (x.UserId.Equals(userId) || x.IpAddress.Equals(ipAddress)));
+			if(userId == null)
+			{
+				return await _context.Views.AnyAsync(x => x.VideoId == videoId && x.IpAddress.Equals(ipAddress));
+			}
+			else
+			{
+				return await _context.Views.AnyAsync(x => x.VideoId == videoId && x.UserId.Equals(userId));
+			}
       }
 
       public async Task<ViewModel> Create(int videoId, string userId, string ipAddress)

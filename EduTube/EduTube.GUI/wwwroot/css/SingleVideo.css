@@ -122,7 +122,7 @@ button:focus {
    width: 30%;
 }
 #hide{
-	display: none;
+	display: none !important;
 }
 .showBtn, .hideBtn {
    position: absolute;
@@ -196,3 +196,19 @@ textarea {
 .ytp-pause-overlay, .ytp-scroll-min{
 	display: none !important;
 }
+
+#backToHome {
+	width: 100%;
+	margin-top: 1em;
+	cursor: pointer;
+	color: white;
+	border: none;
+	box-shadow: 0 10px 30px rgba(0,0,0,.2);
+	background-color: transparent !important;
+	padding: 0.25rem;
+}
+
+	#backToHome:hover {
+		box-shadow: 0 10px 30px rgba(0,0,0,.5);
+		background-color: transparent !important;
+	}
