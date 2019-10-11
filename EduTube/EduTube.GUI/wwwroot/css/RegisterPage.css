@@ -41,7 +41,6 @@
    width: 7rem; 
 }
 #btnNext {
-   margin-top: 1em;
    float: right;
 }
 #btnBack {
@@ -143,4 +142,8 @@ textarea {
 }
 ::-webkit-scrollbar {
 	width: 10px;
+}
+
+#backBtn {
+   width: 7rem;
 }

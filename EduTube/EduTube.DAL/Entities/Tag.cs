@@ -4,8 +4,9 @@ using System.Text;
 
 namespace EduTube.DAL.Entities
 {
-   public class Tag : Entity
+   public class Tag
    {
+      public int Id { get; set; }
       public string Name { get; set; }
    }
 }

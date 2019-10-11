@@ -6,8 +6,9 @@ using System.Text;
 
 namespace EduTube.BLL.Models
 {
-   public class CommentModel : Model
+   public class CommentModel
    {
+      public int Id { get; set; }
       public string Content { get; set; }
       public DateTime DateCreatedOn { get; set; }
       public virtual ApplicationUserModel User { get; set; }

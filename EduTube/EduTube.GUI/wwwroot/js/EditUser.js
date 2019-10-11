@@ -1,4 +1,14 @@
 ﻿$(function () {
+   let dateOfBirth = $('#dateOfBirthHidden').val();
+   console.log(dateOfBirth);
+
+   $('#BirthDay').val(parseInt(dateOfBirth.split('-')[0]));
+   $('#BirthMonth').val(parseInt(dateOfBirth.split('-')[1]));
+   $('#BirthYear').val(parseInt(dateOfBirth.split('-')[2]));
+   console.log(dateOfBirth.split('-')[0]);
+   console.log(parseInt(dateOfBirth.split('-')[1]));
+   console.log(dateOfBirth.split('-')[2]);
+
    $('#accountTabDiv').css('display', 'none');
    $("#profileImage").click(function (e) {
       $("#imageUpload").click();

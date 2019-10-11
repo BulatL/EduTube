@@ -4,8 +4,9 @@ using System.Text;
 
 namespace EduTube.DAL.Entities
 {
-   public class Chat : Entity
+   public class Chat
    {
+      public int Id { get; set; }
       public string Name { get; set; }
       public bool Deleted { get; set; }
       public List<ChatMessage> Messages { get; set; }

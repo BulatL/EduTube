@@ -5,8 +5,9 @@ using System.Text;
 
 namespace EduTube.BLL.Models
 {
-   public class SubscriptionModel : Model
+   public class SubscriptionModel
    {
+      public int Id { get; set; }
       public ApplicationUserModel Subscriber { get; set; }
       public string SubscriberId { get; set; }
       public ApplicationUserModel SubscribedOn { get; set; }

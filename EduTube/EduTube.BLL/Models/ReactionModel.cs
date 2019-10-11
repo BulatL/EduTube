@@ -4,8 +4,9 @@ using System.Text;
 
 namespace EduTube.BLL.Models
 {
-   public class ReactionModel : Model
+   public class ReactionModel
    {
+      public int Id { get; set; }
       public DateTime DateCreatedOn { get; set; }
       public int EmojiId { get; set; }
       public EmojiModel Emoji { get; set; }

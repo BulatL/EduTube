@@ -5,8 +5,9 @@ using System.Text;
 
 namespace EduTube.DAL.Entities
 {
-   public class Subscription : Entity
+   public class Subscription
    {
+      public int Id { get; set; }
       [ForeignKey("SubscriberId")]
       public ApplicationUser Subscriber { get; set; }
       public string SubscriberId { get; set; }

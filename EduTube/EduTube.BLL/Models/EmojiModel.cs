@@ -4,8 +4,9 @@ using System.Text;
 
 namespace EduTube.BLL.Models
 {
-   public class EmojiModel : Model
+   public class EmojiModel
    {
+      public int Id { get; set; }
       public string Name { get; set; }
       public string ImagePath { get; set; }
       public bool Deleted { get; set; }

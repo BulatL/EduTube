@@ -4,8 +4,9 @@ using System.Text;
 
 namespace EduTube.DAL.Entities
 {
-   public class TagRelationship : Entity
+   public class TagRelationship
    {
+      public int Id { get; set; }
       public int? VideoId { get; set; }
       public Video Video { get; set; }
       public int? ChatId { get; set; }

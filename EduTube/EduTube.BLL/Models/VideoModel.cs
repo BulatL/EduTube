@@ -6,8 +6,9 @@ using System.Text;
 
 namespace EduTube.BLL.Models
 {
-   public class VideoModel : Model
+   public class VideoModel
    {
+      public int Id { get; set; }
       public string Name { get; set; }
       public string Description { get; set; }
       public DateTime DateCreatedOn { get; set; }

@@ -6,12 +6,12 @@ using System.Text;
 
 namespace EduTube.DAL.Entities
 {
-   public class Video : Entity
+   public class Video
    {
+      public int Id { get; set; }
       public string Name { get; set; }
       public string Description { get; set; }
       public DateTime DateCreatedOn { get; set; }
-      //^(https|http):\/\/(?:www\.)?youtube.com\/embed\/[A-z0-9]+
       public string YoutubeUrl { get; set; }
       public string FileName { get; set; }
       public bool AllowComments { get; set; }
