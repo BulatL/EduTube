@@ -21,18 +21,11 @@ namespace EduTube.BLL.Mappers
          model.DateCreatedOn = entity.DateCreatedOn;
          model.Deleted = entity.Deleted;
 
-         /*if (entity.Video != null)
-         {
-            entity.Video.Comments = null;
-            model.Video = VideoMapper.EntityToModel(entity.Video);
-         }*/
-
          if (entity.User != null)
             model.User = UserMapper.EntityToModel(entity.User);
 
          if (entity.Reactions != null)
          {
-            //entity.Reactions.Select(x => x.Comment = null);
             model.Reactions = ReactionMapper.EntitiesToModels(entity.Reactions);
          }
 
@@ -48,19 +41,12 @@ namespace EduTube.BLL.Mappers
          entity.DateCreatedOn = model.DateCreatedOn;
          entity.Deleted = model.Deleted;
 
-         /*if (model.Video != null)
-         {
-            model.Video = null;
-            entity.Video = VideoMapper.ModelToEntity(model.Video);
-         }*/
-
          if (model.User != null)
             entity.User = UserMapper.ModelToEntity(model.User);
 
 
          if (model.Reactions != null)
          {
-            //model.Reactions.Select(x => x.Comment = null);
             entity.Reactions = ReactionMapper.ModelsToEntities(model.Reactions);
          }
 

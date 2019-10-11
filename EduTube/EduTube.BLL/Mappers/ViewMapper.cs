@@ -18,15 +18,6 @@ namespace EduTube.BLL.Mappers
          model.VideoId = entity.VideoId;
          model.IpAddress = entity.IpAddress;
 
-         /*if (entity.User != null)
-            model.User = UserMapper.EntityToModel(entity.User);
-
-         if (entity.Video != null)
-         {
-            entity.Video.Views = null;
-            model.Video = VideoMapper.EntityToModel(entity.Video);
-         }*/
-
          return model;
       }
       public static View ModelToEntity(ViewModel model)
@@ -36,15 +27,6 @@ namespace EduTube.BLL.Mappers
          entity.UserId = model.UserId;
          entity.VideoId = model.VideoId;
          entity.IpAddress = model.IpAddress;
-
-         /*if (model.User != null)
-            entity.User = UserMapper.ModelToEntity(model.User);
-
-         if (model.Video != null)
-         {
-            model.Video.Views = null;
-            entity.Video = VideoMapper.ModelToEntity(model.Video);
-         }*/
 
          return entity;
       }

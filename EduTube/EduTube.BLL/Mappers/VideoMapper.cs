@@ -73,19 +73,16 @@ namespace EduTube.BLL.Mappers
 
          if (entity.Comments != null)
          {
-            //entity.Comments.ForEach(x => x.Video = null);
             model.Comments = CommentMapper.EntitiesToModels(entity.Comments);
          }
 
          if (entity.Views != null)
          {
-            //entity.Views.ForEach(x => x.Video = null);
             model.Views = ViewMapper.EntitiesToModels(entity.Views);
          }
 
          if (entity.Reactions != null)
          {
-            //entity.Reactions.ForEach(x => x.Video = null);
             model.Reactions = ReactionMapper.EntitiesToModels(entity.Reactions);
          }
 
@@ -122,13 +119,11 @@ namespace EduTube.BLL.Mappers
 
          if (model.Comments != null)
          {
-            //model.Comments.Select(x => x.Video = null);
             entity.Comments = CommentMapper.ModelsToEntities(model.Comments);
          }
 
          if (model.Views != null)
          {
-            //model.Views.Select(x => x.Video = null);
             entity.Views = ViewMapper.ModelsToEntities(model.Views);
          }
 

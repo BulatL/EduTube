@@ -60,7 +60,6 @@ namespace EduTube.BLL.Mappers
 
          if (entity.Notifications != null)
          {
-            //entity.Notifications.Select(x => x.User = null);
             model.Notifications = NotificationMapper.EntitiesToModels(entity.Notifications);
          }
 
@@ -70,8 +69,6 @@ namespace EduTube.BLL.Mappers
             {
                sub.Subscriber = null;
             }
-            //entity.SubscribedOn.Select(x => x.SubscribedOn = null);
-            //entity.SubscribedOn.Select(x => x.Subscriber = null);
             model.SubscribedOn = SubscriptionMapper.EntitiesToModels(entity.SubscribedOn);
          }
 
@@ -81,8 +78,6 @@ namespace EduTube.BLL.Mappers
             {
                sub.SubscribedOn = null;
             }
-            //entity.Subscribers.Select(x => x.SubscribedOn = null);
-            //entity.Subscribers.Select(x => x.Subscriber = null);
             model.Subscribers = SubscriptionMapper.EntitiesToModels(entity.Subscribers);
          }
 
@@ -123,7 +118,6 @@ namespace EduTube.BLL.Mappers
 
          if (model.Notifications != null)
          {
-            //model.Notifications.ForEach(x => x.User = null);
             entity.Notifications = NotificationMapper.ModelsToEntities(model.Notifications);
          }
 

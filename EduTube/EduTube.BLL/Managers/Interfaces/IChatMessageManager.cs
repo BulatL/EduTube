@@ -8,6 +8,5 @@ namespace EduTube.BLL.Managers.Interfaces
    {
       Task<List<ChatMessageModel>> GetByChat(int id);
       Task<ChatMessageModel> Create(ChatMessageModel chatMessage);
-      Task<ChatMessageModel> Update(ChatMessageModel chatMessage);
    }
 }

@@ -285,18 +285,10 @@ namespace EduTube.BLL.Managers
          List<Comment> comments = await _context.Comments.Where(x => x.VideoId == id && !x.Deleted).ToListAsync();
          List<Reaction> reactions = await _context.Reactions.Where(x => x.VideoId == id && !x.Deleted).ToListAsync();
 
-         _context.Videos.Remove(entity);
-         _context.Comments.RemoveRange(comments);
          _context.Reactions.RemoveRange(reactions);
+         _context.Comments.RemoveRange(comments);
+         _context.Videos.Remove(entity);
          return await _context.SaveChangesAsync();
-      }
-
-      public async Task DeleteActivateByUser(string id, bool option)
-      {
-         List<Video> videos = await _context.Videos.Where(x => x.UserId.Equals(id) && x.Deleted == !option).ToListAsync();
-         videos.Select(x => x.Deleted = option);
-         _context.UpdateRange(videos);
-         await _context.SaveChangesAsync();
       }
    }
 }

@@ -17,23 +17,6 @@ namespace EduTube.BLL.Mappers
          entity.VideoId = model.VideoId;
          entity.TagId = model.TagId;
 
-
-         /*if (model.Chat != null)
-         {
-            entity.ChatId = model.Chat.Id;
-            if (entity.Chat == null)
-               entity.Chat = new Chat();
-            ChatMapper.CopyModelToEntity(model.Chat, entity.Chat);
-         }
-
-         if (model.Video != null)
-         {
-            entity.VideoId = model.Video.Id;
-            if (entity.Video == null)
-               entity.Video = new Video();
-            VideoMapper.CopyModelToEntity(model.Video, entity.Video);
-         }*/
-
          if (model.Tag != null)
          {
             entity.TagId = model.Tag.Id;

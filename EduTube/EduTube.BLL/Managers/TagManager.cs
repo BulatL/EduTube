@@ -47,7 +47,6 @@ namespace EduTube.BLL.Managers
          return TagMapper.EntityToModel(await _context.Tags.FirstOrDefaultAsync(x => x.Id == id));
       }
 
-
       public async Task<List<int?>> Get2MostPopularTagsIdByVideoId(List<int> videosId)
       {
          try
@@ -65,29 +64,6 @@ namespace EduTube.BLL.Managers
             Debug.WriteLine(e.StackTrace);
          }
          return new List<int?>();
-      }
-
-
-      public async Task<TagModel> Create(TagModel hashtag)
-      {
-         Tag entity = TagMapper.ModelToEntity(hashtag);
-         _context.Tags.Add(entity);
-         await _context.SaveChangesAsync();
-         return TagMapper.EntityToModel(entity);
-      }
-
-      public async Task<TagModel> Update(TagModel hashtag)
-      {
-         _context.Update(TagMapper.ModelToEntity(hashtag));
-         await _context.SaveChangesAsync();
-         return hashtag;
-      }
-
-      public async Task Delete(int id)
-      {
-         Tag entity = await _context.Tags.FirstOrDefaultAsync(x => x.Id == id);
-         _context.Tags.Remove(entity);
-         await _context.SaveChangesAsync();
       }
    }
 }

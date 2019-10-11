@@ -20,35 +20,6 @@ namespace EduTube.BLL.Managers
          _context = context;
       }
 
-      public async Task<List<SubscriptionModel>> GetAll()
-      {
-         return SubscriptionMapper.EntitiesToModels(await _context.Subscriptions.Where(x => !x.Deleted).ToListAsync());
-      }
-
-      public async Task<SubscriptionModel> GetById(int id, bool includeAll)
-      {
-         return includeAll ? SubscriptionMapper.EntityToModel(await _context.Subscriptions
-             .Include(x => x.SubscribedOn).Include(x => x.Subscriber)
-             .FirstOrDefaultAsync(x => x.Id == id && !x.Deleted))
-             : SubscriptionMapper.EntityToModel(await _context.Subscriptions
-             .FirstOrDefaultAsync(x => x.Id == id && !x.Deleted));
-      }
-
-      public async Task<List<SubscriptionModel>> GetBySubscriber(string id)
-      {
-         return SubscriptionMapper.EntitiesToModels(await _context.Subscriptions.Where(x => x.SubscriberId.Equals(id) && !x.Deleted).ToListAsync());
-      }
-
-      public async Task<List<SubscriptionModel>> GetBySubscribedOn(string id)
-      {
-         return SubscriptionMapper.EntitiesToModels(await _context.Subscriptions.Where(x => x.SubscribedOnId.Equals(id) && !x.Deleted).ToListAsync());
-      }
-
-      public async Task<SubscriptionModel> GetBySubscriberAndSubscribedOn(string subscriberId, string subscribedOnId)
-      {
-         return SubscriptionMapper.EntityToModel(await _context.Subscriptions.FirstOrDefaultAsync(x => x.SubscriberId.Equals(subscriberId) && x.SubscribedOnId.Equals(subscribedOnId) && !x.Deleted));
-      }
-
       public async Task<bool> IsUserSubscribed(string subscribedOn, string subscriber)
       {
          return (await _context.Subscriptions.AnyAsync(x => x.SubscribedOnId.Equals(subscribedOn) && x.SubscriberId.Equals(subscriber) && !x.Deleted));
@@ -73,21 +44,6 @@ namespace EduTube.BLL.Managers
          }
       }
 
-      public async Task<SubscriptionModel> Update(SubscriptionModel subscription)
-      {
-         _context.Update(SubscriptionMapper.ModelToEntity(subscription));
-         await _context.SaveChangesAsync();
-         return subscription;
-      }
-
-      public async Task Delete(string subscriberId, string subscribedOnId)
-      {
-         Subscription entity = await _context.Subscriptions.FirstOrDefaultAsync(x => x.SubscriberId.Equals(subscriberId) && x.SubscribedOnId.Equals(subscribedOnId) && !x.Deleted);
-         entity.Deleted = true;
-         _context.Update(entity);
-         await _context.SaveChangesAsync();
-      }
-
       public async Task Remove(string subscriberId, string subscribedOnId)
       {
          Subscription entity = await _context.Subscriptions.FirstOrDefaultAsync(x => x.SubscriberId.Equals(subscriberId) && x.SubscribedOnId.Equals(subscribedOnId) && !x.Deleted);
@@ -95,13 +51,5 @@ namespace EduTube.BLL.Managers
          await _context.SaveChangesAsync();
       }
 
-      public async Task DeleteActivateByUser(string id, bool option)
-      {
-         List<Subscription> subscriptions = await _context.Subscriptions.Where(x => (x.SubscribedOnId.Equals(id) || x.SubscriberId.Equals(id))
-                                                                                 && x.Deleted == !option).ToListAsync();
-         subscriptions.Select(x => x.Deleted = option);
-         _context.UpdateRange(subscriptions);
-         await _context.SaveChangesAsync();
-      }
    }
 }

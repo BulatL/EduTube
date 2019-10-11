@@ -10,7 +10,6 @@ namespace EduTube.BLL.Managers.Interfaces
       Task<CommentModel> GetById(int id, bool includeAll);
       Task<CommentModel> Create(CommentModel comment);
       Task<CommentModel> Update(int id, string content);
-      Task<int> Delete(int id);
-      Task Remove(int id);
+      Task<int> Remove(int id);
    }
 }

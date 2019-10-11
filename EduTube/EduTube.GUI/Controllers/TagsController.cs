@@ -16,10 +16,6 @@ namespace EduTube.GUI.Controllers
       {
          _tagManager = tagManager;
       }
-      public IActionResult Index()
-      {
-         return View();
-      }
 
       public async Task<IActionResult> GetAll()
       {

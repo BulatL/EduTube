@@ -295,7 +295,7 @@ namespace EduTube.GUI.Controllers
       [Route("Videos/Delete/{id}")]
       public async Task<IActionResult> Delete(int id)
       {
-         int result = await _videoManager.Delete(id);
+         int result = await _videoManager.Remove(id);
          if (result > 0)
          {
             new ElasticsearchController(_videoManager, _userManager, _tagRelationshipManager).DeleteDocument(id.ToString(), "videos", "videomodel");

@@ -91,7 +91,7 @@ namespace EduTube.GUI.Controllers
       [Route("Comments/Delete/{id}")]
       public async Task<IActionResult> Delete(int id)
       {
-         int result = await _commentManager.Delete(id);
+         int result = await _commentManager.Remove(id);
          if (result > 0 )
             return StatusCode(200);
          else

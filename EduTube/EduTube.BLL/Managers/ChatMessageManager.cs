@@ -32,12 +32,5 @@ namespace EduTube.BLL.Managers
          await _context.SaveChangesAsync();
          return ChatMessageMapper.EntityToModel(entity);
       }
-
-      public async Task<ChatMessageModel> Update(ChatMessageModel chatMessage)
-      {
-         _context.Update(ChatMessageMapper.ModelToEntity(chatMessage));
-         await _context.SaveChangesAsync();
-         return chatMessage;
-      }
    }
 }

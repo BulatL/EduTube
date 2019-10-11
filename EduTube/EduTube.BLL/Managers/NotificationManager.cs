@@ -58,13 +58,5 @@ namespace EduTube.BLL.Managers
          await _context.AddRangeAsync(notifications);
          await _context.SaveChangesAsync();
       }
-
-      public async Task<NotificationModel> Create(NotificationModel notification)
-      {
-         Notification entity = NotificationMapper.ModelToEntity(notification);
-         _context.Notifications.Add(entity);
-         await _context.SaveChangesAsync();
-         return NotificationMapper.EntityToModel(entity);
-      }
    }
 }

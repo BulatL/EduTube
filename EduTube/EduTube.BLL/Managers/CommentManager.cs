@@ -55,28 +55,16 @@ namespace EduTube.BLL.Managers
          return CommentMapper.EntityToModel(entity);
       }
 
-      public async Task<int> Delete(int id)
+      public async Task<int> Remove(int id)
       {
          Comment entity = await _context.Comments.FirstOrDefaultAsync(x => x.Id == id);
          if (entity == null)
             return 0;
          List<Reaction> reactions = await _context.Reactions.Where(x => x.CommentId == id && !x.Deleted).ToListAsync();
 
-         entity.Deleted = true;
-         _context.Update(entity);
-         _context.UpdateRange(reactions);
-         return await _context.SaveChangesAsync();
-      }
-      public async Task Remove(int id)
-      {
-         Comment entity = await _context.Comments.FirstOrDefaultAsync(x => x.Id == id);
-         if (entity == null)
-            return;
-         List<Reaction> reactions = await _context.Reactions.Where(x => x.CommentId == id && !x.Deleted).ToListAsync();
-
-         _context.Comments.Remove(entity);
          _context.Reactions.RemoveRange(reactions);
-         await _context.SaveChangesAsync();
+         _context.Comments.Remove(entity);
+         return await _context.SaveChangesAsync();
       }
    }
 }

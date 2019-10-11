@@ -19,28 +19,12 @@ namespace EduTube.BLL.Managers
       {
          _context = context;
       }
-
-      public async Task<List<ReactionModel>> GetAll()
-      {
-         return ReactionMapper.EntitiesToModels(await _context.Reactions.Where(x => !x.Deleted).ToListAsync());
-      }
-
-      public async Task<ReactionModel> GetById(int id)
-      {
-         return ReactionMapper.EntityToModel(await _context.Reactions
-             .FirstOrDefaultAsync(x => x.Id == id && !x.Deleted));
-      }
-
-      public async Task<List<ReactionModel>> GetByVideo(int videoId)
-      {
-         return ReactionMapper.EntitiesToModels(await _context.Reactions.Where(x => x.VideoId == videoId && !x.Deleted).ToListAsync());
-      }
-
       public async Task<ReactionModel> GetByVideoAndUser(int videoId, string userId)
       {
          return ReactionMapper.EntityToModel(await _context.Reactions.FirstOrDefaultAsync(x => x.VideoId == videoId && 
          x.UserId.Equals(userId) && !x.Deleted));
       }
+
       public async Task<ReactionModel> GetByCommentAndUser(int commentId, string userId)
       {
          return ReactionMapper.EntityToModel(await _context.Reactions.FirstOrDefaultAsync(x => x.CommentId == commentId &&
@@ -68,34 +52,10 @@ namespace EduTube.BLL.Managers
          return ReactionMapper.EntityToModel(entity);
       }
 
-      public async Task<ReactionModel> Update(ReactionModel reaction)
-      {
-         _context.Update(ReactionMapper.ModelToEntity(reaction));
-         await _context.SaveChangesAsync();
-         return reaction;
-      }
-
       public async Task Remove(int id)
       {
          Reaction entity = await _context.Reactions.FirstOrDefaultAsync(x => x.Id == id);
-         /*entity.Deleted = true;
-         _context.Update(entity);*/
          _context.Reactions.Remove(entity);
-         await _context.SaveChangesAsync();
-      }
-      public async Task Delete(int id)
-      {
-         Reaction entity = await _context.Reactions.FirstOrDefaultAsync(x => x.Id == id);
-         entity.Deleted = true;
-         _context.Update(entity);
-         await _context.SaveChangesAsync();
-      }
-
-      public async Task DeleteActivateByUser(string id, bool option)
-      {
-         List<Reaction> reactions = await _context.Reactions.Where(x => x.UserId.Equals(id) && x.Deleted == !option).ToListAsync();
-         reactions.Select(x => x.Deleted = option);
-         _context.UpdateRange(reactions);
          await _context.SaveChangesAsync();
       }
    }

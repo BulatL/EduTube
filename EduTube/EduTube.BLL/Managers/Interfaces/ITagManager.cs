@@ -10,8 +10,5 @@ namespace EduTube.BLL.Managers.Interfaces
       Task<List<TagModel>> GetByNames(string names);
       Task<TagModel> GetById(int id);
       Task<List<int?>> Get2MostPopularTagsIdByVideoId(List<int> videosId);
-      Task<TagModel> Create(TagModel tag);
-      Task<TagModel> Update(TagModel tag);
-      Task Delete(int id);
    }
 }

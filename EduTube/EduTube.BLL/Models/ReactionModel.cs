@@ -12,9 +12,7 @@ namespace EduTube.BLL.Models
       public string UserId { get; set; }
       public ApplicationUserModel User { get; set; }
       public int? VideoId { get; set; }
-      //public VideoModel Video { get; set; }
       public int? CommentId { get; set; }
-      //public CommentModel Comment { get; set; }
       public bool Deleted { get; set; }
    }
 }
