@@ -28,13 +28,13 @@ namespace EduTube.GUI.Controllers
       {
          ApplicationUserModel currentUser = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
          if (currentUser == null)
-            return StatusCode(401);
+				return LocalRedirect("/Error/401");
 
-         if (currentUser.Blocked)
+			if (currentUser.Blocked)
          {
             await _userManager.Logout();
-            return StatusCode(403);
-         }
+				return LocalRedirect("/Error/403");
+			}
 
          ReactionModel exist = new ReactionModel();
          ReactionModel model = ReactionCreateViewModel.CopyToModel(reaction);

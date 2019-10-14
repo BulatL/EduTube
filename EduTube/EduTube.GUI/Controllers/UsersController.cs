@@ -139,9 +139,9 @@ namespace EduTube.GUI.Controllers
          {
             EditUserViewModel viewModel = new EditUserViewModel(currentUser);
             return View(viewModel);
-         }
-         return StatusCode(401);
-      }
+			}
+			return LocalRedirect("/Error/401");
+		}
 
       [Authorize]
       [Route("Users/Edit/{id}")]
@@ -279,9 +279,9 @@ namespace EduTube.GUI.Controllers
          }
 
          else
-         {
-            return StatusCode(403);
-         }
+			{
+				return LocalRedirect("/Error/401");
+			}
       }
       [Authorize]
       [HttpPost]
@@ -304,9 +304,9 @@ namespace EduTube.GUI.Controllers
                return LocalRedirect("/Users/" + User.Claims.FirstOrDefault(x => x.Type.Equals("channelName")).Value);
             }
             else
-            {
-               return StatusCode(403);
-            }
+				{
+					return LocalRedirect("/Error/401");
+				}
          }
          else
          {

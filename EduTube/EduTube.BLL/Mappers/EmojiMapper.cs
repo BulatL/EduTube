@@ -7,8 +7,17 @@ namespace EduTube.BLL.Mappers
 {
    public class EmojiMapper
    {
+		public static void CopyModelToEntity(EmojiModel model, Emoji entity)
+		{
+			if (model == null)
+				return;
 
-      public static EmojiModel EntityToModel(Emoji entity)
+			entity.Name = model.Name;
+			entity.ImagePath = model.ImagePath;
+			entity.Deleted = model.Deleted;
+		}
+
+		public static EmojiModel EntityToModel(Emoji entity)
       {
          if (entity == null)
             return null;

@@ -237,18 +237,18 @@ namespace EduTube.GUI.Controllers
          VideoModel video = await _videoManager.GetById(id, true);
 
          if (video == null)
-            return StatusCode(401);
+				return LocalRedirect("/Error/401");
 
-         string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
          string currentUserRole = await _userManager.GetRole(currentUserId);
 
          if (id.Equals(currentUserId) || (!id.Equals(currentUserId) && currentUserRole.Equals("Admin")))
             return View(new VideoEditViewModel(video));
 
-         else
-            return StatusCode(403);
+			else
+				return LocalRedirect("/Error/401");
 
-      }
+		}
       [Authorize]
       [HttpPost]
       public async Task<IActionResult> Edit(VideoEditViewModel viewModel)
@@ -276,9 +276,9 @@ namespace EduTube.GUI.Controllers
                await new ElasticsearchController(_videoManager, _userManager, _tagRelationshipManager).UpdateVideo(video);
                return LocalRedirect("/Videos/" + video.Id);
             }
-            else
-               return StatusCode(403);
-         }
+				else
+					return LocalRedirect("/Error/401");
+			}
          return View(viewModel);
       }
 

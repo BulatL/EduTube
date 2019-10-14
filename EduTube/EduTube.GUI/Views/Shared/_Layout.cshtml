@@ -58,20 +58,22 @@
                               <img src="~/profileImages/@User.Claims.FirstOrDefault(x => x.Type.Equals("profileImage"))?.Value" />
                            </div>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-lg-right greyBackground"
-                             aria-labelledby="navbarDropdownMenuLink-55" id="userMenuDropdown">
-                           <a class="dropdown-item" href="/Users/@User.Claims.FirstOrDefault(x => x.Type.Equals("channelName"))?.Value.Replace(" ", "-")"><i class='far fa-user'></i> My profile</a>
-                           <a class="dropdown-item" href="/Chats"><i class="fa fa-envelope"></i> Chat rooms</a>
-                           <div class="breakLineWhite"></div>
-                           <a class="dropdown-item" href="/Notifications"><i class="fas fa-bell"></i> Notifications</a>
-                           <div class="breakLineWhite"></div>
-                           @if (User.Claims.FirstOrDefault(x => x.Type.Equals("role")).Value.Equals("Admin"))
-                           {
-                              <a class="nav-link" asp-area="" asp-controller="AdminUsers" asp-action="Index"><i class='fas fa-users'></i> Admin page</a>
-                              <div class="breakLineWhite"></div>
-                           }
-                           <a class="dropdown-item" href="/Logout"><i class="fa fa-sign-out"></i> Log out</a>
-                        </div>
+								<div class="dropdown-menu dropdown-menu-lg-right greyBackground"
+									  aria-labelledby="navbarDropdownMenuLink-55" id="userMenuDropdown">
+									<a class="dropdown-item" href="/Users/@User.Claims.FirstOrDefault(x => x.Type.Equals("channelName"))?.Value.Replace(" ", "-")"><i class='far fa-user'></i> My profile</a>
+									<a class="dropdown-item" href="/Chats"><i class="fa fa-envelope"></i> Chat rooms</a>
+									<div class="breakLineWhite"></div>
+									<a class="dropdown-item" href="/Notifications"><i class="fas fa-bell"></i> Notifications</a>
+									<div class="breakLineWhite"></div>
+									@if (User.Claims.FirstOrDefault(x => x.Type.Equals("role")).Value.Equals("Admin"))
+									{
+										<a class="nav-link" asp-area="" asp-controller="AdminUsers" asp-action="Index"><i class='fas fa-users'></i> Admin page</a>
+										<div class="breakLineWhite"></div>
+										<a class="nav-link" asp-area="" asp-controller="AdminUsers" asp-action="Index"><i class='fas fa-laugh'></i> Emoji page</a>
+										<div class="breakLineWhite"></div>
+									}
+									<a class="dropdown-item" href="/Logout"><i class="fa fa-sign-out"></i> Log out</a>
+								</div>
                      </li>
                   </ul>
                }

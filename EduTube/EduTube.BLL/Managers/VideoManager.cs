@@ -57,29 +57,6 @@ namespace EduTube.BLL.Managers
          }
       }
 
-      public async Task<List<VideoModel>> SearchVideos(string userId, string search)
-      {
-         if (userId != null)
-         {
-            return VideoMapper.EntitiesToModels(await _context.Videos
-                .Include(x => x.Views)
-                .Where(x => !x.Deleted && (x.VideoVisibility != VideoVisibility.Invitation ||
-                (x.VideoVisibility == VideoVisibility.Invitation && x.UserId == userId)) &&
-                x.Name.Contains(search))
-                .OrderByDescending(x => x.Views.Count())
-                .Take(5).ToListAsync());
-         }
-         else
-         {
-            return VideoMapper.EntitiesToModels(await _context.Videos
-               .Include(x => x.Views)
-               .Where(x => !x.Deleted && x.VideoVisibility == VideoVisibility.Public &&
-                x.Name.Contains(search))
-               .OrderByDescending(x => x.Views.Count())
-               .Take(5).ToListAsync());
-         }
-      }
-
       public async Task<List<int>> GetVideosIdByView(string userId, string ipAddress)
       {
          return await _context.Views.Where(x => x.UserId.Equals(userId) || x.IpAddress.Equals(ipAddress))
@@ -115,76 +92,6 @@ namespace EduTube.BLL.Managers
             );
          }
          return VideoMapper.EntitiesToModels(videos);
-      }
-
-      public async Task<List<VideoModel>> GetRecommendedVideos(string userId, string ipAddress)
-      {
-         List<Video> videos = new List<Video>();
-         List<int> videosId = new List<int>();
-         List<int?> hashtagsId = new List<int?>();
-
-         Debug.WriteLine("usao u menadzera " + DateTime.Now);
-         if (userId != null)
-         {
-            videosId = await _context.Views.Where(x => x.UserId == userId)
-                .Select(x => x.VideoId).Distinct().ToListAsync();
-
-            Debug.WriteLine("nasao videoId " + DateTime.Now);
-            hashtagsId = await _context.TagRelationships
-                .Where(x => videosId.Contains(int.Parse(x.VideoId.ToString())))
-                .GroupBy(x => x.TagId)
-                .OrderByDescending(g => g.Count())
-                .Take(2)
-                .Select(x => x.Key)
-                .ToListAsync();
-
-
-            Debug.WriteLine("nasao hastagsId " + DateTime.Now);
-            foreach (var id in hashtagsId)
-            {
-               videos.AddRange(await _context.TagRelationships
-                   .Include(h => h.Video)
-                   .Where(h => !h.Video.Deleted && (h.Video.VideoVisibility != VideoVisibility.Invitation ||
-                   (h.Video.VideoVisibility == VideoVisibility.Invitation && h.Video.UserId == userId)) &&
-                   h.TagId == id)
-                   .Select(h => h.Video)
-                   .Take(6)
-                   .ToListAsync()
-               );
-            }
-
-            Debug.WriteLine("zavrsio petlju " + DateTime.Now);
-            return VideoMapper.EntitiesToModels(videos);
-         }
-         else
-         {
-            videosId = await _context.Views.Where(x => x.IpAddress == ipAddress)
-                .Select(x => x.VideoId).Distinct().ToListAsync();
-
-            Debug.WriteLine("nasao videoId " + DateTime.Now);
-            hashtagsId = await _context.TagRelationships
-                .Where(x => videosId.Contains(int.Parse(x.VideoId.ToString())))
-                .GroupBy(x => x.TagId)
-                .OrderByDescending(g => g.Count())
-                .Take(2)
-                .Select(x => x.Key)
-                .ToListAsync();
-
-
-            Debug.WriteLine("nasao hastagsId " + DateTime.Now);
-            foreach (var id in hashtagsId)
-            {
-               videos.AddRange(await _context.TagRelationships
-                   .Include(h => h.Video)
-                   .Where(h => !h.Video.Deleted && h.Video.VideoVisibility == VideoVisibility.Public &&
-                   h.TagId == id)
-                   .Select(h => h.Video)
-                   .Take(6)
-                   .ToListAsync()
-               );
-            }
-            return VideoMapper.EntitiesToModels(videos);
-         }
       }
 
       public async Task<VideoModel> GetById(int id, bool includeAll)
@@ -258,23 +165,6 @@ namespace EduTube.BLL.Managers
          VideoMapper.CopyModelToEntity(model, entity);
          await _context.SaveChangesAsync();
          return VideoMapper.EntityToModel(entity);
-      }
-
-      public async Task<int> Delete(int id)
-      {
-         Video video = await _context.Videos.FirstOrDefaultAsync(x => x.Id == id && !x.Deleted);
-         if (video == null)
-            return 0;
-         List<Comment> comments = await _context.Comments.Where(x => x.VideoId == id && !x.Deleted).ToListAsync();
-         List<Reaction> reactions = await _context.Reactions.Where(x => x.VideoId == id && !x.Deleted).ToListAsync();
-
-         video.Deleted = true;
-         comments.ForEach(x => x.Deleted = true);
-         reactions.ForEach(x => x.Deleted = true);
-         _context.Update(video);
-         _context.UpdateRange(comments);
-         _context.UpdateRange(reactions);
-         return await _context.SaveChangesAsync();
       }
 
       public async Task<int> Remove(int id)

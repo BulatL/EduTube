@@ -1,0 +1,43 @@
+﻿@model EduTube.GUI.ViewModels.EmojiViewModel
+
+@{
+	ViewData["Title"] = "Edit";
+}
+<div class="row">
+	<div class="container">
+		<h4 class=" text-center">Create new chat</h4>
+		<hr />
+		<form asp-action="Edit" method="post" enctype="multipart/form-data" id="form">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" asp-for="Id"/>
+			<div class="row">
+				<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+					<div class="form-group">
+						<label asp-for="Name" class="control-label"></label>
+						<input asp-for="Name" class="form-control">
+						<span asp-validation-for="Name" class="text-danger"></span>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+					<div class="form-group">
+						<label class="control-label">Image</label>
+						<input type="hidden" id="oldImage" asp-for="OldImage" />
+						<input id="imageUpload" asp-for="Image" type="file" class="form-control">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<img id="imagePreview" width="50" />
+				</div>
+			</div>
+			<div class="form-group">
+				<button onclick='RedirectTo("/Emojis/")' class="float-left blackBtn position-initial" type="button">Back emoji list</button>
+				<button type="submit" class="purpleBtn float-right" style="position: inherit !important;">Create</button>
+			</div>
+		</form>
+	</div>
+</div>
+@section Scripts{
+	<script src="~/js/Emoji.js"></script>
+}

@@ -1,0 +1,50 @@
+﻿@model IEnumerable<EduTube.BLL.Models.EmojiModel>
+
+@{
+	ViewData["Title"] = "Index";
+}
+@section Styles{
+	<link href="~/css/EmojiIndex.css" rel="stylesheet" />
+}
+<p>
+	<button class="purpleBtn float-right" id="createNewBtn" onclick='RedirectTo("/Emojis/Create")'>Create new</button>
+</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				Name
+			</th>
+			<th>
+				Image
+			</th>
+			<th>
+				Options
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var emoji in Model)
+		{
+			<tr id="emoji_@emoji.Id">
+				<td>
+					@Html.Raw(emoji.Name)
+				</td>
+				<td>
+					<img src="~/images/@emoji.ImagePath" width="50" />
+				</td>
+				<td>
+					<button class="greenBtn optionBtn" onclick='RedirectTo("/Emojis/Edit/@emoji.Id")'>Edit</button>
+					<button class="blackBtn optionBtn" onclick='DeleteEmoji("@emoji.Id")'>Delete</button>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<!--Div for deleting user-->
+<div class="modal hide" id="deleteDialog" role="dialog" aria-hidden="true"></div>
+
+@section Scripts{ 
+	<script src="~/js/Emoji.js"></script>
+}

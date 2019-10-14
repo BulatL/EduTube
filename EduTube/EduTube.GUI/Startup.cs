@@ -56,7 +56,6 @@ namespace EduTube.GUI
                 options.User.RequireUniqueEmail = true;
              })
              .AddEntityFrameworkStores<ApplicationDbContext>()
-             .AddDefaultUI()
              .AddDefaultTokenProviders();
 
          services.Configure<IdentityOptions>(options =>
@@ -86,12 +85,9 @@ namespace EduTube.GUI
 			 opt => {
 				 //configure your other properties
 				 opt.LoginPath = "/Login";
+				 opt.AccessDeniedPath = "/Error/401";
+				 opt.LogoutPath = "/Logout";
 			 });
-			/*services.Configure<FormOptions>(x =>
-         {
-             x.ValueLengthLimit = int.MaxValue;
-             x.MultipartBodyLengthLimit = int.MaxValue; // In case of multipart
-         });*/
 		}
 
       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -111,7 +107,8 @@ namespace EduTube.GUI
          app.UseStaticFiles();
          app.UseCookiePolicy();
          app.UseAuthentication();
-         app.UseSignalR(route =>
+			app.UseStatusCodePagesWithReExecute("/Error/{0}");
+			app.UseSignalR(route =>
          {
             route.MapHub<ChatHub>("/Chats/Index");
          });

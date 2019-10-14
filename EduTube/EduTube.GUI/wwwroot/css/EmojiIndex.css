@@ -1,0 +1,9 @@
+﻿.optionBtn {
+	position: inherit !important;
+	width: 30%;
+}
+#createNewBtn{
+	position: inherit !important;
+	margin-bottom: 1rem;
+	width: 15%;
+}

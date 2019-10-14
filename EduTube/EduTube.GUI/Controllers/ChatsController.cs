@@ -39,8 +39,9 @@ namespace EduTube.GUI.Controllers
          return Json(await _chatMessageManager.GetByChat(id));
       }
 
-      // GET: Chats/Create
-      public IActionResult Create()
+		// GET: Chats/Create
+		[Authorize(Roles = "Admin")]
+		public IActionResult Create()
       {
          return View();
       }
@@ -56,10 +57,11 @@ namespace EduTube.GUI.Controllers
             await _chatManager.Create(chat, viewModel.Tags);
             return RedirectToAction("Index");
          }
-         return StatusCode(401);
-      }
-      
-      public async Task<IActionResult> Edit(int id)
+			return LocalRedirect("/Error/401");
+		}
+
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> Edit(int id)
       {
          ChatModel chat = await _chatManager.GetById(id);
          if (chat == null)
