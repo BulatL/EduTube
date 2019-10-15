@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using EduTube.BLL.Managers.Interfaces;
-using EduTube.BLL.Models;
 using EduTube.DAL.Entities;
 using EduTube.GUI.ViewModels;
 using Microsoft.AspNetCore.Authorization;

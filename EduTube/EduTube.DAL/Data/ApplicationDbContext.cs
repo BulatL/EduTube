@@ -3,10 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace EduTube.DAL.Data
 {
@@ -33,9 +30,9 @@ namespace EduTube.DAL.Data
       {
          modelBuilder.Entity<Chat>(ConfigureChat);
          modelBuilder.Entity<Notification>(ConfigureNotification);
-         modelBuilder.Entity<Video>(ConfigureVideo);
-         modelBuilder.Entity<TagRelationship>(ConfigureTagRelationship);
          modelBuilder.Entity<Subscription>(ConfigureSubscription);
+         modelBuilder.Entity<TagRelationship>(ConfigureTagRelationship);
+         modelBuilder.Entity<Video>(ConfigureVideo);
 
          foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
          {
@@ -53,15 +50,6 @@ namespace EduTube.DAL.Data
       {
          builder.HasOne<ApplicationUser>().WithMany(x => x.Notifications).HasForeignKey(x => x.UserId);
       }
-      private void ConfigureVideo(EntityTypeBuilder<Video> builder)
-      {
-         builder.HasMany(x => x.TagRelationships);
-      }
-      private void ConfigureTagRelationship(EntityTypeBuilder<TagRelationship> builder)
-      {
-         builder.HasOne(x => x.Chat).WithMany(x => x.TagRelationships).HasForeignKey(x => x.ChatId);
-         builder.HasOne(x => x.Video).WithMany(x => x.TagRelationships).HasForeignKey(x => x.VideoId);
-      }
       private void ConfigureSubscription(EntityTypeBuilder<Subscription> builder)
       {
          builder.HasOne(x => x.Subscriber).
@@ -70,6 +58,15 @@ namespace EduTube.DAL.Data
          builder.HasOne(x => x.SubscribedOn).
              WithMany(x => x.Subscribers).
              HasForeignKey(x => x.SubscribedOnId);
+      }
+      private void ConfigureTagRelationship(EntityTypeBuilder<TagRelationship> builder)
+      {
+         builder.HasOne(x => x.Chat).WithMany(x => x.TagRelationships).HasForeignKey(x => x.ChatId);
+         builder.HasOne(x => x.Video).WithMany(x => x.TagRelationships).HasForeignKey(x => x.VideoId);
+      }
+      private void ConfigureVideo(EntityTypeBuilder<Video> builder)
+      {
+         builder.HasMany(x => x.TagRelationships);
       }
    }
 }

@@ -26,6 +26,7 @@ function populateReccomendedVideo(videos) {
    let secondRecommendedVideosRow = $("#secondRecommendedVideosRow");
    let secondRecommendedVideosContent = [];
 
+   console.log(videos.firstRecommended);
    if (videos.firstRecommended.length > 0) {
       for (let i = 0; i < videos.firstRecommended.length; i++) {
          let thumbnail = "";
@@ -56,6 +57,7 @@ function populateReccomendedVideo(videos) {
       $("#firstRecommendedHeading").remove();
    }
 
+   console.log(videos.secondRecommended);
    if (videos.secondRecommended.length > 0) {
       for (let i = 0; i < videos.secondRecommended.length; i++) {
          let thumbnail = "";

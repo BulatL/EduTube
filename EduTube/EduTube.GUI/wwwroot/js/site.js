@@ -99,6 +99,7 @@ function GetNewNotifications() {
    });
 
 }
+
 function openNotificationDropdown() {
    document.getElementById("notificationDropdown").classList.toggle("show");
 }

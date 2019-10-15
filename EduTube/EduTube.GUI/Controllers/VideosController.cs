@@ -11,8 +11,6 @@ using EduTube.GUI.ViewModels;
 using EduTube.GUI.Services.Interface;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using EduTube.DAL.Enums;
 using System.Xml;
 using EduTube.BLL.Enums;
 
@@ -25,30 +23,25 @@ namespace EduTube.GUI.Controllers
       private readonly ITagManager _tagManager;
       private readonly IApplicationUserManager _userManager;
       private readonly IUploadService _uploadService;
-      private readonly IViewManager _viewManager;
       private readonly IReactionManager _reactionManager;
       private readonly IEmojiManager _emojiManager;
-      private readonly IHostingEnvironment _hostingEnvironment;
       private readonly ISubscriptionManager _subscriptionManager;
 
       public VideosController(IVideoManager videoManager, ITagRelationshipManager tagRelationshipManager,
           ITagManager tagManager, IApplicationUserManager userManager,
-          IUploadService uploadService, IViewManager viewManager, IReactionManager reactionManager,
-          IEmojiManager emojiManager, IHostingEnvironment hostingEnvironment, ISubscriptionManager subscriptionManager)
+          IUploadService uploadService, IReactionManager reactionManager,
+          IEmojiManager emojiManager, ISubscriptionManager subscriptionManager)
       {
          _videoManager = videoManager;
          _tagRelationshipManager = tagRelationshipManager;
          _tagManager = tagManager;
          _userManager = userManager;
          _uploadService = uploadService;
-         _viewManager = viewManager;
          _reactionManager = reactionManager;
          _emojiManager = emojiManager;
-         _hostingEnvironment = hostingEnvironment;
          _subscriptionManager = subscriptionManager;
       }
 
-      // GET: Videos
       public async Task<IActionResult> Index()
       {
          ApplicationUserModel user = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
@@ -168,7 +161,6 @@ namespace EduTube.GUI.Controllers
          return StatusCode(404);
       }
 
-      // GET: Videos/Create
       [Authorize]
       public async Task<IActionResult> Create()
       {
@@ -182,9 +174,6 @@ namespace EduTube.GUI.Controllers
          return View();
       }
 
-      // POST: Videos/Create
-      // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-      // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
       [Authorize]
       [HttpPost]
       [ValidateAntiForgeryToken]
@@ -289,7 +278,6 @@ namespace EduTube.GUI.Controllers
          return PartialView("DeleteModalDialog");
       }
 
-      // GET: Videos/Delete/5
       [Authorize]
       [HttpDelete]
       [Route("Videos/Delete/{id}")]
@@ -304,7 +292,5 @@ namespace EduTube.GUI.Controllers
          else
             return StatusCode(404);
       }
-
-
    }
 }

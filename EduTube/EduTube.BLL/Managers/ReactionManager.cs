@@ -41,14 +41,7 @@ namespace EduTube.BLL.Managers
       {
          Reaction entity = ReactionMapper.ModelToEntity(reaction);
          await _context.Reactions.AddAsync(entity);
-         try
-         {
-            await _context.SaveChangesAsync();
-         }
-         catch(Exception e)
-         {
-            Console.WriteLine(e);
-         }
+         await _context.SaveChangesAsync();
          return ReactionMapper.EntityToModel(entity);
       }
 
