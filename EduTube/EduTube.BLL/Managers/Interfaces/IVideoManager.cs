@@ -7,7 +7,7 @@ namespace EduTube.BLL.Managers.Interfaces
    public interface IVideoManager
    {
       Task<List<VideoModel>> GetAll();
-      Task<List<VideoModel>> GetTop5Videos(string userId);
+      Task<List<VideoModel>> GetTop6Videos(string userId);
       Task<List<int>> GetVideosIdByView(string userId, string ipAddress);
       Task<List<VideoModel>> Get6VideosByTag(string userId, int? tagId);
       Task<bool> CheckInvitationCode(int videoId, string invitationCode);

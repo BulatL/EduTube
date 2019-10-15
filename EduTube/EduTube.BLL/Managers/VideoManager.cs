@@ -34,7 +34,7 @@ namespace EduTube.BLL.Managers
          return VideoMapper.EntitiesToModels(await _context.Videos.Where(x => !x.Deleted).ToListAsync());
       }
 
-      public async Task<List<VideoModel>> GetTop5Videos(string userId)
+      public async Task<List<VideoModel>> GetTop6Videos(string userId)
       {
          if (userId != null)
          {
@@ -44,7 +44,7 @@ namespace EduTube.BLL.Managers
                 .Where(x => !x.Deleted && (x.VideoVisibility != VideoVisibility.Invitation ||
                 (x.VideoVisibility == VideoVisibility.Invitation && x.UserId == userId)))
                 .OrderByDescending(x => x.Views.Count())
-                .Take(5).ToListAsync());
+                .Take(6).ToListAsync());
          }
          else
          {
@@ -53,7 +53,7 @@ namespace EduTube.BLL.Managers
                 .Include(x => x.User)
                .Where(x => !x.Deleted && x.VideoVisibility == VideoVisibility.Public)
                .OrderByDescending(x => x.Views.Count())
-               .Take(5).ToListAsync());
+               .Take(6).ToListAsync());
          }
       }
 
@@ -126,6 +126,7 @@ namespace EduTube.BLL.Managers
       public async Task<VideoModel> Create(VideoModel model, string tagNames)
       {
          List<TagModel> tags = await _tagManager.GetByNames(tagNames);
+			model.TagRelationships = new List<TagRelationshipModel>();
          foreach (var item in tags)
          {
             TagRelationshipModel tr = new TagRelationshipModel() { Id = 0, TagId = item.Id, Tag = item, Video = model };

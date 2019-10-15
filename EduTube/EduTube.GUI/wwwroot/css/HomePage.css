@@ -1,0 +1,33 @@
+﻿#allVideos{
+	padding: 2rem 3rem;
+}
+.margin-bottom-1rem {
+	margin-bottom: 1rem;
+}
+.margin-top-2rem{
+	margin-top: 2rem;
+}
+#breakLine{
+	display: none;
+}
+.display-block{
+	display: block;
+}
+.bottom-right {
+	position: absolute;
+	bottom: -10px;
+	right: 5px;
+}
+.videoDuration:hover {
+	color: #fff;
+}
+
+#popularVideos {
+	display: inline-flex;
+}
+.bold {
+	font-weight: bold;
+}
+.videoDiv{
+	margin-bottom: 1rem;
+}

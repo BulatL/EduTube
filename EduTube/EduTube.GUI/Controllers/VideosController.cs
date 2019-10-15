@@ -46,7 +46,7 @@ namespace EduTube.GUI.Controllers
       {
          ApplicationUserModel user = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
 
-         return View(await _videoManager.GetTop5Videos(user?.Id));
+         return View(await _videoManager.GetTop6Videos(user?.Id));
       }
 
       [Route("Videos/RecommendedVideos/{ipAddress}")]

@@ -14,7 +14,7 @@
    display: none;
 }
 #thumbnail{
-   height:15rem;
+   max-height:15rem;
 }
 
 #backToProfileBtn {
@@ -29,18 +29,6 @@
       box-shadow: 0 10px 30px rgba(0,0,0,.5);
       background-color: transparent !important;
    }
-/*#tagsInput_tag{
-   color:white;
-}
-#tagsInput_tagsinput {
-   background-color: transparent;
-   border: none;
-   padding: 0;
-}
-.ui-autocomplete-input valid {
-   border-bottom: none !important;
-   box-shadow: none !important;
-}*/
 /*Checkbox*/
 .badgebox {
    opacity: 0;

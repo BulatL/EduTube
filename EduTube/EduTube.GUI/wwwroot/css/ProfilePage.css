@@ -1,15 +1,6 @@
 ﻿body {
     color: #ffffff;
 }
-/*#profileImageDiv{
-    max-height: 15em;
-    max-width: 18em;
-}
-#profileImage{
-    border-radius: 50%;
-    max-width: 100%;
-    height: auto;
-}*/
 #subscribeBtn {
    position: initial;
    margin-top: 1rem;
@@ -31,8 +22,6 @@
    #profileImageDiv img {
       width: 10rem;
       height: 10rem;
-      /*width: 100%;
-        height: auto;*/
    }
 .subProfileImageDiv {
    position: relative;

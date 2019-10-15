@@ -1,35 +1,44 @@
 ﻿@model IEnumerable<EduTube.BLL.Models.VideoModel>
 @{
-   ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
 }
 
-@section Styles{ }
+@section Styles{
+	<link href="~/css/HomePage.css" rel="stylesheet" />
+}
 
-
-<h4>Popular videos</h4>
+<h4 class="margin-bottom-1rem bold">Popular videos</h4>
 <div class="row">
-   @foreach (var video in Model)
-   {
-      <div class="col-lg-2">
-         <a href="/Videos/@video.Id">
-            <img src="@video.Thumbnail" class="videoThumbnails" />
-            <p class="text-white videoName" title="@video.Name">@video.Name</p>
-         </a>
-         <a href="/Users/@video.UserChannelName.Replace(" ", "-")">
-            <p class="text-white fontSize08">@video.UserChannelName</p>
-         </a>
-         <p class="fontSize08">@video.DateCreatedOn.ToString("yyyy-MM-dd hh:mm")</p>
-      </div>
-   }
+	@foreach (var video in Model)
+	{
+		<div class="col-lg-2 videoDiv">
+			<div style="width: 10rem;">
+				<a href="/Videos/@video.Id">
+					<div class="videoThumbnailsDiv">
+						<img src="@video.Thumbnail" class="videoThumbnails" />
+						<p class="bottom-right greyBackground videoDuration">@video.Duration</p>
+					</div>
+					<p class="text-white videoName bold" title="@video.Name">@video.Name</p>
+				</a>
+			</div>
+			<a href="/Users/@video.UserChannelName.Replace(" ", "-")" class="display-block">
+				<span class="text-white fontSize08">@video.UserChannelName</span>
+			</a>
+			<span class="fontSize08">@video.DateCreatedOn.ToString("yyyy-MM-dd hh:mm")</span>
+		</div>
+	}
 </div>
 
-<h4 style="margin-top: 2rem;" id="firstRecommendedHeading"></h4>
+<div class="breakLineGray"></div>
+
+<h4 class="margin-bottom-1rem margin-top-2rem bold" id="firstRecommendedHeading"></h4>
 <div class="row" id="firstRecommendedVideosRow">
 </div>
-<h4 style="margin-top: 2rem;" id="secondRecommendedHeading"></h4>
+<div class="breakLineGray" id="breakLine"></div>
+<h4 class="margin-bottom-1rem margin-top-2rem bold" id="secondRecommendedHeading"></h4>
 <div class="row" id="secondRecommendedVideosRow">
 </div>
 
 @section Scripts{
-   <script src="~/js/HomePage.js"></script>
+	<script src="~/js/HomePage.js"></script>
 }

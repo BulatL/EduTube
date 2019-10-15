@@ -1,71 +1,77 @@
 ﻿@model IEnumerable<EduTube.BLL.Models.NotificationModel>
 @{
-   ViewData["Title"] = "Notifications";
+	ViewData["Title"] = "Notifications";
 }
 @section Styles{
-   <link href="~/css/NotificationsPage.css" rel="stylesheet" />
+	<link href="~/css/NotificationsPage.css" rel="stylesheet" />
 }
 @if (Model.Any())
 {
-   <div class="container greyBackground" id="notifDiv">
-      @for (int i = 0; i < Model.Count(); i++)
-      {
-         <div class="row padding1">
-            <div class="col-lg-10 col-md-10 col-sm-12">
-            <div class="row">
-               <div class="col-lg-1 col-md-2 col-sm-2 marginAuto">
-                  <div class="notificationUserImageDiv">
-                     <img src="/profileImages/@Model.ElementAtOrDefault(i).UserProfileImage">
-                  </div>
-               </div>
-               <div class="col-lg-11 col-md-10 col-sm-10 breakWord marginAuto">
-                  @Html.Raw(Model.ElementAtOrDefault(i).Content)
-               </div>
-            </div>
-            </div>
-            <div class="col-lg-2 col-md-2 col-sm-12 marginAuto">
-               <span class="float-right" id="dateSpan">
-                  @Html.Raw(Model.ElementAtOrDefault(i).DateCreatedOn.ToString("yyyy-MM-dd hh:mm"))
-               </span>
-            </div>
-         </div>
-         @if (Model.Count() - 1 != i)
-         {
-            <div class="row breakLineWhite"></div>
-         }
-      }
-      <!--<div class="row" id="notificationDiv">
-         <div class="col-lg-10 col-md-10 col-sm-12">
-            <div class="row">
-               <div class="col-lg-1 col-md-2 col-sm-2 marginAuto">
-                  <a href="/Users/">
-                     <div class="notificationUserImageDiv">
-                        <img src="~/profileImages/default-avatar.png" />
-                     </div>
-                  </a>
-               </div>
-               <div class="col-lg-11 col-md-10 col-sm-10 breakWord marginAuto">
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-               </div>
-            </div>
+	<div class="container greyBackground" id="notifDiv">
+		@for (int i = 0; i < Model.Count(); i++)
+		{
+			<div class="row padding1">
+				<div class="col-lg-10 col-md-10 col-sm-12">
+					<div class="row">
+						<div class="col-lg-1 col-md-2 col-sm-2 marginAuto">
+							<div class="notificationUserImageDiv">
+								<img src="/profileImages/@Model.ElementAtOrDefault(i).UserProfileImage">
+							</div>
+						</div>
+						<div class="col-lg-11 col-md-10 col-sm-10 breakWord marginAuto">
+							@Html.Raw(Model.ElementAtOrDefault(i).Content)
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-12 marginAuto">
+					<span class="float-right" id="dateSpan">
+						@Html.Raw(Model.ElementAtOrDefault(i).DateCreatedOn.ToString("yyyy-MM-dd hh:mm"))
+					</span>
+				</div>
+			</div>
+			@if (Model.Count() - 1 != i)
+			{
+				<div class="row breakLineWhite"></div>
+			}
+		}
+		<!--<div class="row" id="notificationDiv">
+			<div class="col-lg-10 col-md-10 col-sm-12">
+				<div class="row">
+					<div class="col-lg-1 col-md-2 col-sm-2 marginAuto">
+						<a href="/Users/">
+							<div class="notificationUserImageDiv">
+								<img src="~/profileImages/default-avatar.png" />
+							</div>
+						</a>
+					</div>
+					<div class="col-lg-11 col-md-10 col-sm-10 breakWord marginAuto">
+						Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+					</div>
+				</div>
 
-         </div>
-         <div class="col-lg-2 col-md-2 col-sm-12 marginAuto">
-            <span class="float-right" id="dateSpan">
-               10/10/2019
-            </span>
-         </div>
-      </div>-->
-   </div>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-12 marginAuto">
+				<span class="float-right" id="dateSpan">
+					10/10/2019
+				</span>
+			</div>
+		</div>-->
+	</div>
 
-   @if (Model.Count() == 5)
-   {
-      <input type="hidden" id="notificationsCount" value="@Model.Count()" />
-      <div id="buttonDiv" class="text-center">
-         <button class="orangeBtn" id="showMore" onclick="ShowMore()">Show more</button>
-      </div>
-   }
+	@if (Model.Count() == 5)
+	{
+		<input type="hidden" id="notificationsCount" value="@Model.Count()" />
+		<div id="buttonDiv" class="text-center">
+			<button class="orangeBtn" id="showMore" onclick="ShowMore()">Show more</button>
+		</div>
+	}
+}
+@if (!Model.Any())
+{
+	<div class="container text-center greyBackground" style="padding: 2rem" >
+		<h4 class="colorWhite">You don't have notifications</h4>
+	</div>
 }
 @section Scripts{
-   <script src="~/js/Notifications.js"></script>
+	<script src="~/js/Notifications.js"></script>
 }

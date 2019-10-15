@@ -29,35 +29,37 @@
       <script type="text/javascript">(function () { var css = document.createElement('link'); css.href = 'https://use.fontawesome.com/releases/v5.1.0/css/all.css'; css.rel = 'stylesheet'; css.type = 'text/css'; document.getElementsByTagName('head')[0].appendChild(css); })();</script>
 
       <nav class="navbar navbar-expand-lg navbar-toggleable-sm box-shadow mb-3">
-         <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EduTube</a>
-            <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-               <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-               @if (Context.User.Identity.IsAuthenticated)
-               {
-                  <input type="hidden" id="userLoggedIn" value="true" />
-                  <ul class="navbar-nav ml-auto nav-flex-icons">
-                     <li class="nav-item avatar dropdown dropleft">
-                        <a class="nav-link " id="notificationsIcon" data-toggle="dropdown" aria-expanded="false">
-                           <div class="notification"></div>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-lg-left greyBackground" aria-labelledby="notificationsIcon" id="notificationsDiv">
-                           <input type="hidden" id="lastNotificationId" />
-                        </div>
-                        <div id="newNotificationsDiv">
+			<div class="container-fluid">
+				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+					<img src="~/images/4f652811-550b-42bf-95cb-4603325068ef_200x200.png" style="height: 6rem" />
+				</a>
+				<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+						  aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+					@if (Context.User.Identity.IsAuthenticated)
+					{
+						<input type="hidden" id="userLoggedIn" value="true" />
+						<ul class="navbar-nav ml-auto nav-flex-icons">
+							<li class="nav-item avatar dropdown dropleft">
+								<a class="nav-link " id="notificationsIcon" data-toggle="dropdown" aria-expanded="false">
+									<div class="notification"></div>
+								</a>
+								<div class="dropdown-menu dropdown-menu-lg-left greyBackground" aria-labelledby="notificationsIcon" id="notificationsDiv">
+									<input type="hidden" id="lastNotificationId" />
+								</div>
+								<div id="newNotificationsDiv">
 
-                        </div>
-                     </li>
+								</div>
+							</li>
 
-                     <li class="nav-item avatar dropdown">
-                        <a class="nav-link " id="navbarDropdownMenuLink-55" data-toggle="dropdown" aria-expanded="false">
-                           <div id="profileImageNavbarDiv">
-                              <img src="~/profileImages/@User.Claims.FirstOrDefault(x => x.Type.Equals("profileImage"))?.Value" />
-                           </div>
-                        </a>
+							<li class="nav-item avatar dropdown">
+								<a class="nav-link " id="navbarDropdownMenuLink-55" data-toggle="dropdown" aria-expanded="false">
+									<div id="profileImageNavbarDiv">
+										<img src="~/profileImages/@User.Claims.FirstOrDefault(x => x.Type.Equals("profileImage"))?.Value" />
+									</div>
+								</a>
 								<div class="dropdown-menu dropdown-menu-lg-right greyBackground"
 									  aria-labelledby="navbarDropdownMenuLink-55" id="userMenuDropdown">
 									<a class="dropdown-item" href="/Users/@User.Claims.FirstOrDefault(x => x.Type.Equals("channelName"))?.Value.Replace(" ", "-")"><i class='far fa-user'></i> My profile</a>
@@ -69,30 +71,28 @@
 									{
 										<a class="nav-link" asp-area="" asp-controller="AdminUsers" asp-action="Index"><i class='fas fa-users'></i> Admin page</a>
 										<div class="breakLineWhite"></div>
-										<a class="nav-link" asp-area="" asp-controller="AdminUsers" asp-action="Index"><i class='fas fa-laugh'></i> Emoji page</a>
+										<a class="nav-link" asp-area="" asp-controller="Emojis" asp-action="Index"><i class='fas fa-laugh'></i> Emoji page</a>
 										<div class="breakLineWhite"></div>
 									}
 									<a class="dropdown-item" href="/Logout"><i class="fa fa-sign-out"></i> Log out</a>
 								</div>
-                     </li>
-                  </ul>
-               }
-               @if (!Context.User.Identity.IsAuthenticated)
-               {
-                  <input type="hidden" id="userLoggedIn" value="false" />
-                  <a class="nav-link" href="/Register">Register</a>
-                  <a class="nav-link" href="/Login?redirectUrl=@Context.Request.Path"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a>
-               }
-               <div class="nav navbar-nav navbar-right">
-                  <div class="input-group">
-                     <input class="form-control mr-sm-2" type="search" placeholder="Search" id="searchInput" aria-label="Search">
-                  </div>
-               </div>
-               <ul class="navbar-nav flex-grow-1">
-                  
-               </ul>
-            </div>
-         </div>
+							</li>
+						</ul>
+					}
+					@if (!Context.User.Identity.IsAuthenticated)
+					{
+						<input type="hidden" id="userLoggedIn" value="false" />
+						<a class="nav-link" href="/Register">Register</a>
+						<a class="nav-link" href="/Login?redirectUrl=@Context.Request.Path"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a>
+					}
+					<div class="nav navbar-nav navbar-right">
+						<div class="input-group">
+							<input class="form-control mr-sm-2" type="search" placeholder="Search" id="searchInput" aria-label="Search">
+						</div>
+					</div>
+					<ul class="navbar-nav flex-grow-1"></ul>
+				</div>
+			</div>
       </nav>
    </header>
    <div class="container-fluid" id="mainBodyDiv">
@@ -104,7 +104,7 @@
 
    <footer class="border-top footer text-muted">
       <div class="container">
-         &copy; 2019 - EduTube.GUI
+         &copy; 2019 - EduTube
       </div>
    </footer>
 

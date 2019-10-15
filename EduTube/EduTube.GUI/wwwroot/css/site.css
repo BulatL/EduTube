@@ -17,6 +17,12 @@ a.navbar-brand {
 .display-flex{
    display: flex !important;
 }
+
+.breakLineGray {
+	height: 0.8px;
+	width: -webkit-fill-available;
+	background-color: #242424;
+}
 /* Sticky footer styles
 -------------------------------------------------- */
 /*dropdown*/
@@ -147,11 +153,12 @@ button.accept-policy {
 }
 
 .notification {
-   display: inline-block;
-   position: relative;
-   padding: 0.6em;
-   border-radius: 0.2em;
-   font-size: 1rem;
+	display: inline-block;
+	position: relative;
+	padding: 0.6em;
+	border-radius: 0.2em;
+	font-size: 1.2rem;
+	top: 7px;
 }
 
    .notification::before,
@@ -364,16 +371,16 @@ h2 {
 
 #profileImageNavbarDiv {
    position: relative;
-   width: 3.5rem;
-   height: 3.5rem;
+   width: 4rem;
+   height: 4rem;
    overflow: hidden;
    border-radius: 50%;
    margin-left: 1rem;
 }
 
    #profileImageNavbarDiv img {
-      width: 3.5rem;
-      height: 3.5rem;
+      width: 4rem;
+      height: 4rem;
    }
 
 .noPadding {
@@ -699,4 +706,9 @@ a.waves-effect, a.waves-light {
       margin-left: 0.5rem;
       margin-right: 0.5rem;
       font-size: 18px;
-   }  
+   }
+
+.navbar{
+	padding-bottom: 0 !important;
+	margin-bottom: 0 !important;
+}

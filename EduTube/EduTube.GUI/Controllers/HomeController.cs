@@ -24,11 +24,7 @@ namespace EduTube.GUI.Controllers
          ApplicationUser user = await _userManager.GetUserAsync(User);
          List<VideoModel> videos = new List<VideoModel>();
 
-         if (user == null)
-            videos = await _videoManager.GetTop5Videos(null);
-
-         else
-            videos = await _videoManager.GetTop5Videos(user.Id);
+			videos = await _videoManager.GetTop6Videos(user?.Id);
 
          return View(videos);
       }
