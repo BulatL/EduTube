@@ -1513,7 +1513,7 @@
       ]
     },
     "Microsoft.AspNetCore.Http.Extensions/2.2.0": {
-      "sha512": "wXfB68sp3X+6/TLUHVF5eiscn9iGptGEwjJyk4yBbbOAVJECE59/KUun6sT+JlNcNCWEWE0S7Ew+yMD6bm3rrQ==",
+      "sha512": "lyEExtXdag+/tGhJVJgU6s2LOEUO3Uex4bDjN2RWuOYPe0l4rTDFv8B1WJO3EnnFrcCbbhATEc+3y3ntzSZKqw==",
       "type": "package",
       "path": "microsoft.aspnetcore.http.extensions/2.2.0",
       "files": [
@@ -2494,7 +2494,7 @@
       ]
     },
     "runtime.native.System.Data.SqlClient.sni/4.5.0": {
-      "sha512": "AJfX7owAAkMjWQYhoml5IBfXh8UyYPjktn8pK0BFGAdKgBS7HqMz1fw5vdzfZUWfhtTPDGCjgNttt46ZyEmSjg==",
+      "sha512": "zmr7mxqvG7M7qWzPTHQEF0jIOo65vqsnaJ2s7AyZ9JQaSJ3rfXZ7vPGszw1EbvRATu6zsFMdpQeq1g7oaNocOg==",
       "type": "package",
       "path": "runtime.native.system.data.sqlclient.sni/4.5.0",
       "files": [
@@ -2762,7 +2762,7 @@
       ]
     },
     "System.Data.SqlClient/4.6.0": {
-      "sha512": "gwItUWW1BMCckicFO85c8frFaMK8SGqYn5IeA3GSX4Lmid+CjXETfoHz7Uv+Vx6L0No7iRc/7cBL8gd6o9k9/g==",
+      "sha512": "cppLAiY36su7Hr9dOaeDXRkndLKtnh7HgQgOfAgV0oN764BQXShll7yBZ8OwPtdYUSuwTT0re7eDQPGhwnojVQ==",
       "type": "package",
       "path": "system.data.sqlclient/4.6.0",
       "files": [
@@ -4500,23 +4500,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Dusan\\.nuget\\packages\\": {},
+    "C:\\Users\\Bulat\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Dusan\\Desktop\\luka\\EduTube\\EduTube\\EduTube.BLL\\EduTube.BLL.csproj",
+      "projectUniqueName": "D:\\Projects\\Diplomski\\EduTube\\EduTube.BLL\\EduTube.BLL.csproj",
       "projectName": "EduTube.BLL",
-      "projectPath": "C:\\Users\\Dusan\\Desktop\\luka\\EduTube\\EduTube\\EduTube.BLL\\EduTube.BLL.csproj",
-      "packagesPath": "C:\\Users\\Dusan\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Dusan\\Desktop\\luka\\EduTube\\EduTube\\EduTube.BLL\\obj\\",
+      "projectPath": "D:\\Projects\\Diplomski\\EduTube\\EduTube.BLL\\EduTube.BLL.csproj",
+      "packagesPath": "C:\\Users\\Bulat\\.nuget\\packages\\",
+      "outputPath": "D:\\Projects\\Diplomski\\EduTube\\EduTube.BLL\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Dusan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Bulat\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4529,8 +4529,8 @@
       "frameworks": {
         "netcoreapp2.2": {
           "projectReferences": {
-            "C:\\Users\\Dusan\\Desktop\\luka\\EduTube\\EduTube\\EduTube.DAL\\EduTube.DAL.csproj": {
-              "projectPath": "C:\\Users\\Dusan\\Desktop\\luka\\EduTube\\EduTube\\EduTube.DAL\\EduTube.DAL.csproj"
+            "D:\\Projects\\Diplomski\\EduTube\\EduTube.DAL\\EduTube.DAL.csproj": {
+              "projectPath": "D:\\Projects\\Diplomski\\EduTube\\EduTube.DAL\\EduTube.DAL.csproj"
             }
           }
         }

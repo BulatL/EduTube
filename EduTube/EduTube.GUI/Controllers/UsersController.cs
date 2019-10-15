@@ -135,9 +135,11 @@ namespace EduTube.GUI.Controllers
       public async Task<IActionResult> Edit(string id)
       {
          ApplicationUserModel currentUser = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
-         if (id.Equals(currentUser?.Id))
+         string role = await _userManager.GetRole(currentUser.Id);
+         if (id.Equals(currentUser?.Id) || role.Equals("Admin"))
          {
-            EditUserViewModel viewModel = new EditUserViewModel(currentUser);
+            ApplicationUserModel userForEdit = await _userManager.GetById(id, false);
+            EditUserViewModel viewModel = new EditUserViewModel(userForEdit);
             return View(viewModel);
 			}
 			return LocalRedirect("/Error/401");

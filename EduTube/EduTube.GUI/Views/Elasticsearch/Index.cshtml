@@ -7,7 +7,7 @@
 
 @section Styles{
    <link href="~/css/SearchPage.css" rel="stylesheet" />
- }
+}
 <div class="container">
    <div class="greyBackground">
       <input type="hidden" id="search_query" value="@Model.SearchQuery" />
@@ -65,20 +65,32 @@
             }
          </div>
          <div id="usersDiv">
-            <div class="container" id="usersContainer">
+            <div id="usersContainer">
                @if (Model.Users != null)
                {
                   @foreach (var user in Model.Users)
                   {
-
-                     <div class="display-inline-block userDiv">
+                     <div class="videoDiv">
                         <a href="/Users/@user.ChannelName.Replace(" ", "-")">
                            <div class="userProfileImageDiv">
                               <img src="~/profileImages/@user.ProfileImage" />
                            </div>
-                           <h4 class="overflow text-center">@user.ChannelName</h4>
                         </a>
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                           <a href="/Users/@user.ChannelName.Replace(" ", "-")">
+                              <p class="searchVideoName" title="@user.ChannelName">
+                                 @Html.Raw(user.ChannelName)
+                              </p>
+                           </a>
+                           <span class="searchVideoOwner">@user.Firstname @user.Lastname</span>
+                        </div>
+                        <div class="col-lg-6 col-md-5 col-sm-12 col-xs-12">
+                           <div class="searchVideoDescription">
+                              @Html.Raw(user.ChannelDescription)
+                           </div>
+                        </div>
                      </div>
+                     <div class="breakLineWhite"></div>
                   }
 
                   @if (Model.Users.Count() == 0)

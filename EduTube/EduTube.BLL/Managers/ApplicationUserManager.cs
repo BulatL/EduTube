@@ -138,13 +138,17 @@ namespace EduTube.BLL.Managers
          if (refreshClaims)
          {
             IList<Claim> claims = await _userManager.GetClaimsAsync(entity);
-            List<Claim> oldClaims = new List<Claim>();
-            Claim oldProfileImage = claims.FirstOrDefault(x => x.Type.Equals("profileImage"));
-            Claim oldChannelName = claims.FirstOrDefault(x => x.Type.Equals("channelName"));
-            oldClaims.Add(oldProfileImage);
-            oldClaims.Add(oldChannelName);
-            IdentityResult removeClaims = await _userManager.RemoveClaimsAsync(entity, oldClaims);
-            if (removeClaims.Succeeded)
+            IdentityResult removeClaims = IdentityResult.Success;
+            if (claims.Count > 0)
+            {
+               List<Claim> oldClaims = new List<Claim>();
+               Claim oldProfileImage = claims.FirstOrDefault(x => x.Type.Equals("profileImage"));
+               Claim oldChannelName = claims.FirstOrDefault(x => x.Type.Equals("channelName"));
+               oldClaims.Add(oldProfileImage);
+               oldClaims.Add(oldChannelName);
+               removeClaims = await _userManager.RemoveClaimsAsync(entity, oldClaims);
+            }
+            if (removeClaims.Succeeded && claims.Count > 0)
             {
                List<Claim> newClaims = new List<Claim>();
                Claim profileImage = new Claim("profileImage", entity.ProfileImage);

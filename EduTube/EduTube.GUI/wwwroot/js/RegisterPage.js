@@ -30,7 +30,6 @@
       let channelDescriptionError = "";
       let passwordError = "";
 
-
       let birthDay = $('#BirthDay').val();
       let birthMonth = $('#BirthMonth').val();
       let birthYear = $('#BirthYear').val();
