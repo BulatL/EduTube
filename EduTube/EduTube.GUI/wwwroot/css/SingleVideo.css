@@ -66,6 +66,11 @@ button:focus {
    #btnSubscribeOwner, #emojisDiv {
       float: right;
    }
+   #btnSubscribeOwner {
+      margin-left: 5rem;
+      width: 7rem;
+      text-align: center;
+   }
 }
 
 @media (max-width: 768px) {

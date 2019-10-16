@@ -357,7 +357,7 @@ h2 {
    .purpleBtn:hover {
       box-shadow: 0 10px 30px rgba(0,0,0,.5);
       background: linear-gradient(to right,#e80a89 0,#9c0059 100%);
-      color: #fff;
+      color: #fff !important;
    }
 
 .footer {

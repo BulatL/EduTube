@@ -4,8 +4,11 @@
       $('#InvitationCodeDiv').show();
    }
 
+   $("#customThumbnail").on('change',function () {
+      console.log("kliknuo");
+      FasterPreview(this);
+   });
    let oldThumbnail = $('#oldThumbnail').val();
-   console.log(oldThumbnail);
    if (oldThumbnail != undefined && oldThumbnail != '') {
       $('#thumbnail').attr("src", oldThumbnail);
    }
@@ -63,6 +66,7 @@
          $('#youtubeUrlError').text('');
       }
    });
+
    $('#form').submit(function () {
       let video = $('#videoFile').val();
       let youtubeUrl = $('#youtubeUrl').val();
@@ -155,4 +159,14 @@ function convert_time(duration) {
 
 function Redirect(redirectUrl) {
    window.location.replace(redirectUrl);
+}
+
+function FasterPreview(uploader) {
+   console.log("usao");
+   console.log(uploader);
+   if (uploader.files && uploader.files[0]) {
+      console.log(uploader.files[0]);
+      $('#thumbnail').attr('src',
+         window.URL.createObjectURL(uploader.files[0]));
+   }
 }

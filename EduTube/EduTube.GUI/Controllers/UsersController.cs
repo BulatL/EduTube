@@ -22,15 +22,15 @@ namespace EduTube.GUI.Controllers
    public class UsersController : Controller
    {
       private IApplicationUserManager _userManager;
-      private IUploadService _uploadSerice;
+      private IUploadService _uploadService;
       private IVideoManager _videoManager;
       private ITagRelationshipManager _tagRelationshipManager;
 
-      public UsersController(IApplicationUserManager userManager, IUploadService uploadSerice,
+      public UsersController(IApplicationUserManager userManager, IUploadService uploadService,
          IVideoManager videoManager, ITagRelationshipManager tagRelationshipManager)
       {
          _userManager = userManager;
-         _uploadSerice = uploadSerice;
+         _uploadService = uploadService;
          _videoManager = videoManager;
          _tagRelationshipManager = tagRelationshipManager;
       }
@@ -154,7 +154,10 @@ namespace EduTube.GUI.Controllers
          {
             ApplicationUserModel user = EditUserViewModel.CopyToModel(viewModel);
             if(viewModel.ProfileImage != null)
-               user.ProfileImage = _uploadSerice.UploadImage(viewModel.ProfileImage, "profileImages");
+            {
+               _uploadService.RemoveImage(viewModel.OldImage, "profileImages");
+               user.ProfileImage = _uploadService.UploadImage(viewModel.ProfileImage, "profileImages");
+            }
 
             user = await _userManager.Update(user);
             await new ElasticsearchController(_videoManager, _userManager, _tagRelationshipManager).UpdateUser(user);
@@ -189,7 +192,7 @@ namespace EduTube.GUI.Controllers
             };
 
             if (viewModel.ProfileImage != null)
-               user.ProfileImage = _uploadSerice.UploadImage(viewModel.ProfileImage, "profileImages");
+               user.ProfileImage = _uploadService.UploadImage(viewModel.ProfileImage, "profileImages");
 
             else
                user.ProfileImage = "default-avatar.png";

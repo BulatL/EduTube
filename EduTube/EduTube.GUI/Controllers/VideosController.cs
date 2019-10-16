@@ -194,12 +194,12 @@ namespace EduTube.GUI.Controllers
                video.Duration = XmlConvert.ToTimeSpan(viewModel.VideoDuration);
             
             if(viewModel.Thumbnail != null)
-               video.Thumbnail = _uploadService.UploadImage(viewModel.Thumbnail, "thumbnails");
+               video.Thumbnail = String.Format("/thumbnails/" + _uploadService.UploadImage(viewModel.Thumbnail, "thumbnails"));
 
             else
             {
                if (viewModel.Video != null)
-                  video.Thumbnail = "thumbnails/" +  _uploadService.CreateThumbnail(video.FileName);
+                  video.Thumbnail = String.Format("/thumbnails/" + _uploadService.CreateThumbnail(video.FileName));
                
                else
                   video.Thumbnail = String.Format(@"https://img.youtube.com/vi/" + viewModel.YoutubeId + "/0.jpg");
@@ -257,7 +257,7 @@ namespace EduTube.GUI.Controllers
                if (viewModel.NewThumbnail != null)
                {
                   _uploadService.RemoveImage(viewModel.OldThumbnail, "thumbnails");
-                  video.Thumbnail = _uploadService.UploadImage(viewModel.NewThumbnail, "thumbnails");
+                  video.Thumbnail = String.Format("/thumbnails/" + _uploadService.UploadImage(viewModel.NewThumbnail, "thumbnails"));
                }
 
                video = await _videoManager.Update(video, viewModel.Tags);

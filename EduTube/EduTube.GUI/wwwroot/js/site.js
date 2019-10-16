@@ -226,6 +226,7 @@ function Promote(id) {
 }
 
 function DeleteUser(userId) {
+   console.log("usao");
    $("#deleteUserDialog").load(`/Users/GetDeleteDialog/${userId}`, function (responseTxt, statusTxt, xhr) {
       if (statusTxt == "error")
          console.log("error")
@@ -244,8 +245,16 @@ function DeleteUserConfirm(id) {
          console.log(response);
       },
       error: function (data, xhr) {
-         if (data.status == 200)
-            window.location.replace(`/Home`);
+         if (data.status == 200) {
+            let currentUser = $('#currentUser').val();
+            if (currentUser === id) {
+               RedirectTo("/Home");
+            }
+            else {
+               $('#deleteUserDialog').modal('hide');
+               $(`#user_${id}`).remove();
+            }
+         }
 
          else
             alert('Delete operation failed');

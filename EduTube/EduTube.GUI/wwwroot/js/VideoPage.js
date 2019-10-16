@@ -18,13 +18,11 @@ function ShowMoreComments() {
       return;
 
    let videoId = $('#videoId').val();
-   console.log(videoId);
    $.ajax({
       url: `/Comments/GetByVideo?videoId=${videoId}&lastCommentId=${lastCommentId}`,
       type: 'GET',
       dataType: 'json',
       success: function (response) {
-         console.log(response);
          if (response.length > 0) {
             PopulateComments(response);
             $('#lastCommentId').val(response[response.length - 1].id);
@@ -46,12 +44,10 @@ function ShowMoreComments() {
 }
 
 function PopulateComments(comments) {
-   console.log("usao u populate");
    let currentUserId = $('#currentUserId').val();
    let commentsDiv = $('#commentsDiv');
    let commentsContent = [];
    for (var i = 0; i < comments.length; i++) {
-      console.log(comments[i].id);
       let likeCount = 0;
       let dislikeCount = 0;
       let likeResizeCommentEmoji = '';
@@ -75,13 +71,8 @@ function PopulateComments(comments) {
             }
          }
       }
-
-
-      console.log(comments[i].userId);
-      console.log(currentUserId);
-
       commentsContent.push(
-         `<div class="col-12 comment_${comments[i].id}" id="comment_${comments[i].id}">
+         `<div class="col-12" id="comment_${comments[i].id}">
             <div class="row">
                <div class="col-1">
                   <a href="/Users/${comments[i].user.channelName.replace(' ', '-')}">
@@ -147,8 +138,6 @@ function PopulateComments(comments) {
             <div class="breakLine"></div>
          </div>`
       );
-      console.log(commentsContent);
-      console.log("--------------------------------------------------");
    }
    commentsDiv.append(commentsContent.join(''));
    $('html, body').animate({
@@ -218,7 +207,6 @@ function CheckInvitationCode() {
 
 function Reaction(emojiId, videoId, commentId) {
    let oldReaction = $('#reactionHidden').val();
-   console.log(oldReaction);
    $.ajax({
       url: '/Reactions/Create',
       type: 'POST',
@@ -229,10 +217,8 @@ function Reaction(emojiId, videoId, commentId) {
       },
       dataType: 'json',
       success: function (data, textStatus, xhr) {
-         console.log(data);
       },
       error: function (data, xhr) {
-         console.log(data);
          if (data.status === 201) {
             if (videoId !== null) {
                $('.resizeVideoEmoji').removeClass('resizeVideoEmoji');
@@ -343,7 +329,6 @@ function CreateComment(videoId) {
          $('#commentsCount').val(parseInt(oldCommentsCount) + 1);
       },
       error: function (response, jqXHR) {
-         console.log(response);
       }
    });
 }
@@ -429,9 +414,12 @@ function DeleteCommentConfirm(id) {
       type: 'DELETE',
       dataType: 'json',
       success: function (response) {
-         console.log(response);
       },
       error: function (data, xhr) {
+         if (data.status === 200) {
+            $('#deleteCommentDialog').modal('hide');
+            $(`#comment_${id}`).remove();
+         }
          if (data.status !== 200)
             alert('Delete operation failed');
       }
@@ -454,7 +442,6 @@ function DeleteVideoConfirm(id) {
       type: 'DELETE',
       dataType: 'json',
       success: function (response) {
-         console.log(response);
       },
       error: function (data, xhr) {
          if (data.status === 200)
@@ -475,7 +462,6 @@ function showCommentOptionDiv(commentId) {
 }
 
 function MakeCommentEditable(commentId) {
-   console.log("usao");
    $(`#commentOptionsDiv_${commentId}`).hide();
    $(`#editCommentBtnDiv_${commentId}`).show();
    let commentContent = $(`#commentContentSpan_${commentId}`);
@@ -513,7 +499,6 @@ function EditComment(commentId) {
       dataType: 'json',
       data: { "CommentContent": commentContent },
       success: function (response) {
-         console.log(response);
       },
       error: function (data, xhr) {
          if (data.status === 200) {
@@ -601,10 +586,8 @@ function RedirectToLogin(videoId) {
 
 function ShowMore() {
    let previouseHeight = $('.panel').css('height');
-   console.log(previouseHeight);
    $('.panel').css('max-height', 'max-content');
    let newHeight = $('.panel').css('height');
-   console.log(newHeight);
 	$('#show').attr('style', 'display:none !important');
    if (previouseHeight === newHeight) {
 		$('#hide').attr('style', 'display:none !important');

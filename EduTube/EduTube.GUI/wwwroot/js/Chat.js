@@ -8,15 +8,22 @@ document.getElementById("sendButton").disabled = true;
 connection.on("ReceiveMessage", function (userId, channelName, profileImage, message) {
    console.log("ReceiveMessage");
    let msg_history = $('#msg_history');
+   let current_user_id = $('#current_user_id').val();
+   let current_chat = $('#current_chat').val();
 
-   if (message == "joined") {
+   if (message === "joined") {
       msg_history.append(
-         `<h5 class="messageInfo">${userChannelName} joined chat</h5>`
+         `<div class="msg text-center">
+            <div class="incoming_msg_img"> 
+               <img src="/profileImages/${profileImage}"> 
+            </div>
+            <a href="/Users/${channelName.replace(" ", "-")}">
+               <h5 class="messageInfo">${channelName} joined chat</h5>
+            </a>
+         </div>`
       );
       return;
    }
-   let current_user_id = $('#current_user_id').val();
-   let current_chat = $('#current_chat').val();
    if (current_user_id == userId) {
 
       msg_history.append(
@@ -38,7 +45,9 @@ connection.on("ReceiveMessage", function (userId, channelName, profileImage, mes
             </div>
             <div class="received_msg">
                <div class="received_withd_msg">
-                  <span class="sender_name" id="sender_name_${current_chat}">${channelName}</span>
+                  <a href="/Users/${channelName.replace(" ", "-")}">
+                     <span class="sender_name" id="sender_name_${current_chat}">${channelName}</span>
+                  </a>
                   <p>
                      ${message}
                   </p>
@@ -146,7 +155,9 @@ function PopulateIncomingMessage(message) {
          </div>
          <div class="received_msg">
             <div class="received_withd_msg">
-               <span class="sender_name" id="sender_name_${message.chatId}">${message.user.channelName}</span>
+               <a href="/Users/${message.user.channelName.replace(" ", "-")}">
+                  <span class="sender_name" id="sender_name_${message.chatId}">${message.user.channelName}</span>
+               </a>
                <p>
                   ${message.message}
                </p>

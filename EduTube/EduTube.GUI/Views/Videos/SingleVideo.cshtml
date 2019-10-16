@@ -204,7 +204,7 @@
             {
                @foreach (var comment in Model.Comments)
                {
-                  <div class="col-12 comment_@comment.Id">
+                  <div class="col-12" id="comment_@comment.Id">
                      <div class="row">
                         <div class="col-1">
                            <a href="/Users/@comment.OwnerChannelName.Replace(" ", "-")">
