@@ -42,13 +42,6 @@ namespace EduTube.GUI.Controllers
          _subscriptionManager = subscriptionManager;
       }
 
-      public async Task<IActionResult> Index()
-      {
-         ApplicationUserModel user = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
-
-         return View(await _videoManager.GetTop6Videos(user?.Id));
-      }
-
       [Route("Videos/RecommendedVideos/{ipAddress}")]
       public async Task<IActionResult> RecomendedVideos(string ipAddress)
       {
@@ -59,23 +52,22 @@ namespace EduTube.GUI.Controllers
 
          ApplicationUserModel user = await _userManager.GetById(User.FindFirstValue(ClaimTypes.NameIdentifier), false);
 
-         List<int> seenVideosId = await _videoManager.GetVideosIdByView(user?.Id, ipAddress);
-         List<int?> tagsId = await _tagManager.Get2MostPopularTagsIdByVideoId(seenVideosId);
+         List<int> watchedVideosId = await _videoManager.GetVideosIdByView(user?.Id, ipAddress);
+         List<int?> tagsId = await _tagManager.Get2MostPopularTagsIdByVideoId(watchedVideosId);
          if (tagsId != null && tagsId?.Count() > 0)
          {
             if (tagsId.ElementAtOrDefault(0) != null)
             {
-               firstTag = await _tagManager.GetById(int.Parse(tagsId[0].ToString()));
+               firstTag = await _tagManager.GetById(tagsId[0].Value);
                firstRecommendedVideos = await _videoManager.Get6VideosByTag(user?.Id, tagsId.ElementAtOrDefault(0));
             }
             if (tagsId.ElementAtOrDefault(1) != null)
             {
-               secondTag = await _tagManager.GetById(int.Parse(tagsId[1].ToString()));
+               secondTag = await _tagManager.GetById(tagsId[1].Value);
                secondRecommendedVideos = await _videoManager.Get6VideosByTag(user?.Id, tagsId.ElementAtOrDefault(1));
             }
          }
 
-         Debug.WriteLine("nazad u kontroleru " + DateTime.Now);
          HomeRecommendedVideos viewModel = new HomeRecommendedVideos(firstRecommendedVideos,
              secondRecommendedVideos, firstTag?.Name, secondTag?.Name);
          return Json(viewModel);

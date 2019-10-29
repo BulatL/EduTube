@@ -62,18 +62,18 @@
             <div class="row">
                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                   <div class="form-group">
-                     <label asp-for="VideoVisibility" class="control-label"></label>
+                     <label asp-for="VideoVisibility" class="control-label">Who can see this video?</label>
                      <select asp-for="VideoVisibility" class="form-control" id="visibilitySelect">
-                        <option value="0" title="Everyone can see this video">Public</option>
-                        <option value="1" title="Only logged users can see this video">Private</option>
-                        <option value="2" title="Only users whit invitation code can see this video">Invite</option>
+                        <option value="0" title="Everyone can see this video">Everyone can see this video</option>
+                        <option value="1" title="Only logged in users can see this video">Only logged in users can see this video</option>
+                        <option value="2" title="Only users whit invitation code can see this video">Only users whit invitation code can see this video</option>
                      </select>
                      <span asp-validation-for="VideoVisibility" class="text-danger"></span>
                   </div>
                </div>
                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                   <div class="form-group" id="InvitationCodeDiv">
-                     <label asp-for="InvitationCode" class="control-label"></label>
+                     <label asp-for="InvitationCode" class="control-label">Invitation code</label>
                      <input asp-for="InvitationCode" class="form-control" id="InvitationCode" disabled />
                      <input type="hidden" asp-for="InvitationCode" class="form-control" id="InvitationCodeHidden" />
                      <span asp-validation-for="InvitationCode" class="text-danger"></span>

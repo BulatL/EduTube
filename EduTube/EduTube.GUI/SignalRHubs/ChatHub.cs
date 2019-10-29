@@ -2,9 +2,7 @@
 using EduTube.BLL.Models;
 using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace EduTube.GUI.SignalRHubs
@@ -19,13 +17,6 @@ namespace EduTube.GUI.SignalRHubs
          _userManager = userManager;
          _chatMessageManager = chatMessageManager;
       }
-      /*
-       * The ChatHub class inherits from the SignalR Hub class. The Hub class manages connections, 
-       * groups, and messaging.
-
-         The SendMessage method can be called by a connected client to send a message to all clients.
-         SignalR code is asynchronous to provide maximum scalability.
-       */
       public async Task SendMessage(string message,int chatId, string chatName)
       {
          ApplicationUserModel currentUser = await _userManager.GetById(Context.User.Claims.FirstOrDefault(x => x.Type.Equals("id")).Value, false);
