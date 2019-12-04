@@ -125,7 +125,7 @@ Here we can see entities of application
 ![vdeo create](https://github.com/BulatL/EduTube/blob/master/Images/CreateVideo2.png "video create")
 
   This image represent page for uploading video. Tags input is for adding tags to the video. Input work like autocomplite, so user can see all existing tags or he can create new one. 
-  VideoVisibility input is dropdown. There is 3 types of visibility, ** Public ** everyone can see video, ** Private ** only logged in user can see video and ** Invitation ** only users that enter invitation code can see video.
+  VideoVisibility input is dropdown. There is 3 types of visibility, **Public** everyone can see video, **Private** only logged in user can see video and **Invitation** only users that enter invitation code can see video.
   Invitation code is random generated string.
   User have2 options for uploading video. 
     - Upload video from device.
