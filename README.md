@@ -122,7 +122,7 @@ Here we can see entities of application
   
   
   
-![vdeo create](https://github.com/BulatL/EduTube/blob/master/Images/VideoCreate2.png "video create")
+![vdeo create](https://github.com/BulatL/EduTube/blob/master/Images/CreateVideo2.png "video create")
 
   This image represent page for uploading video. Tags input is for adding tags to the video. Input work like autocomplite, so user can see all existing tags or he can create new one. 
   VideoVisibility input is dropdown. There is 3 types of visibility, ** Public ** everyone can see video, ** Private ** only logged in user can see video and ** Invitation ** only users that enter invitation code can see video.
@@ -135,7 +135,7 @@ Here we can see entities of application
   And last checkbox is if user want to allow comments on video
   
   
-![prikaz videa](https://github.com/BulatL/EduTube/blob/master/Images/Prikaz%Videa.png "prikaz videa")
+![prikaz videa](https://github.com/BulatL/EduTube/blob/master/Images/Prikaz%20Videa.png "prikaz videa")
 
   This image represent uploaded video page. We can watch video, see basic info about video, see basic name of the video owner, see comments or post comment and leave reaction on video or comment.
   
