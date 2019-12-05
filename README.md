@@ -144,5 +144,6 @@ Here we can see entities of application
 ![Chat](https://github.com/BulatL/EduTube/blob/master/Images/Chat.png "Chat")
 
   This image represent page for chat rooms. On left side user can see chat rooms. When user join chat he will see previous messages and will be able to send new ones.
+  Sending  message functionality was implemented with SignalR library.
   
   
