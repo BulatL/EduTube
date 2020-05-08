@@ -147,5 +147,4 @@ Here we can see entities of application
   Sending  message functionality was implemented with SignalR library.
   
   
-
-Project is using Elasticsearch 6.5.4 version
+Project is using Elasticsearch 6.5.4 version which must be launched before launching this application
